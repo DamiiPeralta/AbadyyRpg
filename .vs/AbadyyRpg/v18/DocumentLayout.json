@@ -1,0 +1,105 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\battlesetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\battlesetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\battlemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\battlemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\battlelogic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\battlelogic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\abilityso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\abilityso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\GameManager.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\GameManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\GameManager.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAADwv28AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T21:55:52.377Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BattleSetup.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleSetup.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BattleSetup.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleSetup.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\BattleSetup.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T21:55:45.961Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BattleManager.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BattleManager.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\BattleManager.cs",
+              "ViewState": "AgIAANwAAAAAAAAAAAAiwAMBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T21:55:41.314Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BattleLogic.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleLogic.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BattleLogic.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleLogic.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\BattleLogic.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAFUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T21:55:35.98Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AbilitySO.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\AbilitySO.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\AbilitySO.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\AbilitySO.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\AbilitySO.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAqwFgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-10T21:49:17.243Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9,9 +9,8 @@ public class GameManager : MonoBehaviour
     public List<Unit> playerUnits;
     public List<Unit> enemyUnits;
 
-    [SerializeField] private GameObject[] playerHealthBarPrefabs = new GameObject[3];
-    [SerializeField] private GameObject[] enemyHealthBarPrefabs = new GameObject[8];
-    public BattleTest BattleTest;
+    [SerializeField] private GameObject[] playerHealthBarPrefabs = new GameObject[4];
+    [SerializeField] private GameObject[] enemyHealthBarPrefabs = new GameObject[8];    
 
     public GameObject[] GetPlayerHealthBars() => playerHealthBarPrefabs;
     public GameObject[] GetEnemyHealthBars() => enemyHealthBarPrefabs;

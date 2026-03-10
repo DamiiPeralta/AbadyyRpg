@@ -70,25 +70,11 @@ public class BattleLogic : MonoBehaviour
             unit.unitView = unitView;
             unitView.SetUnit(unit);
 
-            // Valores de prueba simples (ajustar más tarde)
-            if (isPlayer)
-            {
-                unit.physicalDamage = 10;
-                unit.magicalDamage = 5;
-                unit.maxPhysicalArmor = 15;
-                unit.currentPhysicalArmor = 15;
-                unit.maxMagicalArmor = 8;
-                unit.currentMagicalArmor = 8;
-            }
-            else
-            {
-                unit.physicalDamage = 8;
-                unit.magicalDamage = 3;
-                unit.maxPhysicalArmor = 10;
-                unit.currentPhysicalArmor = 10;
-                unit.maxMagicalArmor = 5;
-                unit.currentMagicalArmor = 5;
-            }
+            // Reiniciar índice de habilidades por si el objeto se reutiliza en otra batalla
+            unit.ResetAbilities();
+
+            // Los valores de daño y armadura ahora se configuran en el prefab (UnitData).
+            // Si necesita ajustes dinámicos, se pueden aplicar aquí después de la creación.
 
             units.Add(unit);
             Debug.Log($"Unit instanciada: {unit.GetInfo()}");

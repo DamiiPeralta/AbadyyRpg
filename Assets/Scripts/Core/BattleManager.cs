@@ -25,6 +25,9 @@ public class BattleManager : MonoBehaviour
     {
         playerUnits = new List<Unit>(players);
         enemyUnits = new List<Unit>(enemies);
+        // reiniciar índices de habilidades en todas las unidades
+        foreach (var u in playerUnits) u.ResetAbilities();
+        foreach (var u in enemyUnits) u.ResetAbilities();
         battleActive = true;
         currentTurnIndex = 0;
         GameManager.SetHealthBars(playerUnits, enemyUnits);
@@ -71,22 +74,34 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        // Chequear efecto de "perdió turno"
+        if (currentUnit.skipNextTurn)
+        {
+            Debug.Log($"[SALTO] {currentUnit.unitName} está incapacitado y pierde este turno.");
+            currentUnit.skipNextTurn = false;
+            AdvanceTurn();
+            return;
+        }
+
         // Determinar si es unidad aliada o enemiga
         bool isPlayer = playerUnits.Contains(currentUnit);
-        List<Unit> targets = isPlayer ? enemyUnits : playerUnits;
+        List<Unit> allies = isPlayer ? playerUnits : enemyUnits;
+        List<Unit> enemies = isPlayer ? enemyUnits : playerUnits;
 
-        // Atacar al primer enemigo vivo
-        Unit target = GetFirstAliveTarget(targets);
-
-        
-
-        if (target != null)
+        // Elegir habilidad a usar
+        AbilitySO ability = currentUnit.GetNextAbility();
+        if (ability != null)
         {
-            PerformAttack(currentUnit, target);
+            ability.Execute(currentUnit, allies, enemies, this);
         }
         else
         {
-            Debug.Log("No hay objetivos vivos para atacar.");
+            // sin habilidades, comportamiento clásico: atacar al primer vivo
+            Unit target = GetFirstAliveTarget(enemies);
+            if (target != null)
+                PerformAttack(currentUnit, target);
+            else
+                Debug.Log("No hay objetivos vivos para atacar.");
         }
 
         // Avanzar al siguiente turno
@@ -110,17 +125,24 @@ public class BattleManager : MonoBehaviour
     // Realiza un ataque: atacante daña al objetivo con daño físico y mágico
     private void PerformAttack(Unit attacker, Unit target)
     {
+        PerformAttack(attacker, target, 1f);
+    }
+
+    // Overload que permite aplicar un multiplicador de daño
+    private void PerformAttack(Unit attacker, Unit target, float multiplier)
+    {
         // Visual: movimiento rápido del atacante al realizar el ataque
         if (attacker.unitView != null)
         {
             attacker.unitView.AttackMotion();
         }
 
-        // Usar daño físico y mágico del atacante
-        var (physArmorAbsorbed, magArmorAbsorbed, hpDamage) = target.TakeDamage(attacker.physicalDamage, attacker.magicalDamage);
+        int physAtk = Mathf.RoundToInt(attacker.physicalDamage * multiplier);
+        int magAtk = Mathf.RoundToInt(attacker.magicalDamage * multiplier);
+        var (physArmorAbsorbed, magArmorAbsorbed, hpDamage) = target.TakeDamage(physAtk, magAtk);
 
         Debug.Log($"⚔️ {attacker.unitName} ataca a {target.unitName}");
-        Debug.Log($"   Daño Físico: {attacker.physicalDamage} | Daño Mágico: {attacker.magicalDamage}");
+        Debug.Log($"   Daño Físico: {physAtk} | Daño Mágico: {magAtk}");
         Debug.Log($"   Armadura Física absorbió: {physArmorAbsorbed} | Armadura Mágica absorbió: {magArmorAbsorbed} | Daño a HP: {hpDamage}");
         Debug.Log($"   {target.GetInfo()}");
 
@@ -141,7 +163,7 @@ public class BattleManager : MonoBehaviour
     }
 
     // Actualiza la visualización de una unidad si tiene una vista asignada
-    private void UpdateUnitVisualsIfExists(Unit unit)
+    public void UpdateUnitVisualsIfExists(Unit unit)
     {
         if (unit.unitView != null)
         {
@@ -199,12 +221,18 @@ public class BattleManager : MonoBehaviour
         status += "Aliados:\n";
         foreach (Unit unit in playerUnits)
         {
-            status += $"  {unit.GetInfo()}\n";
+            status += $"  {unit.GetInfo()}";
+            if (unit.skipNextTurn)
+                status += " (saltará turno)";
+            status += "\n";
         }
         status += "\nEnemigos:\n";
         foreach (Unit unit in enemyUnits)
         {
-            status += $"  {unit.GetInfo()}\n";
+            status += $"  {unit.GetInfo()}";
+            if (unit.skipNextTurn)
+                status += " (saltará turno)";
+            status += "\n";
         }
         return status;
     }

@@ -99,6 +99,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b6bc97437b66a4fb47f5f0b8edbca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flashDuration: 0.25
+  shakeDuration: 0.25
+  shakeMagnitude: 0.1
+  attackDistance: 0.2
+  attackDuration: 0.25
 --- !u!114 &1236515076954360387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,9 +117,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Esqueleto
+  description: 
+  icon: {fileID: 0}
   maxHP: 30
   speed: 15
   baseDamage: 5
+  physicalDamage: 15
+  magicalDamage: 4
+  maxPhysicalArmor: 50
+  maxMagicalArmor: 0
+  startHP: -1
+  startPhysicalArmor: -1
+  startMagicalArmor: -1
+  abilities:
+  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
+  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
+  - {fileID: 11400000, guid: 82f1bd99dc8903241aa7492f61f273e8, type: 2}
 --- !u!114 &-2739415821537674471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,4 +146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 0}
+  nameText: {fileID: 0}
   healthText: {fileID: 0}
+  physicalArmorSlider: {fileID: 0}
+  magicalArmorSlider: {fileID: 0}
+  physicalArmorText: {fileID: 0}
+  magicalArmorText: {fileID: 0}

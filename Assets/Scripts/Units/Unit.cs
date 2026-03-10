@@ -9,13 +9,13 @@ public class Unit
     public int maxHP;                 // HP máximo
     public int currentHP;             // HP actual
     public int speed;                 // Velocidad (determina orden de turnos)
-    public int baseDamage;            // Daño base del ataque (deprecado)
+    public int baseDamage;            // Daño base del ataque (legacy, calculado como fis + mag si se usa)
     
-    // Daño físico y mágico
+    // Daño físico y mágico (editable desde inspector vía UnitData)
     public int physicalDamage;        // Daño físico del ataque
     public int magicalDamage;         // Daño mágico del ataque
 
-    // Estado mutable - Armaduras
+    // Armaduras
     public int maxPhysicalArmor;      // Armadura física máxima
     public int currentPhysicalArmor;  // Armadura física actual
     public int maxMagicalArmor;       // Armadura mágica máxima
@@ -25,9 +25,27 @@ public class Unit
     public bool isAlive;              // Estado de vida
     public UnitData unitData;         // Referencia a UnitSO (opcional)
     public UnitView unitView;         // Referencia a la visualización (opcional)
-    
+
+    // Sistema de habilidades
+    public List<AbilitySO> abilities = new List<AbilitySO>();
+    private int nextAbilityIndex = 0; // cual usar a continuación
+
+    // Efectos de estado simples
+    public bool skipNextTurn = false;
+
+    // Accede a la siguiente habilidad en la lista (y avanza el índice)
+    public AbilitySO GetNextAbility()
+    {
+        if (abilities == null || abilities.Count == 0)
+            return null;
+        AbilitySO ability = abilities[nextAbilityIndex];
+        nextAbilityIndex = (nextAbilityIndex + 1) % abilities.Count;
+        return ability;
+    }
+
     public Unit(string name, int hp, int spd, int dmg)
     {
+        // constructor simple, sigue existiendo por compatibilidad
         unitName = name;
         maxHP = hp;
         currentHP = hp;
@@ -58,6 +76,8 @@ public class Unit
         currentMagicalArmor = magArmor;
         isAlive = true;
     }
+
+    // Si en el futuro se necesitan valores de inicio diferentes al máximo se pueden ajustar después de crear la unidad
     // Obtiene el HP actual como porcentaje
     public float GetHPPercentage()
     {
@@ -114,11 +134,24 @@ public class Unit
     // Obtiene información de la unidad como string
     public string GetInfo()
     {
-        return $"{unitName} | HP: {currentHP}/{maxHP} | SPD: {speed} | Phys DMG: {physicalDamage} | Mag DMG: {magicalDamage} | Phys Armor: {currentPhysicalArmor}/{maxPhysicalArmor} | Mag Armor: {currentMagicalArmor}/{maxMagicalArmor}";
+        string info = $"{unitName} | HP: {currentHP}/{maxHP} | SPD: {speed} | Phys DMG: {physicalDamage} | Mag DMG: {magicalDamage} | Phys Armor: {currentPhysicalArmor}/{maxPhysicalArmor} | Mag Armor: {currentMagicalArmor}/{maxMagicalArmor}";
+        if (abilities != null && abilities.Count > 0)
+        {
+            info += " | Abilities:";
+            foreach (var a in abilities)
+                info += " " + a.abilityName;
+        }
+        return info;
     }
 
     // Métodos y responsabilidades para el futuro
     // -----------------------------------------------
+
+    // Resetea el índice de habilidades (útil al iniciar una batalla)
+    public void ResetAbilities()
+    {
+        nextAbilityIndex = 0;
+    }
 
     // Inicializa la unidad en combate a partir de UnitSO
     // - Crea instancias de Ability a partir de AbilitySO
