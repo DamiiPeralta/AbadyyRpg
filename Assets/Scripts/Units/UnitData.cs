@@ -1,55 +1,140 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Componente que va en cada prefab de unidad para almacenar sus datos
 public class UnitData : MonoBehaviour
 {
     [Header("Identidad")]
     public string unitName = "Unidad";
-    [TextArea]
-    public string description;
-    public Sprite icon;
+    [TextArea] public string description;
 
-    [Header("Estadísticas básicas")]
-    public int maxHP = 100;
-    public int speed = 10;
-    public int baseDamage = 10;   // todavía se puede usar si se necesita un valor general
+    [Header("Sprites")]
+    public Sprite icon;          // Retrato para UI
+    public Sprite battleSprite;  // Sprite visible en combate
 
-    [Header("Daño")]
-    public int physicalDamage = 10;
-    public int magicalDamage = 0;
+    [Header("Atributos")]
+    public int strength = 10;
+    public int dexterity = 10;
+    public int intelligence = 10;
+    public int constitution = 10;
 
-    [Header("Armaduras (total)")]
+    [Header("Progreso inicial")]
+    public int level = 1;
+    public int experience = 0;
+    public int maxStamina = 100;
+    public int startStamina = -1;
+    public int maxMana = 100;
+    public int startMana = -1;
+
+    [Header("Armaduras base")]
     public int maxPhysicalArmor = 0;
     public int maxMagicalArmor = 0;
 
-    [Header("Valores iniciales (opcional)")]
-    public int startHP = -1;               // si es -1 usaremos maxHP
-    public int startPhysicalArmor = -1;    // si es -1 usaremos maxPhysicalArmor
-    public int startMagicalArmor = -1;     // si es -1 usaremos maxMagicalArmor
+    [Header("Valores iniciales")]
+    public int startHP = -1;
+    public int startPhysicalArmor = -1;
+    public int startMagicalArmor = -1;
 
     [Header("Habilidades")]
     public List<AbilitySO> abilities = new List<AbilitySO>();
 
-    // Crea una instancia de Unit basada en estos datos
+    [Header("Tacticas")]
+    public List<TacticRule> tactics = new List<TacticRule>();
+
+    [Header("Equipo inicial")]
+    public EquipmentItem helmet;
+    public EquipmentItem chest;
+    public EquipmentItem feet;
+    public EquipmentItem hands;
+    public EquipmentItem rightHand;
+    public EquipmentItem leftHand;
+    public EquipmentItem ring;
+    public EquipmentItem amulet;
+
+    [Header("Consumibles iniciales")]
+    public ConsumableItem consumable1;
+    public ConsumableItem consumable2;
+
     public Unit CreateUnit()
     {
-        Unit unit = new Unit(unitName, maxHP, speed, physicalDamage, magicalDamage, maxPhysicalArmor, maxMagicalArmor);
+        Unit unit = new Unit(unitName);
 
-        // ajustar valores iniciales si se especificaron
+        unit.unitData = this;
+
+        unit.strength = strength;
+        unit.dexterity = dexterity;
+        unit.intelligence = intelligence;
+        unit.constitution = constitution;
+
+        unit.level = Mathf.Max(1, level);
+        unit.experience = Mathf.Max(0, experience);
+        unit.maxStamina = Mathf.Max(1, maxStamina);
+        unit.currentStamina = startStamina >= 0
+            ? Mathf.Clamp(startStamina, 0, unit.maxStamina)
+            : unit.maxStamina;
+        unit.maxMana = Mathf.Max(0, maxMana);
+        unit.currentMana = startMana >= 0
+            ? Mathf.Clamp(startMana, 0, unit.maxMana)
+            : unit.maxMana;
+
+        unit.baseMaxPhysicalArmor = maxPhysicalArmor;
+        unit.baseMaxMagicalArmor = maxMagicalArmor;
+
+        unit.EquipItem(helmet);
+        unit.EquipItem(chest);
+        unit.EquipItem(feet);
+        unit.EquipItem(hands);
+        unit.EquipItem(rightHand);
+        unit.EquipItem(leftHand);
+        unit.EquipItem(ring);
+        unit.EquipItem(amulet);
+
+        unit.RecalculateStats();
+
         if (startHP >= 0)
-            unit.currentHP = Mathf.Min(startHP, unit.maxHP);
-        if (startPhysicalArmor >= 0)
-            unit.currentPhysicalArmor = Mathf.Min(startPhysicalArmor, unit.maxPhysicalArmor);
-        if (startMagicalArmor >= 0)
-            unit.currentMagicalArmor = Mathf.Min(startMagicalArmor, unit.maxMagicalArmor);
+            unit.currentHP = Mathf.Clamp(startHP, 0, unit.maxHP);
+        else
+            unit.currentHP = unit.maxHP;
 
-        // copiar la lista de habilidades si hay alguna
+        if (unit.currentHP <= 0)
+            unit.isAlive = false;
+
+        if (startPhysicalArmor >= 0)
+            unit.currentPhysicalArmor = Mathf.Clamp(startPhysicalArmor, 0, unit.maxPhysicalArmor);
+        else
+            unit.currentPhysicalArmor = unit.maxPhysicalArmor;
+
+        if (startMagicalArmor >= 0)
+            unit.currentMagicalArmor = Mathf.Clamp(startMagicalArmor, 0, unit.maxMagicalArmor);
+        else
+            unit.currentMagicalArmor = unit.maxMagicalArmor;
+
         if (abilities != null && abilities.Count > 0)
-        {
             unit.abilities = new List<AbilitySO>(abilities);
+
+        if (tactics != null && tactics.Count > 0)
+        {
+            unit.tactics = new List<TacticRule>();
+
+            foreach (TacticRule tactic in tactics)
+            {
+                if (tactic != null)
+                    unit.tactics.Add(tactic.Clone());
+            }
         }
 
+        unit.consumable1 = consumable1;
+        unit.consumable2 = consumable2;
+
         return unit;
+    }
+
+    public void ClearRuntimeConsumable1()
+    {
+        consumable1 = null;
+    }
+
+    public void ClearRuntimeConsumable2()
+    {
+        consumable2 = null;
     }
 }

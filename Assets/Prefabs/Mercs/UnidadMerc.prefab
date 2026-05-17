@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3509436074151126141}
   - component: {fileID: 1390923297637423354}
   m_Layer: 0
-  m_Name: Unidad
+  m_Name: UnidadMerc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,12 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3092437677006040346}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3092437677006040344
 SpriteRenderer:
@@ -44,9 +45,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -58,6 +62,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -93,6 +98,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b6bc97437b66a4fb47f5f0b8edbca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 6977658439239612171, guid: be030e909c0726140a48ccb9e64891d0,
+    type: 3}
+  flashDuration: 0.25
+  shakeDuration: 0.25
+  shakeMagnitude: 0.1
+  attackDistance: 0.2
+  attackDuration: 0.25
+  healFloatDistance: 0.15
+  healDuration: 0.45
 --- !u!114 &1390923297637423354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,6 +120,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Unidad
+  description: 
+  icon: {fileID: 0}
   maxHP: 100
   speed: 10
   baseDamage: 10
+  physicalDamage: 10
+  magicalDamage: 0
+  maxPhysicalArmor: 0
+  maxMagicalArmor: 0
+  startHP: -1
+  startPhysicalArmor: -1
+  startMagicalArmor: -1
+  abilities: []

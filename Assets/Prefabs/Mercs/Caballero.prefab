@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 0.35011002, y: 0.40080407, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: -937215717, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,11 +99,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b6bc97437b66a4fb47f5f0b8edbca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableStatusPulse: 1
+  statusPulseInTime: 0.18
+  statusPulseHoldTime: 0.08
+  statusPulseOutTime: 0.18
+  statusPulseRestTime: 0.12
+  floatingTextPrefab: {fileID: 6977658439239612171, guid: be030e909c0726140a48ccb9e64891d0,
+    type: 3}
+  floatingTextDelay: 0.12
   flashDuration: 0.25
   shakeDuration: 0.25
   shakeMagnitude: 0.1
   attackDistance: 0.2
   attackDuration: 0.25
+  healFloatDistance: 0.15
+  healDuration: 0.45
 --- !u!114 &1390923297637423354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,22 +128,65 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Caballero
   description: 
-  icon: {fileID: 0}
-  maxHP: 150
-  speed: 20
-  baseDamage: 10
-  physicalDamage: 15
-  magicalDamage: 5
-  maxPhysicalArmor: 200
-  maxMagicalArmor: 80
+  icon: {fileID: 1520116757, guid: 05408f35652d4f041bc5bb1febd2a2de, type: 3}
+  battleSprite: {fileID: -937215717, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
+  strength: 10
+  dexterity: 10
+  intelligence: 10
+  constitution: 10
+  level: 1
+  experience: 0
+  maxStamina: 100
+  startStamina: -1
+  maxMana: 50
+  startMana: -1
+  maxPhysicalArmor: 0
+  maxMagicalArmor: 0
   startHP: -1
   startPhysicalArmor: -1
   startMagicalArmor: -1
   abilities:
-  - {fileID: 11400000, guid: 82f1bd99dc8903241aa7492f61f273e8, type: 2}
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
+  - {fileID: 11400000, guid: 5cf49471e696be0468893d65ae625678, type: 2}
+  - {fileID: 11400000, guid: 6d70147c79ca67847bad28ee151c02a8, type: 2}
+  - {fileID: 11400000, guid: 3b44ebd95f2de214e876e1ff09f4f95d, type: 2}
+  - {fileID: 11400000, guid: 774bfb5c8c698df438ed714fc0e0b1a2, type: 2}
+  - {fileID: 11400000, guid: ace9704a4d3d46b9be7a643295205042, type: 2}
+  tactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 4
+    thresholdPercent: 40
+    ability: {fileID: 11400000, guid: 6d70147c79ca67847bad28ee151c02a8, type: 2}
+  - priority: 2
+    isActive: 1
+    conditionType: 1
+    thresholdPercent: 45
+    ability: {fileID: 11400000, guid: 774bfb5c8c698df438ed714fc0e0b1a2, type: 2}
+  - priority: 3
+    isActive: 1
+    conditionType: 2
+    thresholdPercent: 50
+    ability: {fileID: 11400000, guid: 5cf49471e696be0468893d65ae625678, type: 2}
+  - priority: 4
+    isActive: 1
+    conditionType: 3
+    thresholdPercent: 60
+    ability: {fileID: 11400000, guid: ace9704a4d3d46b9be7a643295205042, type: 2}
+  - priority: 5
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 30
+    ability: {fileID: 11400000, guid: 3b44ebd95f2de214e876e1ff09f4f95d, type: 2}
+  helmet: {fileID: 0}
+  chest: {fileID: 11400000, guid: f0912c2daeeef064fa378a31a2438a83, type: 2}
+  feet: {fileID: 0}
+  hands: {fileID: 0}
+  rightHand: {fileID: 0}
+  leftHand: {fileID: 0}
+  ring: {fileID: 0}
+  amulet: {fileID: 0}
+  consumable1: {fileID: 11400000, guid: 7af7a9c5f8af8394fb0446f6d8e97673, type: 2}
+  consumable2: {fileID: 11400000, guid: 7af7a9c5f8af8394fb0446f6d8e97673, type: 2}
 --- !u!114 &6977133511550308768
 MonoBehaviour:
   m_ObjectHideFlags: 0

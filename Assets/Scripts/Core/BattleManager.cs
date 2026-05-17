@@ -1,145 +1,471 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 
-// Controla la secuencia completa de combate
 public class BattleManager : MonoBehaviour
 {
-    // Referencias a unidades en combate
-    public List<Unit> playerUnits;   // Mercenarios u aliados
-    public List<Unit> enemyUnits;    // Enemigos
+    public List<Unit> playerUnits;
+    public List<Unit> enemyUnits;
 
-    // Lista de turnos ordenados por velocidad
-    private List<Unit> turnOrder;
-    private int currentTurnIndex;
+    [Header("Setup de batalla")]
+    public BattleSetup battleSetup;
+    public PartyRuntimeState partyRuntimeState;
+
+    [Header("Turnos acumulativos")]
+    public int turnThreshold = 100;
+    public int maxTurnsPerRound = 20;
+
+    [Header("Taunt")]
+    public int frontMaxTaunt = 100;
+    public int backMaxTaunt = 80;
+    public int tauntDecayPerRound = 30;
+
+    private List<Unit> activeUnits = new List<Unit>();
+    private Queue<Unit> turnQueue = new Queue<Unit>();
+
+    [Header("UI Turnos")]
+    private List<Unit> currentRoundOrder = new List<Unit>();
+    private int currentTurnIndex = 0;
+    private bool cleanedRuntimeViews = false;
+
     public GameManager GameManager;
-
-    // Estado de combate
     public bool battleActive;
 
-    // --- INICIALIZACIÓN DE COMBATE ---
-
-    // Inicia el combate - ordena las unidades por velocidad
-    public void StartBattle(List<Unit> players, List<Unit> enemies)
+    public void StartBattleFromSetup()
     {
-        playerUnits = new List<Unit>(players);
-        enemyUnits = new List<Unit>(enemies);
-        // reiniciar índices de habilidades en todas las unidades
-        foreach (var u in playerUnits) u.ResetAbilities();
-        foreach (var u in enemyUnits) u.ResetAbilities();
-        battleActive = true;
-        currentTurnIndex = 0;
-        GameManager.SetHealthBars(playerUnits, enemyUnits);
-
-        // Crear el orden de turnos basado en velocidad (de mayor a menor)
-        turnOrder = new List<Unit>();
-        turnOrder.AddRange(playerUnits);
-        turnOrder.AddRange(enemyUnits);
-        turnOrder = turnOrder.OrderByDescending(unit => unit.speed).ToList();
-
-        
-
-        Debug.Log("=== BATALLA INICIADA ===");
-        Debug.Log("Orden de turnos:");
-        for (int i = 0; i < turnOrder.Count; i++)
+        if (battleSetup == null)
         {
-            Debug.Log($"{i + 1}. {turnOrder[i].GetInfo()}");
+            Debug.LogError("BattleManager: battleSetup no asignado.");
+            return;
         }
-        Debug.Log("=======================\n");
+
+        if (GameRunState.Instance != null)
+        {
+            Debug.Log("BattleManager: GameRunState detectado.");
+            Debug.Log($"BattleManager: currentBattleGroupId = {GameRunState.Instance.currentBattleGroupId}");
+            Debug.Log($"BattleManager: returnNodeId = {GameRunState.Instance.returnNodeId}");
+        }
+        else
+        {
+            Debug.LogWarning("BattleManager: no hay GameRunState.Instance. ¿Entraste directo a BattleScene?");
+        }
+
+        partyRuntimeState = PartyRuntimeState.Instance;
+
+        if (partyRuntimeState == null)
+        {
+            Debug.LogError("BattleManager: no existe PartyRuntimeState.Instance. Entrá al combate desde WorldMapScene, no directo desde BattleScene.");
+            return;
+        }
+
+        if (!partyRuntimeState.HasParty())
+        {
+            Debug.LogError("BattleManager: PartyRuntimeState existe, pero no tiene party. Inicializala desde WorldMapScene antes de entrar a combate.");
+            return;
+        }
+
+        List<Unit> players = partyRuntimeState.GetCurrentParty();
+
+        Debug.Log($"BattleManager: party cargada desde runtime. Cantidad aliados = {players.Count}");
+
+        AttachPlayerViews(players);
+
+        List<Unit> enemies = CreateEnemyUnitsFromSetup();
+
+        Debug.Log($"BattleManager: enemigos creados. Cantidad enemigos = {enemies.Count}");
+
+        StartBattle(players, enemies);
     }
 
-    // --- EJECUCIÓN DE TURNOS ---
+    private void AttachPlayerViews(List<Unit> players)
+    {
+        if (players == null || battleSetup == null)
+            return;
 
-    // Ejecuta un turno completo - obtiene la unidad actual y la hace atacar
+        int count = Mathf.Min(
+            players.Count,
+            Mathf.Min(battleSetup.allyPrefabs.Count, battleSetup.allyPositions.Count)
+        );
+
+        for (int i = 0; i < count; i++)
+        {
+            Unit unit = players[i];
+            GameObject prefab = battleSetup.allyPrefabs[i];
+            Transform pos = battleSetup.allyPositions[i];
+
+            if (unit == null || prefab == null || pos == null)
+                continue;
+
+            unit.unitView = null;
+
+            GameObject instanceGO = Instantiate(prefab, pos.position, Quaternion.identity, pos.parent);
+
+            UnitView unitView = instanceGO.GetComponent<UnitView>();
+            if (unitView == null)
+            {
+                SpriteRenderer sr = instanceGO.GetComponent<SpriteRenderer>();
+                if (sr == null)
+                    sr = instanceGO.AddComponent<SpriteRenderer>();
+
+                unitView = instanceGO.AddComponent<UnitView>();
+            }
+
+            unit.unitView = unitView;
+            unitView.SetUnit(unit);
+        }
+    }
+
+    private List<Unit> CreateEnemyUnitsFromSetup()
+    {
+        List<Unit> enemies = new List<Unit>();
+
+        if (battleSetup == null)
+        {
+            Debug.LogError("BattleManager: battleSetup es null al crear enemigos.");
+            return enemies;
+        }
+
+        List<GameObject> enemiesToSpawn = battleSetup.enemyPrefabs;
+
+        if (GameRunState.Instance != null && !string.IsNullOrWhiteSpace(GameRunState.Instance.currentBattleGroupId))
+        {
+            string requestedGroupId = GameRunState.Instance.currentBattleGroupId;
+
+            Debug.Log($"BattleManager: intentando cargar grupo enemigo: {requestedGroupId}");
+
+            List<GameObject> groupPrefabs = battleSetup.GetEnemyPrefabsForGroup(requestedGroupId);
+
+            if (groupPrefabs != null && groupPrefabs.Count > 0)
+            {
+                enemiesToSpawn = groupPrefabs;
+                Debug.Log($"BattleManager: grupo {requestedGroupId} encontrado con {groupPrefabs.Count} enemigos.");
+            }
+            else
+            {
+                Debug.LogWarning($"BattleManager: grupo {requestedGroupId} no encontrado o vacío. Usando enemigos por defecto.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("BattleManager: no hay GameRunState o currentBattleGroupId. Usando enemigos por defecto.");
+        }
+
+        int count = Mathf.Min(
+            enemiesToSpawn != null ? enemiesToSpawn.Count : 0,
+            battleSetup.enemyPositions != null ? battleSetup.enemyPositions.Count : 0
+        );
+
+        Debug.Log($"BattleManager: enemiesToSpawn = {(enemiesToSpawn != null ? enemiesToSpawn.Count : 0)}, enemyPositions = {(battleSetup.enemyPositions != null ? battleSetup.enemyPositions.Count : 0)}, count final = {count}");
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject prefab = enemiesToSpawn[i];
+            Transform pos = battleSetup.enemyPositions[i];
+
+            if (prefab == null)
+            {
+                Debug.LogWarning($"BattleManager: prefab enemigo en índice {i} es null.");
+                continue;
+            }
+
+            if (pos == null)
+            {
+                Debug.LogWarning($"BattleManager: posición enemiga en índice {i} es null.");
+                continue;
+            }
+
+            GameObject instanceGO = Instantiate(prefab, pos.position, Quaternion.identity, pos.parent);
+
+            UnitData unitData = instanceGO.GetComponent<UnitData>();
+            if (unitData == null)
+            {
+                Debug.LogWarning($"BattleManager: enemigo {prefab.name} no tiene UnitData.");
+                continue;
+            }
+
+            Unit unit = unitData.CreateUnit();
+
+            UnitView unitView = instanceGO.GetComponent<UnitView>();
+            if (unitView == null)
+            {
+                SpriteRenderer sr = instanceGO.GetComponent<SpriteRenderer>();
+                if (sr == null)
+                    sr = instanceGO.AddComponent<SpriteRenderer>();
+
+                unitView = instanceGO.AddComponent<UnitView>();
+            }
+
+            unit.unitView = unitView;
+            unitView.SetUnit(unit);
+
+            enemies.Add(unit);
+
+            Debug.Log($"BattleManager: enemigo creado: {unit.unitName}");
+        }
+
+        return enemies;
+    }
+
+    public void StartBattle(List<Unit> players, List<Unit> enemies)
+    {
+        cleanedRuntimeViews = false;
+
+        playerUnits = new List<Unit>(players);
+        enemyUnits = new List<Unit>(enemies);
+
+        foreach (var u in playerUnits)
+        {
+            u.ResetAbilities();
+            u.ResetTurnMeter();
+            u.ResetTaunt();
+            u.frontMaxTaunt = frontMaxTaunt;
+            u.backMaxTaunt = backMaxTaunt;
+            u.RecalculateStats();
+        }
+
+        foreach (var u in enemyUnits)
+        {
+            u.ResetAbilities();
+            u.ResetTurnMeter();
+            u.ResetTaunt();
+            u.frontMaxTaunt = frontMaxTaunt;
+            u.backMaxTaunt = backMaxTaunt;
+            u.RecalculateStats();
+        }
+
+        battleActive = true;
+
+        if (GameManager != null)
+            GameManager.SetHealthBars(playerUnits, enemyUnits);
+
+        BuildTurnQueue();
+
+        Debug.Log("=== BATALLA INICIADA ===");
+        Debug.Log(GetBattleStatus());
+    }
+
+    private void BuildTurnQueue()
+    {
+        ApplyRoundTauntDecay();
+
+        activeUnits.Clear();
+        turnQueue.Clear();
+
+        activeUnits.AddRange(playerUnits.Where(u => u != null && u.isAlive));
+        activeUnits.AddRange(enemyUnits.Where(u => u != null && u.isAlive));
+
+        int safety = 0;
+
+        while (turnQueue.Count < maxTurnsPerRound && activeUnits.Count > 0 && safety < 10000)
+        {
+            foreach (Unit unit in activeUnits)
+            {
+                if (unit == null || !unit.isAlive)
+                    continue;
+
+                unit.RecalculateStats();
+                unit.turnMeter += unit.speed;
+            }
+
+            List<Unit> readyUnits = activeUnits
+                .Where(u => u != null && u.isAlive && u.turnMeter >= turnThreshold)
+                .OrderByDescending(u => u.turnMeter)
+                .ThenByDescending(u => u.speed)
+                .ToList();
+
+            foreach (Unit unit in readyUnits)
+            {
+                if (turnQueue.Count >= maxTurnsPerRound)
+                    break;
+
+                unit.turnMeter -= turnThreshold;
+                turnQueue.Enqueue(unit);
+            }
+
+            safety++;
+        }
+
+        if (safety >= 10000)
+            Debug.LogWarning("BuildTurnQueue llegó al límite de seguridad.");
+
+        currentRoundOrder = turnQueue.ToList();
+        currentTurnIndex = 0;
+
+        Debug.Log("=== NUEVA RONDA DE TURNOS ===");
+
+        int index = 1;
+        foreach (Unit unit in currentRoundOrder)
+        {
+            Debug.Log($"{index}. {unit.unitName} | SPD: {unit.speed} | Meter restante: {unit.turnMeter} | Taunt {unit.currentTaunt}/{unit.CurrentMaxTaunt}");
+            index++;
+        }
+    }
+
+    private void ApplyRoundTauntDecay()
+    {
+        if (playerUnits != null)
+        {
+            foreach (Unit unit in playerUnits)
+            {
+                if (unit != null && unit.isAlive)
+                    unit.DecayTaunt(tauntDecayPerRound);
+            }
+        }
+
+        if (enemyUnits != null)
+        {
+            foreach (Unit unit in enemyUnits)
+            {
+                if (unit != null && unit.isAlive)
+                    unit.DecayTaunt(tauntDecayPerRound);
+            }
+        }
+    }
+
     public void ExecuteTurn()
     {
         if (!battleActive)
             return;
 
-        // Obtener la unidad cuyo turno es
-        Unit currentUnit = turnOrder[currentTurnIndex];
+        CheckBattleEnd();
 
-        // Visual: indicar que es el turno de esta unidad
-        if (currentUnit.unitView != null)
-        {
-            currentUnit.unitView.FlashTurn();
-        }
+        if (!battleActive)
+            return;
 
-        // Si la unidad no está viva, saltar su turno
-        if (!currentUnit.isAlive)
+        if (turnQueue == null || turnQueue.Count == 0)
+            BuildTurnQueue();
+
+        if (turnQueue.Count == 0)
         {
-            Debug.Log($"[SALTO] {currentUnit.unitName} está muerto.");
-            AdvanceTurn();
+            CheckBattleEnd();
             return;
         }
 
-        // Chequear efecto de "perdió turno"
+        Unit currentUnit = turnQueue.Dequeue();
+
+        currentTurnIndex++;
+
+        if (currentUnit == null || !currentUnit.isAlive)
+        {
+            CheckBattleEnd();
+            return;
+        }
+
+        ExecuteUnitTurn(currentUnit);
+
+        CheckBattleEnd();
+
+        if (!battleActive)
+            return;
+
+        if (turnQueue.Count == 0)
+            BuildTurnQueue();
+    }
+
+    private void ExecuteUnitTurn(Unit currentUnit)
+    {
+        currentUnit.RecalculateStats();
+
+        currentUnit.ProcessStatusEffects();
+
+        if (!currentUnit.isAlive)
+        {
+            UpdateUnitVisualsIfExists(currentUnit);
+            return;
+        }
+
+        if (currentUnit.unitView != null)
+            currentUnit.unitView.FlashTurn();
+
         if (currentUnit.skipNextTurn)
         {
             Debug.Log($"[SALTO] {currentUnit.unitName} está incapacitado y pierde este turno.");
             currentUnit.skipNextTurn = false;
-            AdvanceTurn();
             return;
         }
 
-        // Determinar si es unidad aliada o enemiga
         bool isPlayer = playerUnits.Contains(currentUnit);
+
         List<Unit> allies = isPlayer ? playerUnits : enemyUnits;
         List<Unit> enemies = isPlayer ? enemyUnits : playerUnits;
 
-        // Elegir habilidad a usar
-        AbilitySO ability = currentUnit.GetNextAbility();
+        bool usedConsumable = ConsumableResolver.TryUseFirstValidConsumable(
+            currentUnit,
+            allies,
+            enemies,
+            this
+        );
+
+        if (usedConsumable)
+            return;
+
+        AbilitySO ability = currentUnit.GetAbilityForTurn(allies, enemies, this);
+
         if (ability != null)
         {
+            if (currentUnit.unitView != null)
+                currentUnit.unitView.AttackMotion();
+
             ability.Execute(currentUnit, allies, enemies, this);
         }
         else
         {
-            // sin habilidades, comportamiento clásico: atacar al primer vivo
-            Unit target = GetFirstAliveTarget(enemies);
+            Unit target = isPlayer ? GetFirstAliveTarget(enemies) : GetHighestTauntTarget(enemies);
+
             if (target != null)
                 PerformAttack(currentUnit, target);
             else
                 Debug.Log("No hay objetivos vivos para atacar.");
         }
-
-        // Avanzar al siguiente turno
-        AdvanceTurn();
-
-        // Verificar si el combate terminó
-        CheckBattleEnd();
     }
 
-    // Obtiene el primer objetivo vivo de una lista
     private Unit GetFirstAliveTarget(List<Unit> targets)
     {
         foreach (Unit unit in targets)
         {
-            if (unit.isAlive)
+            if (unit != null && unit.isAlive)
                 return unit;
         }
+
         return null;
     }
 
-    // Realiza un ataque: atacante daña al objetivo con daño físico y mágico
+    private Unit GetHighestTauntTarget(List<Unit> targets)
+    {
+        return targets
+            .Where(u => u != null && u.isAlive)
+            .OrderByDescending(u => u.TotalTaunt)
+            .ThenByDescending(u => u.currentHP)
+            .FirstOrDefault();
+    }
+
     private void PerformAttack(Unit attacker, Unit target)
     {
         PerformAttack(attacker, target, 1f);
     }
 
-    // Overload que permite aplicar un multiplicador de daño
     private void PerformAttack(Unit attacker, Unit target, float multiplier)
     {
-        // Visual: movimiento rápido del atacante al realizar el ataque
         if (attacker.unitView != null)
-        {
             attacker.unitView.AttackMotion();
+
+        int physAtk = Mathf.RoundToInt(attacker.RollPhysicalDamage() * multiplier);
+        int magAtk = Mathf.RoundToInt(attacker.RollMagicalDamage() * multiplier);
+
+        var (physArmorAbsorbed, magArmorAbsorbed, hpDamage) = target.TakeDamage(physAtk, magAtk);
+
+        if (target.unitView != null)
+        {
+            target.unitView.ShowDamageBreakdown(physArmorAbsorbed, magArmorAbsorbed, hpDamage);
+            target.unitView.FlashHit(Color.white);
+            target.unitView.ShakeOnHit();
         }
 
-        int physAtk = Mathf.RoundToInt(attacker.physicalDamage * multiplier);
-        int magAtk = Mathf.RoundToInt(attacker.magicalDamage * multiplier);
-        var (physArmorAbsorbed, magArmorAbsorbed, hpDamage) = target.TakeDamage(physAtk, magAtk);
+        bool attackerIsPlayer = playerUnits.Contains(attacker);
+
+        if (attackerIsPlayer)
+            attacker.AddTaunt(30);
 
         Debug.Log($"⚔️ {attacker.unitName} ataca a {target.unitName}");
         Debug.Log($"   Daño Físico: {physAtk} | Daño Mágico: {magAtk}");
@@ -147,113 +473,123 @@ public class BattleManager : MonoBehaviour
         Debug.Log($"   {target.GetInfo()}");
 
         if (!target.isAlive)
-        {
-            Debug.Log($"💀 {target.unitName} ha sido derrotado.\n");
-        }
+            Debug.Log($"💀 {target.unitName} ha sido derrotado.");
 
-        // Visual: destello y sacudida en el objetivo atacado
-        if (target.unitView != null)
-        {
-            target.unitView.FlashHit();
-            target.unitView.ShakeOnHit();
-        }
-
-        // Actualizar visualización de la unidad atacada
         UpdateUnitVisualsIfExists(target);
     }
 
-    // Actualiza la visualización de una unidad si tiene una vista asignada
     public void UpdateUnitVisualsIfExists(Unit unit)
     {
-        if (unit.unitView != null)
-        {
+        if (unit != null && unit.unitView != null)
             unit.unitView.UpdateVisuals();
-        }
     }
 
-    // Avanza al siguiente turno
-    private void AdvanceTurn()
-    {
-        currentTurnIndex++;
-        if (currentTurnIndex >= turnOrder.Count)
-            currentTurnIndex = 0;
-    }
-
-    // --- VERIFICACIÓN DE FIN DE COMBATE ---
-
-    // Verifica si el combate terminó
     public void CheckBattleEnd()
     {
-        bool playerAlive = playerUnits.Any(u => u.isAlive);
-        bool enemiesAlive = enemyUnits.Any(u => u.isAlive);
+        bool playerAlive = playerUnits.Any(u => u != null && u.isAlive);
+        bool enemiesAlive = enemyUnits.Any(u => u != null && u.isAlive);
 
         if (!playerAlive)
-        {
             EndBattle(false);
-        }
         else if (!enemiesAlive)
-        {
             EndBattle(true);
-        }
     }
 
-    // Termina el combate
     private void EndBattle(bool playerWon)
     {
         battleActive = false;
+        turnQueue.Clear();
+
+        currentRoundOrder.Clear();
+        currentTurnIndex = 0;
+
+        CleanupRuntimePartyViews();
 
         if (playerWon)
-        {
             Debug.Log("\n🎉 ¡EL JUGADOR HA GANADO!\n");
+        else
+            Debug.Log("\n💀 ¡LOS ENEMIGOS HAN GANADO!\n");
+
+        if (GameRunState.Instance != null && !string.IsNullOrWhiteSpace(GameRunState.Instance.returnSceneName))
+        {
+            GameRunState.Instance.RegisterCombatResult(playerWon);
+
+            Debug.Log($"BattleManager: volviendo a escena {GameRunState.Instance.returnSceneName}");
+
+            SceneManager.LoadScene(GameRunState.Instance.returnSceneName);
         }
         else
         {
-            Debug.Log("\n💀 ¡LOS ENEMIGOS HAN GANADO!\n");
+            Debug.Log("BattleManager: combate terminado sin GameRunState. No se cambia de escena.");
         }
     }
 
-    // --- MÉTODOS AUXILIARES ---
+    private void CleanupRuntimePartyViews()
+    {
+        if (cleanedRuntimeViews)
+            return;
 
-    // Obtiene el estado actual de la batalla
+        cleanedRuntimeViews = true;
+
+        if (partyRuntimeState != null)
+            partyRuntimeState.ClearSceneViews();
+    }
+
+    private void OnDestroy()
+    {
+        CleanupRuntimePartyViews();
+    }
+
+    public List<Unit> GetCurrentRoundOrder()
+    {
+        return currentRoundOrder;
+    }
+
+    public int GetCurrentTurnIndex()
+    {
+        return currentTurnIndex;
+    }
+
     public string GetBattleStatus()
     {
         string status = "=== ESTADO DE LA BATALLA ===\n";
+
         status += "Aliados:\n";
         foreach (Unit unit in playerUnits)
         {
             status += $"  {unit.GetInfo()}";
+
             if (unit.skipNextTurn)
                 status += " (saltará turno)";
+
             status += "\n";
         }
+
         status += "\nEnemigos:\n";
         foreach (Unit unit in enemyUnits)
         {
             status += $"  {unit.GetInfo()}";
+
             if (unit.skipNextTurn)
                 status += " (saltará turno)";
+
             status += "\n";
         }
+
         return status;
     }
 
-    // Ejecuta la batalla automática completa
     public void AutomateBattle()
     {
         StartCoroutine(AutomateBattleCoroutine());
     }
 
-    // Corrutina que ejecuta la batalla con delays entre turnos
     private System.Collections.IEnumerator AutomateBattleCoroutine()
     {
         while (battleActive)
         {
             ExecuteTurn();
-            yield return new WaitForSeconds(1f);  // Espera 0.5 segundos entre turnos
+            yield return new WaitForSeconds(1f);
         }
     }
-
-    // Métodos opcionales para futuro:
-    // - Pausar o reanudar combate
-    // - Eventos para UI (turno actual, daño recibido, habilidades usadas)
 }

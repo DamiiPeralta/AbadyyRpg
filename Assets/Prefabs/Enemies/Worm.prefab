@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8734975799873128954
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: icon
+      value: 
+      objectReference: {fileID: 1233016105, guid: 05408f35652d4f041bc5bb1febd2a2de,
+        type: 3}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: strength
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: unitName
+      value: Gusano
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: dexterity
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: description
+      value: Lento, resistente y venenoso.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: battleSprite
+      value: 
+      objectReference: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba,
+        type: 3}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: constitution
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: intelligence
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: maxMagicalArmor
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: maxPhysicalArmor
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: abilities.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: abilities.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: c7383422933d10743b7cc0ab1b264c8d,
+        type: 2}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: abilities.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: fa506be699f112d41950d7a602948630,
+        type: 2}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.38352543
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.500859
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765729, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba,
+        type: 3}
+    - target: {fileID: 2922832967602765731, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_Name
+      value: Worm
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f5f7922e992504e4c86a4c853ac8cc7a, type: 3}

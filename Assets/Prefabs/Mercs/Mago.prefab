@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 0.3836674, y: 0.4104751, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: -904128199, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,11 +99,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b6bc97437b66a4fb47f5f0b8edbca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableStatusPulse: 1
+  statusPulseInTime: 0.18
+  statusPulseHoldTime: 0.08
+  statusPulseOutTime: 0.18
+  statusPulseRestTime: 0.12
+  floatingTextPrefab: {fileID: 6977658439239612171, guid: be030e909c0726140a48ccb9e64891d0,
+    type: 3}
+  floatingTextDelay: 0.12
   flashDuration: 0.25
   shakeDuration: 0.25
   shakeMagnitude: 0.1
   attackDistance: 0.2
   attackDuration: 0.25
+  healFloatDistance: 0.15
+  healDuration: 0.45
 --- !u!114 &1390923297637423354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,23 +127,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Mago
-  description: 
-  icon: {fileID: 0}
-  maxHP: 100
-  speed: 25
-  baseDamage: 5
-  physicalDamage: 2
-  magicalDamage: 30
-  maxPhysicalArmor: 80
-  maxMagicalArmor: 200
+  description: Soporte principal. Prioriza curacion y proteccion, con dano magico secundario.
+  icon: {fileID: -382313971, guid: 05408f35652d4f041bc5bb1febd2a2de, type: 3}
+  battleSprite: {fileID: -904128199, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
+  strength: 4
+  dexterity: 10
+  intelligence: 20
+  constitution: 9
+  level: 1
+  experience: 0
+  maxStamina: 80
+  startStamina: -1
+  maxMana: 120
+  startMana: -1
+  maxPhysicalArmor: 6
+  maxMagicalArmor: 35
   startHP: -1
   startPhysicalArmor: -1
   startMagicalArmor: -1
   abilities:
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
-  - {fileID: 11400000, guid: c04c4ee73bff0cd4881adce6aedfef79, type: 2}
-  - {fileID: 11400000, guid: c04c4ee73bff0cd4881adce6aedfef79, type: 2}
+  - {fileID: 11400000, guid: 18e9caa04d42d1745b9aff0936828662, type: 2}
+  - {fileID: 11400000, guid: 467cc4eda6c74b618f8a8b53f58c3eb1, type: 2}
+  - {fileID: 11400000, guid: ad0710fd8de43984f8300a2d28dc06cb, type: 2}
+  - {fileID: 11400000, guid: 11143d64ee110c048811811744fadc5e, type: 2}
+  tactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 2
+    thresholdPercent: 70
+    ability: {fileID: 11400000, guid: 18e9caa04d42d1745b9aff0936828662, type: 2}
+  - priority: 2
+    isActive: 1
+    conditionType: 5
+    thresholdPercent: 60
+    ability: {fileID: 11400000, guid: 467cc4eda6c74b618f8a8b53f58c3eb1, type: 2}
+  - priority: 3
+    isActive: 1
+    conditionType: 3
+    thresholdPercent: 45
+    ability: {fileID: 11400000, guid: 11143d64ee110c048811811744fadc5e, type: 2}
+  - priority: 4
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 30
+    ability: {fileID: 11400000, guid: ad0710fd8de43984f8300a2d28dc06cb, type: 2}
+  helmet: {fileID: 0}
+  chest: {fileID: 11400000, guid: b48078ac433af594980e9a92f1001eb0, type: 2}
+  feet: {fileID: 0}
+  hands: {fileID: 0}
+  rightHand: {fileID: 0}
+  leftHand: {fileID: 0}
+  ring: {fileID: 0}
+  amulet: {fileID: 0}
+  consumable1: {fileID: 0}
+  consumable2: {fileID: 0}
 --- !u!114 &5207341882014273214
 MonoBehaviour:
   m_ObjectHideFlags: 0

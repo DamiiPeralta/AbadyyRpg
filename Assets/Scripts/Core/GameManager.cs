@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public List<Unit> enemyUnits;
 
     [SerializeField] private GameObject[] playerHealthBarPrefabs = new GameObject[4];
-    [SerializeField] private GameObject[] enemyHealthBarPrefabs = new GameObject[8];    
+    [SerializeField] private GameObject[] enemyHealthBarPrefabs = new GameObject[8];
 
     public GameObject[] GetPlayerHealthBars() => playerHealthBarPrefabs;
     public GameObject[] GetEnemyHealthBars() => enemyHealthBarPrefabs;
@@ -20,10 +20,14 @@ public class GameManager : MonoBehaviour
         playerUnits = new List<Unit>();
         enemyUnits = new List<Unit>();
     }
+
     public void SetHealthBars(List<Unit> playerUnitsList, List<Unit> enemyUnitsList)
     {
         playerUnits = playerUnitsList;
         enemyUnits = enemyUnitsList;
+
+        ClearHealthBarPanels(playerHealthBarPrefabs);
+        ClearHealthBarPanels(enemyHealthBarPrefabs);
 
         if (playerHealthBarPrefabs == null || playerHealthBarPrefabs.Length == 0)
         {
@@ -41,6 +45,7 @@ public class GameManager : MonoBehaviour
         {
             if (i < playerHealthBarPrefabs.Length && playerHealthBarPrefabs[i] != null)
             {
+                playerHealthBarPrefabs[i].SetActive(true);
                 SetupHealthBar(playerHealthBarPrefabs[i], playerUnits[i], "Player");
             }
         }
@@ -49,26 +54,43 @@ public class GameManager : MonoBehaviour
         {
             if (i < enemyHealthBarPrefabs.Length && enemyHealthBarPrefabs[i] != null)
             {
+                enemyHealthBarPrefabs[i].SetActive(true);
                 SetupHealthBar(enemyHealthBarPrefabs[i], enemyUnits[i], "Enemy");
             }
         }
     }
 
+    private void ClearHealthBarPanels(GameObject[] panels)
+    {
+        if (panels == null)
+            return;
+
+        foreach (GameObject panel in panels)
+        {
+            if (panel != null)
+                panel.SetActive(false);
+        }
+    }
+
     private void SetupHealthBar(GameObject healthBarPrefab, Unit unit, string type)
     {
-        // Buscar el UnitHealthBar en la unidad (en unitView)
+        if (healthBarPrefab == null || unit == null)
+            return;
+
         UnitHealthBar healthBar = unit.unitView.GetComponent<UnitHealthBar>();
+
         if (healthBar == null)
         {
             Debug.LogWarning($"Unit {unit.unitName} ({type}) no tiene componente UnitHealthBar en unitView");
             return;
         }
 
-        // Si el prefab tiene HealthBarUI, usarlo (más claro para el diseñador)
         HealthBarUI ui = healthBarPrefab.GetComponent<HealthBarUI>();
+
         if (ui != null)
         {
             bool ok = ui.ApplyTo(healthBar, unit);
+
             if (ok)
             {
                 Debug.Log($"HealthBar {type} (HealthBarUI) configurado para {unit.unitName}");
@@ -80,8 +102,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Fallback: buscar componentes manualmente en el prefab
         Slider slider = healthBarPrefab.GetComponentInChildren<Slider>();
+
         if (slider == null)
         {
             Debug.LogWarning($"HealthBar prefab {type} no tiene Slider");
@@ -89,6 +111,7 @@ public class GameManager : MonoBehaviour
         }
 
         TextMeshProUGUI[] allTexts = healthBarPrefab.GetComponentsInChildren<TextMeshProUGUI>();
+
         if (allTexts.Length < 2)
         {
             Debug.LogWarning($"HealthBar prefab {type} no tiene al menos 2 TextMeshProUGUI. Encontrados: {allTexts.Length}");
@@ -106,6 +129,4 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"HealthBar {type} configurado para {unit.unitName} (fallback)");
     }
-
-    
 }

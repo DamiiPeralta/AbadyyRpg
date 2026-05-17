@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a4e023d4922bc24094b1811fb187a3d, type: 3}
+  m_Name: Potion_Health
+  m_EditorClassIdentifier: 
+  itemId: Potion_Health
+  itemName: "Poci\xF3n de Vida"
+  description: "Se usa autom\xE1ticamente si la vida est\xE1 por debajo del 30%."
+  icon: {fileID: 0}
+  itemType: 2
+  effects:
+  - effectType: 1
+    statType: 0
+    value: 30
+    isPercent: 0
+  useCondition: 2
+  hpThreshold: 0.3
+  consumableEffectType: 1
+  value: 30
+  statusEffectType: 0
+  statusDuration: 1
+  statusValue: 0

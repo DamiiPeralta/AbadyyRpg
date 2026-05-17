@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8ac264951cb1445932ba696c003d5a, type: 3}
+  m_Name: Iron_Greatsword
+  m_EditorClassIdentifier: 
+  itemId: Iron_Greatsword
+  itemName: Iron Greatsword
+  description: A weighty iron greatsword with high physical impact.
+  icon: {fileID: -30888976, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
+  itemType: 0
+  sellValue: 38
+  effects: []
+  slot: 4
+  levelRequirement: 1
+  weaponType: 1
+  physicalDamageMin: 20
+  physicalDamageMax: 30
+  magicalDamageMin: 0
+  magicalDamageMax: 3

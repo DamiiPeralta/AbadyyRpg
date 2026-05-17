@@ -99,11 +99,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b6bc97437b66a4fb47f5f0b8edbca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 6977658439239612171, guid: be030e909c0726140a48ccb9e64891d0,
+    type: 3}
+  floatingTextDelay: 0.12
   flashDuration: 0.25
   shakeDuration: 0.25
   shakeMagnitude: 0.1
   attackDistance: 0.2
   attackDuration: 0.25
+  healFloatDistance: 0.15
+  healDuration: 0.45
 --- !u!114 &1236515076954360387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,9 +135,9 @@ MonoBehaviour:
   startPhysicalArmor: -1
   startMagicalArmor: -1
   abilities:
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
-  - {fileID: 11400000, guid: 09919a22bf6a77b4abc22a4eed550474, type: 2}
+  - {fileID: 11400000, guid: 5f6ee545098c8454aa937c9ca3124c51, type: 2}
+  - {fileID: 11400000, guid: 5f6ee545098c8454aa937c9ca3124c51, type: 2}
+  - {fileID: 11400000, guid: 5f6ee545098c8454aa937c9ca3124c51, type: 2}
 --- !u!114 &-8221624514242226380
 MonoBehaviour:
   m_ObjectHideFlags: 0

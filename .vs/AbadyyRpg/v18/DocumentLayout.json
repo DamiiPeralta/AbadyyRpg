@@ -3,24 +3,80 @@
   "WorkspaceRootPath": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\worldmap\\connections\\partysetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\worldmap\\connections\\partysetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\battlesetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\battlesetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\partyinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\partyinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\battlemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\caravan\\caravanmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\caravan\\caravanmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\core\\battlemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\battlemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\battlelogic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\battlelogic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\worldmap\\managers\\worldmapmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\worldmap\\managers\\worldmapmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|c:\\users\\hanzoamadordechancha\\desktop\\proyectos\\abadyyrpg\\assets\\scripts\\core\\abilityso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\abilityso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\items\\inventoryruntimestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\items\\inventoryruntimestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\reward\\rewardapplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\reward\\rewardapplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\worldmap\\managers\\gamerunstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\worldmap\\managers\\gamerunstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\worldmap\\connections\\worldmapevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\worldmap\\connections\\worldmapevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\worldmap\\nodes\\worldmapnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\worldmap\\nodes\\worldmapnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\reward\\rewarddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\reward\\rewarddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\ItemDatabase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:Assets\\Scripts\\Items\\ItemDatabase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\core\\partyruntimestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\partyruntimestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\units\\unitdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\units\\unitdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\caravan\\caravanstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\caravan\\caravanstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\items\\itembase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\items\\itembase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\items\\inventoryentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\items\\inventoryentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\scripts\\core\\battlescenestarter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\battlescenestarter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\assets\\worldmap\\connections\\eventpanelui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35C54EA6-8116-993F-94AF-86E354D663E9}|Assembly-CSharp.csproj|solutionrelative:assets\\worldmap\\connections\\eventpanelui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -35,67 +91,232 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "GameManager.cs",
-              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\GameManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\GameManager.cs",
-              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\GameManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Core\\GameManager.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAADwv28AAAAAAAAAAAAAAA==",
+              "Title": "PartySetup.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Connections\\PartySetup.cs",
+              "RelativeDocumentMoniker": "Assets\\WorldMap\\Connections\\PartySetup.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Connections\\PartySetup.cs",
+              "RelativeToolTip": "Assets\\WorldMap\\Connections\\PartySetup.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T21:55:52.377Z",
+              "WhenOpened": "2026-05-15T17:52:24.354Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "BattleSetup.cs",
-              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleSetup.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BattleSetup.cs",
-              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleSetup.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Core\\BattleSetup.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Title": "PartyInitializer.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\PartyInitializer.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\PartyInitializer.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\PartyInitializer.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\PartyInitializer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T21:55:45.961Z",
+              "WhenOpened": "2026-05-15T17:52:23.894Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "CaravanManager.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Caravan\\CaravanManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Caravan\\CaravanManager.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Caravan\\CaravanManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Caravan\\CaravanManager.cs",
+              "ViewState": "AgIAANwAAAAAAAAAAAAmwPoAAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPYxgFEHDjxY3/Xqvc/wtO5P1vvdji/40X1/9DpcBg3rm5cD4yGw6sF5v/bz7UAJZoAtIgw8ASUAAyGMpEYYMAI4gACb7P/wxmg4DuXM3/l5OvM4JsKz5cABVFBa6y7gyrgtZA9KCbig7wuYAJSpMNsBoA8gKIBnkBZiOIRmaHrQtBuMQTGGjNhxvBAk1AGhQTYAkoQHY2MhsOQNFotcgcbIPnSjfSo3FEAwYGAA95Yu3hOJS9AAAAAElFTkSuQmCC",
+              "WhenOpened": "2026-05-15T17:52:23.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ItemDatabase.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\ItemDatabase.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Items\\ItemDatabase.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\ItemDatabase.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Items\\ItemDatabase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T16:58:47.297Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RewardApplier.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Reward\\RewardApplier.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Reward\\RewardApplier.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Reward\\RewardApplier.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Reward\\RewardApplier.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T17:52:23.906Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "InventoryRuntimeState.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\InventoryRuntimeState.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Items\\InventoryRuntimeState.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\InventoryRuntimeState.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Items\\InventoryRuntimeState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T17:52:23.909Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "WorldMapNode.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Nodes\\WorldMapNode.cs",
+              "RelativeDocumentMoniker": "Assets\\WorldMap\\Nodes\\WorldMapNode.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Nodes\\WorldMapNode.cs",
+              "RelativeToolTip": "Assets\\WorldMap\\Nodes\\WorldMapNode.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAcwGwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T17:52:23.91Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "WorldMapManager.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Managers\\WorldMapManager.cs",
+              "RelativeDocumentMoniker": "Assets\\WorldMap\\Managers\\WorldMapManager.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Managers\\WorldMapManager.cs",
+              "RelativeToolTip": "Assets\\WorldMap\\Managers\\WorldMapManager.cs",
+              "ViewState": "AgIAAJoBAAAAAAAAAAAmwLgBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T17:52:23.912Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "WorldMapEvent.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Connections\\WorldMapEvent.cs",
+              "RelativeDocumentMoniker": "Assets\\WorldMap\\Connections\\WorldMapEvent.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Connections\\WorldMapEvent.cs",
+              "RelativeToolTip": "Assets\\WorldMap\\Connections\\WorldMapEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T17:52:23.914Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GameRunState.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Managers\\GameRunState.cs",
+              "RelativeDocumentMoniker": "Assets\\WorldMap\\Managers\\GameRunState.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Managers\\GameRunState.cs",
+              "RelativeToolTip": "Assets\\WorldMap\\Managers\\GameRunState.cs",
+              "ViewState": "AgIAAI0AAAAAAAAAAAAmwKsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T17:52:23.916Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "BattleManager.cs",
               "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BattleManager.cs",
               "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\Core\\BattleManager.cs",
-              "ViewState": "AgIAANwAAAAAAAAAAAAiwAMBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABcCAAAAAAAAAAAmwDUCAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T21:55:41.314Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T17:52:23.919Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "BattleLogic.cs",
-              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleLogic.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BattleLogic.cs",
-              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleLogic.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Core\\BattleLogic.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAAFUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T21:55:35.98Z",
-              "EditorCaption": ""
+              "DocumentIndex": 16,
+              "Title": "InventoryEntry.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\InventoryEntry.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Items\\InventoryEntry.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\InventoryEntry.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Items\\InventoryEntry.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPYxgFEHDjxY3/Xqvc/wtO5P1vvdji/40X1/9DpcBg3rm5cD4yGw6sF5v/bz7UAJZoAtIgw8ASUAAyGMpEYYMAI4gACb7P/wxmg4DuXM3/l5OvM4JsKz5cABVFBa6y7gyrgtZA9KCbig7wuYAJSpMNsBoA8gKIBnkBZiOIRmaHrQtBuMQTGGjNhxvBAk1AGhQTYAkoQHY2MhsOQNFotcgcbIPnSjfSo3FEAwYGAA95Yu3hOJS9AAAAAElFTkSuQmCC",
+              "WhenOpened": "2026-05-15T17:52:23.921Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AbilitySO.cs",
-              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\AbilitySO.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\AbilitySO.cs",
-              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\AbilitySO.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Core\\AbilitySO.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAqwFgAAAABAAAAAAAAAA==",
+              "DocumentIndex": 14,
+              "Title": "CaravanState.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Caravan\\CaravanState.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Caravan\\CaravanState.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Caravan\\CaravanState.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Caravan\\CaravanState.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAmwDoAAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPYxgFEHDjxY3/Xqvc/wtO5P1vvdji/40X1/9DpcBg3rm5cD4yGw6sF5v/bz7UAJZoAtIgw8ASUAAyGMpEYYMAI4gACb7P/wxmg4DuXM3/l5OvM4JsKz5cABVFBa6y7gyrgtZA9KCbig7wuYAJSpMNsBoA8gKIBnkBZiOIRmaHrQtBuMQTGGjNhxvBAk1AGhQTYAkoQHY2MhsOQNFotcgcbIPnSjfSo3FEAwYGAA95Yu3hOJS9AAAAAElFTkSuQmCC",
+              "WhenOpened": "2026-05-15T17:52:23.923Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PartyRuntimeState.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\PartyRuntimeState.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\PartyRuntimeState.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\PartyRuntimeState.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\PartyRuntimeState.cs",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAmwJ0AAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPYxgFEHDjxY3/Xqvc/wtO5P1vvdji/40X1/9DpcBg3rm5cD4yGw6sF5v/bz7UAJZoAtIgw8ASUAAyGMpEYYMAI4gACb7P/wxmg4DuXM3/l5OvM4JsKz5cABVFBa6y7gyrgtZA9KCbig7wuYAJSpMNsBoA8gKIBnkBZiOIRmaHrQtBuMQTGGjNhxvBAk1AGhQTYAkoQHY2MhsOQNFotcgcbIPnSjfSo3FEAwYGAA95Yu3hOJS9AAAAAElFTkSuQmCC",
+              "WhenOpened": "2026-05-15T17:52:23.926Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "RewardData.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Reward\\RewardData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Reward\\RewardData.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Reward\\RewardData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Reward\\RewardData.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAmwCUAAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPYxgFEHDjxY3/Xqvc/wtO5P1vvdji/40X1/9DpcBg3rm5cD4yGw6sF5v/bz7UAJZoAtIgw8ASUAAyGMpEYYMAI4gACb7P/wxmg4DuXM3/l5OvM4JsKz5cABVFBa6y7gyrgtZA9KCbig7wuYAJSpMNsBoA8gKIBnkBZiOIRmaHrQtBuMQTGGjNhxvBAk1AGhQTYAkoQHY2MhsOQNFotcgcbIPnSjfSo3FEAwYGAA95Yu3hOJS9AAAAAElFTkSuQmCC",
+              "WhenOpened": "2026-05-15T17:52:23.928Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ItemBase.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\ItemBase.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Items\\ItemBase.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Items\\ItemBase.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Items\\ItemBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPYxgFEHDjxY3/Xqvc/wtO5P1vvdji/40X1/9DpcBg3rm5cD4yGw6sF5v/bz7UAJZoAtIgw8ASUAAyGMpEYYMAI4gACb7P/wxmg4DuXM3/l5OvM4JsKz5cABVFBa6y7gyrgtZA9KCbig7wuYAJSpMNsBoA8gKIBnkBZiOIRmaHrQtBuMQTGGjNhxvBAk1AGhQTYAkoQHY2MhsOQNFotcgcbIPnSjfSo3FEAwYGAA95Yu3hOJS9AAAAAElFTkSuQmCC",
+              "WhenOpened": "2026-05-15T17:52:23.93Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UnitData.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Units\\UnitData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Units\\UnitData.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Units\\UnitData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Units\\UnitData.cs",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAIwGoAAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPYxgFEHDjxY3/Xqvc/wtO5P1vvdji/40X1/9DpcBg3rm5cD4yGw6sF5v/bz7UAJZoAtIgw8ASUAAyGMpEYYMAI4gACb7P/wxmg4DuXM3/l5OvM4JsKz5cABVFBa6y7gyrgtZA9KCbig7wuYAJSpMNsBoA8gKIBnkBZiOIRmaHrQtBuMQTGGjNhxvBAk1AGhQTYAkoQHY2MhsOQNFotcgcbIPnSjfSo3FEAwYGAA95Yu3hOJS9AAAAAElFTkSuQmCC",
+              "WhenOpened": "2026-05-15T17:52:23.932Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "BattleSceneStarter.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleSceneStarter.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BattleSceneStarter.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\Scripts\\Core\\BattleSceneStarter.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\BattleSceneStarter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T21:49:17.243Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T17:52:23.934Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "EventPanelUI.cs",
+              "DocumentMoniker": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Connections\\EventPanelUI.cs",
+              "RelativeDocumentMoniker": "Assets\\WorldMap\\Connections\\EventPanelUI.cs",
+              "ToolTip": "C:\\Users\\HanzoAmadorDeChancha\\Desktop\\Proyectos\\AbadyyRpg\\Assets\\WorldMap\\Connections\\EventPanelUI.cs",
+              "RelativeToolTip": "Assets\\WorldMap\\Connections\\EventPanelUI.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-15T17:52:23.936Z"
             }
           ]
         }

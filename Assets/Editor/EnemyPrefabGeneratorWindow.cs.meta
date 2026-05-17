@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 65cd590578ca4b748be72663fa156674
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - skeletonGO: {fileID: 2922832967602765731, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+      type: 3}
+  - ratGO: {instanceID: 0}
+  - demonGO: {instanceID: 0}
+  - wormGO: {instanceID: 0}
+  - skeletonBoneStrike: {fileID: 11400000, guid: 64cc6461737c06044aef9c5ba285d8b9,
+      type: 2}
+  - skeletonStunBlow: {instanceID: 0}
+  - ratBite: {instanceID: 0}
+  - ratPoisonBite: {instanceID: 0}
+  - demonClaw: {instanceID: 0}
+  - demonDarkBolt: {instanceID: 0}
+  - wormBite: {instanceID: 0}
+  - wormToxicSpit: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

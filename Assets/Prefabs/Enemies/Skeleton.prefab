@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1525923063257729804
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: icon
+      value: 
+      objectReference: {fileID: 1779561621, guid: 05408f35652d4f041bc5bb1febd2a2de,
+        type: 3}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: dexterity
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: description
+      value: "Resistente f\xEDsico, puede aturdir."
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: battleSprite
+      value: 
+      objectReference: {fileID: 1371013794, guid: 7810e42caf0bb154e912ea5726d2ccba,
+        type: 3}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: constitution
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: intelligence
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: maxPhysicalArmor
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: abilities.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: abilities.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 64cc6461737c06044aef9c5ba285d8b9,
+        type: 2}
+    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: abilities.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 4c807354eb0b8844bb1fde4a53101bf1,
+        type: 2}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25110385
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.26867816
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.9333
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.9719
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765729, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 3.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765729, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 3.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922832967602765729, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 869708991, guid: 96c22ffc1d14e2046b3c7ac2c1e048ec,
+        type: 3}
+    - target: {fileID: 2922832967602765731, guid: f5f7922e992504e4c86a4c853ac8cc7a,
+        type: 3}
+      propertyPath: m_Name
+      value: Skeleton
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f5f7922e992504e4c86a4c853ac8cc7a, type: 3}
