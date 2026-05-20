@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: Steel_Dagger
   itemName: Steel Dagger
   description: A sharp steel dagger made for lethal openings.
-  icon: {fileID: 0}
+  icon: {fileID: 1063790521, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 0
   sellValue: 42
   effects: []

@@ -49,6 +49,9 @@ public class CaravanManager : MonoBehaviour
     public void ShowFirePanel()
     {
         currentSection = "Hoguera";
+        SetPanelState(firePanel, true);
+        SetPanelState(rosterPanel, false);
+        SetPanelState(suppliesPanel, false);
         RefreshActionPanel();
         RefreshAllUI();
     }
@@ -56,6 +59,9 @@ public class CaravanManager : MonoBehaviour
     public void ShowRosterPanel()
     {
         currentSection = "Barracas";
+        SetPanelState(firePanel, false);
+        SetPanelState(rosterPanel, true);
+        SetPanelState(suppliesPanel, false);
         RefreshActionPanel();
         RefreshAllUI();
     }
@@ -63,23 +69,24 @@ public class CaravanManager : MonoBehaviour
     public void ShowSuppliesPanel()
     {
         currentSection = "Suministros";
+        SetPanelState(firePanel, false);
+        SetPanelState(rosterPanel, false);
+        SetPanelState(suppliesPanel, true);
         RefreshActionPanel();
         RefreshAllUI();
     }
 
     public void HideAllPanels()
     {
-        if (buildGeneratedUI)
-            return;
+        SetPanelState(firePanel, false);
+        SetPanelState(rosterPanel, false);
+        SetPanelState(suppliesPanel, false);
+    }
 
-        if (firePanel != null)
-            firePanel.SetActive(false);
-
-        if (rosterPanel != null)
-            rosterPanel.SetActive(false);
-
-        if (suppliesPanel != null)
-            suppliesPanel.SetActive(false);
+    private void SetPanelState(GameObject panel, bool active)
+    {
+        if (panel != null)
+            panel.SetActive(active);
     }
 
     public void RefreshAllUI()

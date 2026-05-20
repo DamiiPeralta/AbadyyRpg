@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: Steel_Sword
   itemName: Steel Sword
   description: A sharpened steel sword for front-line fighters.
-  icon: {fileID: -30888976, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
+  icon: {fileID: 1183509639, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 0
   sellValue: 48
   effects: []

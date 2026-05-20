@@ -15,8 +15,9 @@ MonoBehaviour:
   itemId: Potion_Health
   itemName: "Poci\xF3n de Vida"
   description: "Se usa autom\xE1ticamente si la vida est\xE1 por debajo del 30%."
-  icon: {fileID: 0}
+  icon: {fileID: -1569331020, guid: 37b317fb4d0ae95439857d5af658ec06, type: 3}
   itemType: 2
+  sellValue: 0
   effects:
   - effectType: 1
     statType: 0

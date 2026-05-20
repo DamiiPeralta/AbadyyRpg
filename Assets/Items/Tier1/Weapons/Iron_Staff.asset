@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: Iron_Staff
   itemName: Iron Staff
   description: A reinforced staff that channels stronger arcane force.
-  icon: {fileID: 0}
+  icon: {fileID: -660287080, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 0
   sellValue: 36
   effects: []

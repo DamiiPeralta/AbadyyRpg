@@ -6,40 +6,46 @@ using UnityEngine.UI;
 
 public class EquipmentPanelUI : MonoBehaviour
 {
+    private enum EquipmentInventoryFilter
+    {
+        Weapons,
+        Armors,
+        Consumables
+    }
+
     [Header("Root")]
     public GameObject rootPanel;
 
     [Header("Unit")]
     public MercenaryDetailPanelUI mercenaryDetailPanel;
-    public TMP_Text titleText;
-    public TMP_Text selectedSlotText;
+    [HideInInspector] public TMP_Text titleText;
+    [HideInInspector] public TMP_Text selectedSlotText;
 
     [Header("Slots")]
-    public Button helmetSlotButton;
-    public Button chestSlotButton;
-    public Button feetSlotButton;
-    public Button handsSlotButton;
-    public Button rightHandSlotButton;
-    public Button leftHandSlotButton;
-    public Button ringSlotButton;
-    public Button amuletSlotButton;
+    public List<EquipmentSlotButtonUI> slotButtons = new List<EquipmentSlotButtonUI>();
 
     [Header("Inventory")]
+    public GameObject inventoryPanelRoot;
     public Transform inventoryRoot;
-    public SuppliesItemRowUI itemRowPrefab;
-    public ItemDetailPanelUI itemDetailPanel;
-    public TMP_Text comparisonText;
+    public EquipmentItemRowUI equipmentItemRowPrefab;
+    [HideInInspector] public SuppliesItemRowUI itemRowPrefab;
+    [HideInInspector] public ItemDetailPanelUI itemDetailPanel;
+    [HideInInspector] public TMP_Text comparisonText;
+    [HideInInspector] public Image unitPortraitImage;
 
     [Header("Actions")]
     public Button equipButton;
     public Button unequipButton;
     public Button closeButton;
 
-    private readonly List<SuppliesItemRowUI> rows = new List<SuppliesItemRowUI>();
+    private readonly List<GameObject> rows = new List<GameObject>();
     private Unit selectedUnit;
     private EquipmentSlot selectedSlot = EquipmentSlot.RightHand;
+    private ConsumableSlot selectedConsumableSlot = ConsumableSlot.Consumable1;
+    private bool selectingConsumable;
+    private EquipmentInventoryFilter currentFilter = EquipmentInventoryFilter.Weapons;
     private InventoryEntry selectedEntry;
-    private EquipmentItem selectedItem;
+    private ItemBase selectedItem;
 
     private void Awake()
     {
@@ -57,6 +63,9 @@ public class EquipmentPanelUI : MonoBehaviour
         else
             gameObject.SetActive(true);
 
+        if (inventoryPanelRoot != null)
+            inventoryPanelRoot.SetActive(true);
+
         RefreshAll();
     }
 
@@ -66,6 +75,15 @@ public class EquipmentPanelUI : MonoBehaviour
             rootPanel.SetActive(false);
         else
             gameObject.SetActive(false);
+
+        if (inventoryPanelRoot != null)
+            inventoryPanelRoot.SetActive(false);
+
+        selectedEntry = null;
+        selectedItem = null;
+
+        if (mercenaryDetailPanel != null)
+            mercenaryDetailPanel.Show(selectedUnit);
     }
 
     public void RefreshAll()
@@ -74,24 +92,41 @@ public class EquipmentPanelUI : MonoBehaviour
             mercenaryDetailPanel.Show(selectedUnit);
 
         SetText(titleText, selectedUnit != null ? $"Equipo - {selectedUnit.unitName}" : "Equipo");
-        SetText(selectedSlotText, $"Slot: {FormatSlot(selectedSlot)}");
+        SetText(selectedSlotText, selectingConsumable ? $"Slot: {FormatConsumableSlot(selectedConsumableSlot)}" : $"Slot: {FormatSlot(selectedSlot)}");
+
+        if (unitPortraitImage != null && selectedUnit != null && selectedUnit.unitData != null && selectedUnit.unitData.icon != null)
+            unitPortraitImage.sprite = selectedUnit.unitData.icon;
 
         RebuildInventoryRows();
         RefreshDetail();
+        RefreshMercenaryPreview();
         RefreshActionButtons();
     }
 
     public void SelectSlot(int slotValue)
     {
         selectedSlot = (EquipmentSlot)slotValue;
+        selectingConsumable = false;
         selectedEntry = null;
         selectedItem = null;
         RefreshAll();
     }
 
-    private void SelectSlot(EquipmentSlot slot)
+    public void SelectEquipmentSlot(EquipmentSlot slot)
     {
         selectedSlot = slot;
+        selectingConsumable = false;
+        currentFilter = IsArmorSlot(slot) ? EquipmentInventoryFilter.Armors : EquipmentInventoryFilter.Weapons;
+        selectedEntry = null;
+        selectedItem = null;
+        RefreshAll();
+    }
+
+    public void SelectConsumableSlot(ConsumableSlot slot)
+    {
+        selectedConsumableSlot = slot;
+        selectingConsumable = true;
+        currentFilter = EquipmentInventoryFilter.Consumables;
         selectedEntry = null;
         selectedItem = null;
         RefreshAll();
@@ -100,8 +135,9 @@ public class EquipmentPanelUI : MonoBehaviour
     private void SelectInventoryItem(InventoryEntry entry, ItemBase item)
     {
         selectedEntry = entry;
-        selectedItem = item as EquipmentItem;
+        selectedItem = item;
         RefreshDetail();
+        RefreshMercenaryPreview();
         RefreshActionButtons();
     }
 
@@ -117,13 +153,31 @@ public class EquipmentPanelUI : MonoBehaviour
         if (inventory == null || !inventory.RemoveItem(selectedEntry.itemId, 1))
             return;
 
-        EquipmentItem previous = selectedUnit.GetEquippedItem(selectedItem.slot);
-        selectedUnit.EquipItem(selectedItem);
+        if (selectedItem is ConsumableItem consumable)
+        {
+            ConsumableItem previousConsumable = selectingConsumable && selectedConsumableSlot == ConsumableSlot.Consumable2
+                ? selectedUnit.RemoveConsumable2()
+                : selectedUnit.RemoveConsumable1();
 
-        if (previous != null && !string.IsNullOrWhiteSpace(previous.itemId))
-            inventory.AddItem(previous.itemId, 1);
+            if (selectingConsumable && selectedConsumableSlot == ConsumableSlot.Consumable2)
+                selectedUnit.SetConsumable2(consumable);
+            else
+                selectedUnit.SetConsumable1(consumable);
 
-        selectedSlot = selectedItem.slot;
+            if (previousConsumable != null && !string.IsNullOrWhiteSpace(previousConsumable.itemId))
+                inventory.AddItem(previousConsumable.itemId, 1);
+        }
+        else if (selectedItem is EquipmentItem equipment)
+        {
+            EquipmentItem previous = selectedUnit.GetEquippedItem(equipment.slot);
+            selectedUnit.EquipItem(equipment);
+
+            if (previous != null && !string.IsNullOrWhiteSpace(previous.itemId))
+                inventory.AddItem(previous.itemId, 1);
+
+            selectedSlot = equipment.slot;
+        }
+
         selectedEntry = null;
         selectedItem = null;
         RefreshAll();
@@ -134,14 +188,39 @@ public class EquipmentPanelUI : MonoBehaviour
         if (selectedUnit == null)
             return;
 
-        EquipmentItem previous = selectedUnit.UnequipItem(selectedSlot);
+        ItemBase previous;
+        bool shouldReturnToInventory = true;
+
+        if (selectingConsumable)
+        {
+            previous = selectedConsumableSlot == ConsumableSlot.Consumable2 ? selectedUnit.RemoveConsumable2() : selectedUnit.RemoveConsumable1();
+        }
+        else
+        {
+            EquipmentItem equippedItem = selectedUnit.GetEquippedItem(selectedSlot);
+            shouldReturnToInventory = ShouldReturnUnequippedItem(equippedItem);
+            previous = selectedUnit.UnequipItem(selectedSlot);
+        }
+
         if (previous == null)
             return;
 
-        if (InventoryRuntimeState.Instance != null && !string.IsNullOrWhiteSpace(previous.itemId))
+        if (shouldReturnToInventory && InventoryRuntimeState.Instance != null && !string.IsNullOrWhiteSpace(previous.itemId))
             InventoryRuntimeState.Instance.AddItem(previous.itemId, 1);
 
         RefreshAll();
+    }
+
+    private bool ShouldReturnUnequippedItem(EquipmentItem item)
+    {
+        if (item is Armor)
+        {
+            bool physicalArmorFull = selectedUnit.currentPhysicalArmor >= selectedUnit.maxPhysicalArmor;
+            bool magicalArmorFull = selectedUnit.currentMagicalArmor >= selectedUnit.maxMagicalArmor;
+            return physicalArmorFull && magicalArmorFull;
+        }
+
+        return true;
     }
 
     private bool CanEquipSelected()
@@ -149,17 +228,25 @@ public class EquipmentPanelUI : MonoBehaviour
         if (selectedUnit == null || selectedItem == null)
             return false;
 
-        if (selectedItem.levelRequirement > selectedUnit.level)
-            return false;
+        if (selectedItem is ConsumableItem)
+            return selectingConsumable;
 
-        return selectedItem.slot == selectedSlot;
+        if (selectedItem is EquipmentItem equipment)
+        {
+            if (equipment.levelRequirement > selectedUnit.level)
+                return false;
+
+            return !selectingConsumable && equipment.slot == selectedSlot;
+        }
+
+        return false;
     }
 
     private void RebuildInventoryRows()
     {
         ClearRows();
 
-        if (inventoryRoot == null || itemRowPrefab == null || InventoryRuntimeState.Instance == null)
+        if (inventoryRoot == null || (equipmentItemRowPrefab == null && itemRowPrefab == null) || InventoryRuntimeState.Instance == null)
             return;
 
         foreach (InventoryEntry entry in InventoryRuntimeState.Instance.items)
@@ -168,27 +255,55 @@ public class EquipmentPanelUI : MonoBehaviour
                 continue;
 
             ItemBase item = ItemDatabase.Instance != null ? ItemDatabase.Instance.GetItemById(entry.itemId) : null;
-            EquipmentItem equipment = item as EquipmentItem;
-
-            if (equipment == null || equipment.slot != selectedSlot)
+            if (!ShouldShowItem(item))
                 continue;
 
-            SuppliesItemRowUI row = Instantiate(itemRowPrefab, inventoryRoot);
-            row.gameObject.SetActive(true);
-            row.Bind(entry, item, SelectInventoryItem, null);
-            rows.Add(row);
+            if (equipmentItemRowPrefab != null)
+            {
+                EquipmentItemRowUI row = Instantiate(equipmentItemRowPrefab, inventoryRoot);
+                row.gameObject.SetActive(true);
+                row.Bind(entry, item, SelectInventoryItem);
+                rows.Add(row.gameObject);
+            }
+            else
+            {
+                SuppliesItemRowUI row = Instantiate(itemRowPrefab, inventoryRoot);
+                row.gameObject.SetActive(true);
+                row.Bind(entry, item, SelectInventoryItem, null);
+                rows.Add(row.gameObject);
+            }
         }
     }
 
     private void ClearRows()
     {
-        foreach (SuppliesItemRowUI row in rows)
+        foreach (GameObject row in rows)
         {
             if (row != null)
-                Destroy(row.gameObject);
+                Destroy(row);
         }
 
         rows.Clear();
+    }
+
+    private bool ShouldShowItem(ItemBase item)
+    {
+        if (item == null)
+            return false;
+
+        switch (currentFilter)
+        {
+            case EquipmentInventoryFilter.Weapons:
+                return item is Weapon weapon && !selectingConsumable && weapon.slot == selectedSlot;
+
+            case EquipmentInventoryFilter.Armors:
+                return item is Armor armor && !selectingConsumable && armor.slot == selectedSlot;
+
+            case EquipmentInventoryFilter.Consumables:
+                return item is ConsumableItem;
+        }
+
+        return false;
     }
 
     private void RefreshDetail()
@@ -197,6 +312,18 @@ public class EquipmentPanelUI : MonoBehaviour
             itemDetailPanel.Show(selectedEntry, selectedItem);
 
         SetText(comparisonText, BuildComparisonText());
+        RefreshSlotButtons();
+    }
+
+    private void RefreshMercenaryPreview()
+    {
+        if (mercenaryDetailPanel == null)
+            return;
+
+        if (selectedItem is EquipmentItem equipment && !selectingConsumable)
+            mercenaryDetailPanel.ShowEquipmentPreview(selectedUnit, selectedSlot, equipment);
+        else
+            mercenaryDetailPanel.Show(selectedUnit);
     }
 
     private void RefreshActionButtons()
@@ -205,7 +332,7 @@ public class EquipmentPanelUI : MonoBehaviour
             equipButton.interactable = CanEquipSelected();
 
         if (unequipButton != null)
-            unequipButton.interactable = selectedUnit != null && selectedUnit.GetEquippedItem(selectedSlot) != null;
+            unequipButton.interactable = selectedUnit != null && GetCurrentSelectedSlotItem() != null;
     }
 
     private string BuildComparisonText()
@@ -213,7 +340,7 @@ public class EquipmentPanelUI : MonoBehaviour
         if (selectedUnit == null)
             return "Selecciona un mercenario.";
 
-        EquipmentItem current = selectedUnit.GetEquippedItem(selectedSlot);
+        ItemBase current = GetCurrentSelectedSlotItem();
         StringBuilder builder = new StringBuilder();
 
         builder.AppendLine($"Equipado: {(current != null ? current.itemName : "Nada")}");
@@ -226,14 +353,14 @@ public class EquipmentPanelUI : MonoBehaviour
 
         builder.AppendLine($"Nuevo: {selectedItem.itemName}");
 
-        if (selectedItem.levelRequirement > selectedUnit.level)
-            builder.AppendLine($"Requiere nivel {selectedItem.levelRequirement}.");
+        if (selectedItem is EquipmentItem selectedEquipment && selectedEquipment.levelRequirement > selectedUnit.level)
+            builder.AppendLine(ColorText($"Requiere nivel {selectedEquipment.levelRequirement}.", false));
 
         AppendEquipmentComparison(builder, current, selectedItem);
         return builder.ToString().TrimEnd();
     }
 
-    private void AppendEquipmentComparison(StringBuilder builder, EquipmentItem current, EquipmentItem next)
+    private void AppendEquipmentComparison(StringBuilder builder, ItemBase current, ItemBase next)
     {
         if (current is Weapon || next is Weapon)
         {
@@ -252,25 +379,38 @@ public class EquipmentPanelUI : MonoBehaviour
             AppendDelta(builder, "Armadura fisica", oldArmor != null ? oldArmor.physicalArmor : 0, newArmor != null ? newArmor.physicalArmor : 0);
             AppendDelta(builder, "Armadura magica", oldArmor != null ? oldArmor.magicalArmor : 0, newArmor != null ? newArmor.magicalArmor : 0);
         }
+
+        if (next is ConsumableItem consumable)
+        {
+            builder.AppendLine($"Consumible: {FormatConsumableEffect(consumable)}");
+
+            if (consumable.value > 0)
+                builder.AppendLine($"Valor: {consumable.value}");
+        }
+    }
+
+    private ItemBase GetCurrentSelectedSlotItem()
+    {
+        if (selectedUnit == null)
+            return null;
+
+        if (selectingConsumable)
+            return selectedConsumableSlot == ConsumableSlot.Consumable2 ? selectedUnit.consumable2 : selectedUnit.consumable1;
+
+        return selectedUnit.GetEquippedItem(selectedSlot);
     }
 
     private void AppendDelta(StringBuilder builder, string label, int current, int next)
     {
         int delta = next - current;
         string sign = delta >= 0 ? "+" : "";
-        builder.AppendLine($"{label}: {current} -> {next} ({sign}{delta})");
+        string deltaText = $"{label}: {current} -> {next} ({sign}{delta})";
+        builder.AppendLine(delta == 0 ? deltaText : ColorText(deltaText, delta > 0));
     }
 
     private void HookButtons()
     {
-        HookSlot(helmetSlotButton, EquipmentSlot.Helmet);
-        HookSlot(chestSlotButton, EquipmentSlot.Chest);
-        HookSlot(feetSlotButton, EquipmentSlot.Feet);
-        HookSlot(handsSlotButton, EquipmentSlot.Hands);
-        HookSlot(rightHandSlotButton, EquipmentSlot.RightHand);
-        HookSlot(leftHandSlotButton, EquipmentSlot.LeftHand);
-        HookSlot(ringSlotButton, EquipmentSlot.Ring);
-        HookSlot(amuletSlotButton, EquipmentSlot.Amulet);
+        BindSlotButtons();
 
         if (equipButton != null)
         {
@@ -291,19 +431,12 @@ public class EquipmentPanelUI : MonoBehaviour
         }
     }
 
-    private void HookSlot(Button button, EquipmentSlot slot)
-    {
-        if (button == null)
-            return;
-
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => SelectSlot(slot));
-    }
-
     private void AutoBind()
     {
         if (rootPanel == null)
             rootPanel = gameObject;
+
+        rootPanel.SetActive(true);
 
         if (mercenaryDetailPanel == null)
             mercenaryDetailPanel = GetComponentInChildren<MercenaryDetailPanelUI>(true);
@@ -311,14 +444,39 @@ public class EquipmentPanelUI : MonoBehaviour
         if (itemDetailPanel == null)
             itemDetailPanel = GetComponentInChildren<ItemDetailPanelUI>(true);
 
+        if (inventoryPanelRoot == null)
+            inventoryPanelRoot = FindSceneTransform("PanelSuppliesEquipment")?.gameObject;
+
         if (inventoryRoot == null)
             inventoryRoot = FindChildTransform("EquipmentInventoryContent");
+
+        if (inventoryRoot == null)
+            inventoryRoot = FindChildTransform("Content");
+
+        if (inventoryRoot == null && inventoryPanelRoot != null)
+            inventoryRoot = FindChildTransformIn(inventoryPanelRoot.transform, "Content");
+
+        if (equipmentItemRowPrefab == null)
+            equipmentItemRowPrefab = GetComponentInChildren<EquipmentItemRowUI>(true);
 
         if (itemRowPrefab == null)
             itemRowPrefab = GetComponentInChildren<SuppliesItemRowUI>(true);
 
+        if (equipmentItemRowPrefab == null && itemRowPrefab == null)
+            equipmentItemRowPrefab = FindEquipmentRowTemplate();
+
+        if (equipmentItemRowPrefab == null && itemRowPrefab == null)
+            itemRowPrefab = FindRowTemplate();
+        else
+            HideRowTemplates();
+
+        FindSlotButtons();
+
         if (titleText == null)
             titleText = FindChild<TMP_Text>("Text_EquipmentTitle");
+
+        if (titleText == null)
+            titleText = FindChild<TMP_Text>("Text_Name");
 
         if (selectedSlotText == null)
             selectedSlotText = FindChild<TMP_Text>("Text_SelectedSlot");
@@ -326,18 +484,205 @@ public class EquipmentPanelUI : MonoBehaviour
         if (comparisonText == null)
             comparisonText = FindChild<TMP_Text>("Text_Comparison");
 
-        helmetSlotButton = helmetSlotButton != null ? helmetSlotButton : FindChild<Button>("Button_SlotHelmet");
-        chestSlotButton = chestSlotButton != null ? chestSlotButton : FindChild<Button>("Button_SlotChest");
-        feetSlotButton = feetSlotButton != null ? feetSlotButton : FindChild<Button>("Button_SlotFeet");
-        handsSlotButton = handsSlotButton != null ? handsSlotButton : FindChild<Button>("Button_SlotHands");
-        rightHandSlotButton = rightHandSlotButton != null ? rightHandSlotButton : FindChild<Button>("Button_SlotRightHand");
-        leftHandSlotButton = leftHandSlotButton != null ? leftHandSlotButton : FindChild<Button>("Button_SlotLeftHand");
-        ringSlotButton = ringSlotButton != null ? ringSlotButton : FindChild<Button>("Button_SlotRing");
-        amuletSlotButton = amuletSlotButton != null ? amuletSlotButton : FindChild<Button>("Button_SlotAmulet");
+        if (comparisonText == null)
+            comparisonText = FindChild<TMP_Text>("Text_PrincipalStatistic1");
+
+        if (comparisonText == null)
+            comparisonText = FindChild<TMP_Text>("Text_PrincipalStatistic2");
+
+        if (unitPortraitImage == null)
+            unitPortraitImage = FindChild<Image>("Image_UnitIcon");
+
+        if (unitPortraitImage == null)
+            unitPortraitImage = FindChild<Image>("Image_MercSpriteBackground");
 
         equipButton = equipButton != null ? equipButton : FindChild<Button>("Button_Equip");
+        equipButton = equipButton != null ? equipButton : FindChild<Button>("ButtonEquip");
         unequipButton = unequipButton != null ? unequipButton : FindChild<Button>("Button_Unequip");
+        unequipButton = unequipButton != null ? unequipButton : FindChild<Button>("ButtonUnequip");
         closeButton = closeButton != null ? closeButton : FindChild<Button>("Button_CloseEquipment");
+        closeButton = closeButton != null ? closeButton : FindChild<Button>("Button_Close");
+    }
+
+    private void FindSlotButtons()
+    {
+        slotButtons.Clear();
+
+        EquipmentSlotButtonUI[] existingSlots = GetComponentsInChildren<EquipmentSlotButtonUI>(true);
+        foreach (EquipmentSlotButtonUI slot in existingSlots)
+        {
+            if (slot != null && !slotButtons.Contains(slot))
+                slotButtons.Add(slot);
+        }
+
+        foreach (Button button in GetComponentsInChildren<Button>(true))
+        {
+            if (button == null || !button.name.StartsWith("ButtonEquipmentUISlot"))
+                continue;
+
+            EquipmentSlotButtonUI slot = button.GetComponent<EquipmentSlotButtonUI>();
+            if (slot == null)
+                slot = button.gameObject.AddComponent<EquipmentSlotButtonUI>();
+
+            ConfigureSlotFromLabel(slot);
+
+            if (!slotButtons.Contains(slot))
+                slotButtons.Add(slot);
+        }
+    }
+
+    private void BindSlotButtons()
+    {
+        foreach (EquipmentSlotButtonUI slot in slotButtons)
+        {
+            if (slot == null)
+                continue;
+
+            slot.Bind(this);
+        }
+    }
+
+    private void RefreshSlotButtons()
+    {
+        foreach (EquipmentSlotButtonUI slot in slotButtons)
+        {
+            if (slot == null)
+                continue;
+
+            bool selected = selectingConsumable
+                ? slot.MatchesConsumable(selectedConsumableSlot)
+                : slot.MatchesEquipment(selectedSlot);
+
+            slot.Refresh(selectedUnit, selected);
+        }
+    }
+
+    private void ConfigureSlotFromLabel(EquipmentSlotButtonUI slot)
+    {
+        TMP_Text label = slot.GetComponentInChildren<TMP_Text>(true);
+        string text = Normalize(label != null ? label.text : slot.name);
+
+        if (text.Contains("objeto 2"))
+        {
+            slot.slotKind = EquipmentSlotButtonUI.SlotKind.Consumable;
+            slot.consumableSlot = ConsumableSlot.Consumable2;
+        }
+        else if (text.Contains("objeto 1"))
+        {
+            slot.slotKind = EquipmentSlotButtonUI.SlotKind.Consumable;
+            slot.consumableSlot = ConsumableSlot.Consumable1;
+        }
+        else
+        {
+            slot.slotKind = EquipmentSlotButtonUI.SlotKind.Equipment;
+
+            if (text.Contains("casco"))
+                slot.equipmentSlot = EquipmentSlot.Helmet;
+            else if (text.Contains("pecho"))
+                slot.equipmentSlot = EquipmentSlot.Chest;
+            else if (text.Contains("botas") || text.Contains("pies"))
+                slot.equipmentSlot = EquipmentSlot.Feet;
+            else if (text.Contains("mano izquierda"))
+                slot.equipmentSlot = EquipmentSlot.LeftHand;
+            else if (text.Contains("mano derecha"))
+                slot.equipmentSlot = EquipmentSlot.RightHand;
+            else if (text.Contains("anillo"))
+                slot.equipmentSlot = EquipmentSlot.Ring;
+            else if (text.Contains("amuleto"))
+                slot.equipmentSlot = EquipmentSlot.Amulet;
+            else if (text.Contains("manos") || text.Contains("guantes"))
+                slot.equipmentSlot = EquipmentSlot.Hands;
+        }
+    }
+
+    private SuppliesItemRowUI FindRowTemplate()
+    {
+        Transform row = FindChildTransform("ButtonEquipItemDetail");
+
+        if (row == null)
+            row = FindChildTransform("ButtonItemDetail");
+
+        if (row == null)
+            return null;
+
+        SuppliesItemRowUI rowUI = row.GetComponent<SuppliesItemRowUI>();
+        if (rowUI == null)
+            rowUI = row.gameObject.AddComponent<SuppliesItemRowUI>();
+
+        row.gameObject.SetActive(false);
+        HideRowTemplates();
+        return rowUI;
+    }
+
+    private EquipmentItemRowUI FindEquipmentRowTemplate()
+    {
+        Transform row = FindChildTransform("ButtonEquipItemDetail");
+
+        if (row == null)
+            row = FindChildTransform("ButtonEquipmentDetail");
+
+        if (row == null)
+            return null;
+
+        EquipmentItemRowUI rowUI = row.GetComponent<EquipmentItemRowUI>();
+        if (rowUI == null)
+            rowUI = row.gameObject.AddComponent<EquipmentItemRowUI>();
+
+        row.gameObject.SetActive(false);
+        HideRowTemplates();
+        return rowUI;
+    }
+
+    private void HideRowTemplates()
+    {
+        foreach (Transform child in GetComponentsInChildren<Transform>(true))
+        {
+            if (child == null)
+                continue;
+
+            string childName = child.name.Trim();
+            if (childName == "ButtonEquipItemDetail" ||
+                childName.StartsWith("ButtonEquipItemDetail (") ||
+                childName == "ButtonItemDetail" ||
+                childName.StartsWith("ButtonItemDetail ("))
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private Button FindButtonByNamesOrText(params string[] namesOrTexts)
+    {
+        foreach (string value in namesOrTexts)
+        {
+            Button byName = FindChild<Button>(value);
+            if (byName != null)
+                return byName;
+        }
+
+        foreach (Button button in GetComponentsInChildren<Button>(true))
+        {
+            TMP_Text text = button.GetComponentInChildren<TMP_Text>(true);
+            if (text == null)
+                continue;
+
+            string normalizedText = Normalize(text.text);
+            foreach (string value in namesOrTexts)
+            {
+                if (normalizedText == Normalize(value))
+                    return button;
+            }
+        }
+
+        return null;
+    }
+
+    private bool IsArmorSlot(EquipmentSlot slot)
+    {
+        return slot == EquipmentSlot.Helmet ||
+               slot == EquipmentSlot.Chest ||
+               slot == EquipmentSlot.Feet ||
+               slot == EquipmentSlot.Hands;
     }
 
     private string FormatSlot(EquipmentSlot slot)
@@ -371,6 +716,42 @@ public class EquipmentPanelUI : MonoBehaviour
             text.text = value;
     }
 
+    private string FormatConsumableSlot(ConsumableSlot slot)
+    {
+        return slot == ConsumableSlot.Consumable2 ? "Objeto 2" : "Objeto 1";
+    }
+
+    private string FormatConsumableEffect(ConsumableItem item)
+    {
+        switch (item.consumableEffectType)
+        {
+            case ConsumableEffectType.HealSelf:
+                return "Curacion";
+            case ConsumableEffectType.ReviveAlly:
+                return "Revive aliado";
+            case ConsumableEffectType.DamageAllEnemies:
+                return "Dano a enemigos";
+            case ConsumableEffectType.ApplyStatusToSelf:
+                return $"Estado {item.statusEffectType}";
+            case ConsumableEffectType.CleanseSelfStatus:
+                return "Limpia estado";
+            default:
+                return "Sin efecto";
+        }
+    }
+
+    private string Normalize(string value)
+    {
+        return string.IsNullOrWhiteSpace(value)
+            ? string.Empty
+            : value.Trim().ToLowerInvariant();
+    }
+
+    private string ColorText(string text, bool positive)
+    {
+        return positive ? $"<color=#6DFF7A>{text}</color>" : $"<color=#FF6B6B>{text}</color>";
+    }
+
     private T FindChild<T>(string childName) where T : Component
     {
         Transform child = FindChildTransform(childName);
@@ -381,6 +762,34 @@ public class EquipmentPanelUI : MonoBehaviour
     {
         foreach (Transform child in GetComponentsInChildren<Transform>(true))
         {
+            if (child.name.Trim() == childName)
+                return child;
+        }
+
+        return null;
+    }
+
+    private Transform FindChildTransformIn(Transform root, string childName)
+    {
+        if (root == null)
+            return null;
+
+        foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+        {
+            if (child.name.Trim() == childName)
+                return child;
+        }
+
+        return null;
+    }
+
+    private Transform FindSceneTransform(string childName)
+    {
+        foreach (Transform child in Resources.FindObjectsOfTypeAll<Transform>())
+        {
+            if (child == null || child.hideFlags != HideFlags.None)
+                continue;
+
             if (child.name.Trim() == childName)
                 return child;
         }

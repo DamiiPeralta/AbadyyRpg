@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: Rusty_Staff
   itemName: Rusty Staff
   description: A worn wooden staff with a weak magical focus.
-  icon: {fileID: 0}
+  icon: {fileID: -589591397, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 0
   sellValue: 18
   effects: []

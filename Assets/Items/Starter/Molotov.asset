@@ -16,8 +16,9 @@ MonoBehaviour:
   itemName: Molotov
   description: "Se lanza autom\xE1ticamente y hace da\xF1o m\xE1gico a todos los
     enemigos."
-  icon: {fileID: 0}
+  icon: {fileID: -1210262247, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 2
+  sellValue: 0
   effects: []
   useCondition: 1
   hpThreshold: 0.3

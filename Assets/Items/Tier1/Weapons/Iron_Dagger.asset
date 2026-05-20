@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: Iron_Dagger
   itemName: Iron Dagger
   description: A balanced dagger for precise strikes.
-  icon: {fileID: 0}
+  icon: {fileID: -1144669727, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 0
   sellValue: 24
   effects: []

@@ -273,7 +273,7 @@ TextureImporter:
         width: 64
         height: 58
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -281,6 +281,69 @@ TextureImporter:
       bones: []
       spriteID: fa1de5330f67e424198697314a323d00
       internalID: 440579210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uicharsheet 4_1
+      rect:
+        serializedVersion: 2
+        x: 1294
+        y: 442
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 460c5cd03c186d749a1ad5e0cf686a46
+      internalID: -1183935450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uicharsheet 4_2
+      rect:
+        serializedVersion: 2
+        x: 1352
+        y: 388
+        width: 43
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a23a4ecd7cced84c8ca1ab1a118453f
+      internalID: -2064470991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uicharsheet 4_3
+      rect:
+        serializedVersion: 2
+        x: 1351
+        y: 443
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5287a54aef4bbde41b1f952a7816a2cd
+      internalID: 141067069
       vertices: []
       indices: 
       edges: []
@@ -304,6 +367,9 @@ TextureImporter:
       regeneracion: 486054584
       stun: -1777344786
       uicharsheet 4_0: 440579210
+      uicharsheet 4_1: -1183935450
+      uicharsheet 4_2: -2064470991
+      uicharsheet 4_3: 141067069
       veneno: 709519598
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

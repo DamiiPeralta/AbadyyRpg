@@ -15,8 +15,9 @@ MonoBehaviour:
   itemId: Scroll_Revive
   itemName: "Pergamino de Resurrecci\xF3n"
   description: "Revive autom\xE1ticamente a un aliado ca\xEDdo."
-  icon: {fileID: 0}
+  icon: {fileID: 2011352616, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 2
+  sellValue: 0
   effects: []
   useCondition: 3
   hpThreshold: 0.3

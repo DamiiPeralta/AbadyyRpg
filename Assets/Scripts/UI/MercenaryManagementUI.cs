@@ -243,8 +243,14 @@ public class MercenaryManagementUI : MonoBehaviour
         if (cardPrefab == null)
             cardPrefab = GetComponentInChildren<MercenaryCardUI>(true);
 
+        if (equipmentPanel == null)
+            equipmentPanel = FindOrCreateEquipmentPanel();
+
         if (viewEquipmentButton == null)
             viewEquipmentButton = FindChild<Button>("Button_ViewEquipment");
+
+        if (viewEquipmentButton == null)
+            viewEquipmentButton = FindChild<Button>("Button_SeeEquipment");
 
         if (dismissButton == null)
             dismissButton = FindChild<Button>("Button_Dismiss");
@@ -269,6 +275,36 @@ public class MercenaryManagementUI : MonoBehaviour
     {
         foreach (Transform child in GetComponentsInChildren<Transform>(true))
         {
+            if (child.name.Trim() == childName)
+                return child;
+        }
+
+        return null;
+    }
+
+    private EquipmentPanelUI FindOrCreateEquipmentPanel()
+    {
+        EquipmentPanelUI existing = FindObjectOfType<EquipmentPanelUI>(true);
+        if (existing != null)
+            return existing;
+
+        Transform panel = FindSceneTransform("PanelSuppliesEquipment");
+        if (panel == null)
+            panel = FindSceneTransform("Panel_MercInventory");
+
+        if (panel == null)
+            return null;
+
+        return panel.gameObject.AddComponent<EquipmentPanelUI>();
+    }
+
+    private Transform FindSceneTransform(string childName)
+    {
+        foreach (Transform child in Resources.FindObjectsOfTypeAll<Transform>())
+        {
+            if (child == null || child.hideFlags != HideFlags.None)
+                continue;
+
             if (child.name.Trim() == childName)
                 return child;
         }

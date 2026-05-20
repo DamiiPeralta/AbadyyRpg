@@ -318,8 +318,12 @@ public class Unit
         if (item == null)
             return false;
 
+        int previousMaxPhysicalArmor = maxPhysicalArmor;
+        int previousMaxMagicalArmor = maxMagicalArmor;
+
         equipment[item.slot] = item;
         RecalculateStats();
+        PreserveArmorAfterEquipmentChange(previousMaxPhysicalArmor, previousMaxMagicalArmor);
         return true;
     }
 
@@ -328,9 +332,32 @@ public class Unit
         if (!equipment.TryGetValue(slot, out EquipmentItem item))
             return null;
 
+        int previousMaxPhysicalArmor = maxPhysicalArmor;
+        int previousMaxMagicalArmor = maxMagicalArmor;
+
         equipment.Remove(slot);
         RecalculateStats();
+        PreserveArmorAfterEquipmentChange(previousMaxPhysicalArmor, previousMaxMagicalArmor);
         return item;
+    }
+
+    private void PreserveArmorAfterEquipmentChange(int previousMaxPhysicalArmor, int previousMaxMagicalArmor)
+    {
+        currentPhysicalArmor = PreserveArmorValue(currentPhysicalArmor, previousMaxPhysicalArmor, maxPhysicalArmor);
+        currentMagicalArmor = PreserveArmorValue(currentMagicalArmor, previousMaxMagicalArmor, maxMagicalArmor);
+    }
+
+    private int PreserveArmorValue(int current, int previousMax, int newMax)
+    {
+        if (newMax <= 0)
+            return 0;
+
+        int delta = newMax - previousMax;
+
+        if (delta > 0)
+            return Mathf.Clamp(current + delta, 0, newMax);
+
+        return Mathf.Clamp(current, 0, newMax);
     }
 
     public EquipmentItem GetEquippedItem(EquipmentSlot slot)

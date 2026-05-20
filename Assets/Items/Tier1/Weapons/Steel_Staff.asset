@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: Steel_Staff
   itemName: Steel Staff
   description: A sturdy staff with a stable magical core.
-  icon: {fileID: 0}
+  icon: {fileID: 694275589, guid: fd23397f71a73094cb357316ca0e3ba7, type: 3}
   itemType: 0
   sellValue: 58
   effects: []
