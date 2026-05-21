@@ -10,6 +10,7 @@ public class CaravanManager : MonoBehaviour
     public GameObject firePanel;
     public GameObject rosterPanel;
     public GameObject suppliesPanel;
+    public GameObject artisansPanel;
 
     [Header("Texts")]
     public TMP_Text caravanText;
@@ -52,6 +53,7 @@ public class CaravanManager : MonoBehaviour
         SetPanelState(firePanel, true);
         SetPanelState(rosterPanel, false);
         SetPanelState(suppliesPanel, false);
+        SetPanelState(artisansPanel, false);
         RefreshActionPanel();
         RefreshAllUI();
     }
@@ -62,6 +64,7 @@ public class CaravanManager : MonoBehaviour
         SetPanelState(firePanel, false);
         SetPanelState(rosterPanel, true);
         SetPanelState(suppliesPanel, false);
+        SetPanelState(artisansPanel, false);
         RefreshActionPanel();
         RefreshAllUI();
     }
@@ -72,6 +75,18 @@ public class CaravanManager : MonoBehaviour
         SetPanelState(firePanel, false);
         SetPanelState(rosterPanel, false);
         SetPanelState(suppliesPanel, true);
+        SetPanelState(artisansPanel, false);
+        RefreshActionPanel();
+        RefreshAllUI();
+    }
+
+    public void ShowArtisansPanel()
+    {
+        currentSection = "Artesanos";
+        SetPanelState(firePanel, false);
+        SetPanelState(rosterPanel, false);
+        SetPanelState(suppliesPanel, false);
+        SetPanelState(artisansPanel, true);
         RefreshActionPanel();
         RefreshAllUI();
     }
@@ -81,6 +96,7 @@ public class CaravanManager : MonoBehaviour
         SetPanelState(firePanel, false);
         SetPanelState(rosterPanel, false);
         SetPanelState(suppliesPanel, false);
+        SetPanelState(artisansPanel, false);
     }
 
     private void SetPanelState(GameObject panel, bool active)
@@ -284,6 +300,7 @@ public class CaravanManager : MonoBehaviour
         CreateButton("Hoguera", topBar.transform, ShowFirePanel);
         CreateButton("Barracas", topBar.transform, ShowRosterPanel);
         CreateButton("Suministros", topBar.transform, ShowSuppliesPanel);
+        CreateButton("Artesanos", topBar.transform, ShowArtisansPanel);
         CreateButton("Descansar", topBar.transform, Rest);
         CreateButton("Volver al mapa", topBar.transform, ReturnToWorldMap, 210);
 
@@ -300,6 +317,9 @@ public class CaravanManager : MonoBehaviour
         GameObject suppliesCard = CreateCard("Suministros", content.transform, new Vector2(0.48f, 0f), new Vector2(0.72f, 0.5f), new Vector2(14f, 0f), new Vector2(-10f, 0f));
         suppliesPanel = suppliesCard;
         suppliesText = CreateBodyText("SuppliesText", suppliesCard.transform, 22);
+
+        GameObject artisansCard = CreateCard("Artesanos", content.transform, new Vector2(0.48f, 0f), new Vector2(0.72f, 0.5f), new Vector2(14f, 0f), new Vector2(-10f, 0f));
+        artisansPanel = artisansCard;
 
         GameObject actionCard = CreateCard("Acciones", content.transform, new Vector2(0.735f, 0f), new Vector2(1f, 0.5f), new Vector2(10f, 0f), Vector2.zero);
         firePanel = actionCard;
@@ -439,6 +459,12 @@ public class CaravanManager : MonoBehaviour
             actionBodyText.text =
                 "Estado de la compania, vida actual, stamina, armadura y equipo principal.\n\n" +
                 "Esta lista lee directamente de PartyRuntimeState.";
+        }
+        else if (currentSection == "Artesanos")
+        {
+            actionBodyText.text =
+                "Procesa materiales de la caravana y transforma recursos en equipo o suministros.\n\n" +
+                "Las recetas disponibles dependen del artesano seleccionado.";
         }
         else
         {

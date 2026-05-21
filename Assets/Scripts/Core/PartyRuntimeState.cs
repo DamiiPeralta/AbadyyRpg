@@ -203,6 +203,41 @@ public class PartyRuntimeState : MonoBehaviour
         return TrySetActive(unit, !IsActiveMember(unit));
     }
 
+    public bool SetActivePartyOrdered(List<Unit> units)
+    {
+        if (units == null || units.Count == 0)
+            return false;
+
+        if (runtimeRosterUnits == null || activePartyUnits == null)
+            return false;
+
+        int maxActive = Mathf.Max(1, maxActiveMembers);
+
+        if (units.Count > maxActive)
+            return false;
+
+        List<Unit> orderedUnits = new List<Unit>();
+
+        foreach (Unit unit in units)
+        {
+            if (unit == null)
+                return false;
+
+            if (!runtimeRosterUnits.Contains(unit))
+                return false;
+
+            if (orderedUnits.Contains(unit))
+                return false;
+
+            orderedUnits.Add(unit);
+        }
+
+        activePartyUnits.Clear();
+        activePartyUnits.AddRange(orderedUnits);
+        initialized = true;
+        return true;
+    }
+
     public bool DismissUnit(Unit unit)
     {
         if (unit == null || runtimeRosterUnits == null)

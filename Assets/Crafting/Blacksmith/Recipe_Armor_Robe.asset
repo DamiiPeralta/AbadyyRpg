@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 548e84f0bc444f74c8556989634ae95b, type: 3}
+  m_Name: Recipe_Armor_Robe
+  m_EditorClassIdentifier: 
+  recipeId: Recipe_Armor_Robe
+  recipeName: Tunica Arcana
+  description: Tunica reforzada con cristales y polvo arcano.
+  icon: {fileID: 0}
+  stationType: 0
+  previewItem: {fileID: 11400000, guid: b48078ac433af594980e9a92f1001eb0, type: 2}
+  inputs:
+  - stackType: 6
+    item: {fileID: 0}
+    itemId: 
+    amount: 2
+  - stackType: 7
+    item: {fileID: 0}
+    itemId: 
+    amount: 3
+  - stackType: 0
+    item: {fileID: 11400000, guid: 83dd9b04f7bb4e7b8ca706a64f19035c, type: 2}
+    itemId: Arcane_Dust
+    amount: 2
+  outputs:
+  - stackType: 0
+    item: {fileID: 11400000, guid: b48078ac433af594980e9a92f1001eb0, type: 2}
+    itemId: Armor_Robe
+    amount: 1

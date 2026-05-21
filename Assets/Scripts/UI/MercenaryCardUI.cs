@@ -47,6 +47,12 @@ public class MercenaryCardUI : MonoBehaviour
             selectionFrame.SetActive(selected);
     }
 
+    public void SetRosterStateLabel(string value)
+    {
+        if (rosterStateText != null)
+            rosterStateText.text = value;
+    }
+
     public void Refresh()
     {
         if (unit == null)

@@ -19,6 +19,7 @@ public class MercenaryManagementUI : MonoBehaviour
     public AbilityPickerModalUI abilityPickerModal;
     public ConditionPickerModalUI conditionPickerModal;
     public ConfirmActionModalUI dismissConfirmModal;
+    public RosterSelectionPanelUI rosterSelectionPanel;
 
     [Header("Actions")]
     public Button viewEquipmentButton;
@@ -51,8 +52,10 @@ public class MercenaryManagementUI : MonoBehaviour
         RebuildRoster();
         RefreshCounters();
 
-        if (selectedUnit == null || !roster.Contains(selectedUnit))
-            selectedUnit = roster.Count > 0 ? roster[0] : null;
+        List<Unit> visibleRoster = GetVisibleRoster();
+
+        if (selectedUnit == null || !visibleRoster.Contains(selectedUnit))
+            selectedUnit = visibleRoster.Count > 0 ? visibleRoster[0] : null;
 
         SelectUnit(selectedUnit);
     }
@@ -83,7 +86,7 @@ public class MercenaryManagementUI : MonoBehaviour
         if (rosterRoot == null || cardPrefab == null)
             return;
 
-        foreach (Unit unit in roster)
+        foreach (Unit unit in GetVisibleRoster())
         {
             if (unit == null)
                 continue;
@@ -104,6 +107,14 @@ public class MercenaryManagementUI : MonoBehaviour
         }
 
         cards.Clear();
+    }
+
+    private List<Unit> GetVisibleRoster()
+    {
+        if (PartyRuntimeState.Instance == null || PartyRuntimeState.Instance.GetCurrentParty() == null)
+            return new List<Unit>();
+
+        return PartyRuntimeState.Instance.GetCurrentParty();
     }
 
     private void RefreshCounters()
@@ -133,7 +144,7 @@ public class MercenaryManagementUI : MonoBehaviour
             viewEquipmentButton.onClick.AddListener(OpenEquipment);
 
         if (changeRosterButton != null)
-            changeRosterButton.onClick.AddListener(ToggleSelectedRosterState);
+            changeRosterButton.onClick.AddListener(OpenRosterSelection);
     }
 
     private void DismissSelected()
@@ -168,18 +179,18 @@ public class MercenaryManagementUI : MonoBehaviour
         RefreshFromRuntime();
     }
 
-    private void ToggleSelectedRosterState()
+    private void OpenRosterSelection()
     {
-        if (selectedUnit == null || PartyRuntimeState.Instance == null)
+        if (PartyRuntimeState.Instance == null)
             return;
 
-        if (!PartyRuntimeState.Instance.ToggleActive(selectedUnit))
+        if (rosterSelectionPanel != null)
         {
-            Debug.LogWarning("No se pudo cambiar el roster. Revisa limite de activos o minimo de party.");
+            rosterSelectionPanel.Open(this);
             return;
         }
 
-        RefreshFromRuntime();
+        Debug.LogWarning("MercenaryManagementUI: falta RosterSelectionPanelUI.");
     }
 
     private void OpenEquipment()
@@ -207,7 +218,7 @@ public class MercenaryManagementUI : MonoBehaviour
         if (changeRosterButton != null)
             changeRosterButton.interactable = hasSelection;
 
-        SetText(changeRosterButtonText, isActive ? "Enviar reserva" : "Activar");
+        SetText(changeRosterButtonText, "Cambiar roster");
         SetText(dismissButtonText, "Despedir");
     }
 
@@ -237,6 +248,9 @@ public class MercenaryManagementUI : MonoBehaviour
         if (dismissConfirmModal == null)
             dismissConfirmModal = GetComponentInChildren<ConfirmActionModalUI>(true);
 
+        if (rosterSelectionPanel == null)
+            rosterSelectionPanel = GetComponentInChildren<RosterSelectionPanelUI>(true);
+
         if (rosterRoot == null)
             rosterRoot = FindChildTransform("RosterRoot");
 
@@ -263,6 +277,9 @@ public class MercenaryManagementUI : MonoBehaviour
 
         if (dismissButton != null && dismissButtonText == null)
             dismissButtonText = dismissButton.GetComponentInChildren<TMP_Text>(true);
+
+        if (rosterSelectionPanel == null)
+            rosterSelectionPanel = FindOrCreateRosterSelectionPanel();
     }
 
     private T FindChild<T>(string childName) where T : Component
@@ -296,6 +313,22 @@ public class MercenaryManagementUI : MonoBehaviour
             return null;
 
         return panel.gameObject.AddComponent<EquipmentPanelUI>();
+    }
+
+    private RosterSelectionPanelUI FindOrCreateRosterSelectionPanel()
+    {
+        RosterSelectionPanelUI existing = FindObjectOfType<RosterSelectionPanelUI>(true);
+        if (existing != null)
+            return existing;
+
+        Transform panel = FindSceneTransform("Panel_CombatRosterSelection");
+        if (panel == null)
+            panel = FindSceneTransform("Panel_CombatRoster");
+
+        if (panel == null)
+            return null;
+
+        return panel.gameObject.AddComponent<RosterSelectionPanelUI>();
     }
 
     private Transform FindSceneTransform(string childName)
