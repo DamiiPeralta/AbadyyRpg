@@ -18,6 +18,7 @@ public class WorldMapManager : MonoBehaviour
 
     [Header("UI")]
     public EventPanelUI eventPanelUI;
+    public WorldMapHudUI hudUI;
 
     private WorldMapEvent currentEvent;
 
@@ -51,6 +52,8 @@ public class WorldMapManager : MonoBehaviour
             GameRunState.Instance.RegisterVisitedNode(currentNode.nodeId);
         }
 
+        RefreshHud();
+
         Debug.Log($"Starting at node: {currentNode.nodeName}");
     }
 
@@ -83,7 +86,49 @@ public class WorldMapManager : MonoBehaviour
             return;
         }
 
+        if (!CanPayTravelCost(targetNode))
+            return;
+
+        PayTravelCost(targetNode);
         MoveToNode(targetNode);
+    }
+
+    private bool CanPayTravelCost(WorldMapNode targetNode)
+    {
+        CaravanState caravan = CaravanState.Instance;
+
+        if (caravan == null)
+        {
+            Debug.LogWarning("WorldMapManager: no existe CaravanState. El viaje no consumira stamina ni horas.");
+            return true;
+        }
+
+        int staminaCost = Mathf.Max(0, targetNode.travelStaminaCost);
+
+        if (caravan.caravanStamina < staminaCost)
+        {
+            Debug.Log($"No hay stamina suficiente para viajar a {targetNode.nodeName}. Requiere {staminaCost}, disponible {caravan.caravanStamina}.");
+            RefreshHud();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void PayTravelCost(WorldMapNode targetNode)
+    {
+        CaravanState caravan = CaravanState.Instance;
+
+        if (caravan == null)
+            return;
+
+        int staminaCost = Mathf.Max(0, targetNode.travelStaminaCost);
+        int hourCost = Mathf.Max(0, targetNode.travelHourCost);
+
+        caravan.ChangeStamina(-staminaCost);
+        caravan.AdvanceHours(hourCost);
+
+        Debug.Log($"Viaje a {targetNode.nodeName}: -{staminaCost} stamina, +{hourCost} horas.");
     }
 
     private void MoveToNode(WorldMapNode targetNode)
@@ -102,6 +147,8 @@ public class WorldMapManager : MonoBehaviour
             GameRunState.Instance.RegisterCurrentNode(currentNode.nodeId);
             GameRunState.Instance.RegisterVisitedNode(currentNode.nodeId);
         }
+
+        RefreshHud();
 
         Debug.Log($"Current node: {currentNode.nodeName}");
 
@@ -215,6 +262,8 @@ public class WorldMapManager : MonoBehaviour
         {
             RewardApplier.ApplyReward(completedNode.combatVictoryReward);
         }
+
+        RefreshHud();
 
         foreach (WorldMapNode nodeToUnlock in completedNode.unlockOnCombatVictory)
         {
@@ -397,6 +446,7 @@ public class WorldMapManager : MonoBehaviour
         if (option.reward != null && !option.reward.IsEmpty())
         {
             RewardApplier.ApplyReward(option.reward);
+            RefreshHud();
         }
 
         if (option.returnToStartNode)
@@ -432,6 +482,12 @@ public class WorldMapManager : MonoBehaviour
         }
 
         Debug.Log($"WorldMapManager: currentNode restaurado después del combate: {currentNode.nodeName}");
+    }
+
+    private void RefreshHud()
+    {
+        if (hudUI != null)
+            hudUI.Refresh(currentNode);
     }
 
     public void GoToCaravanScene()

@@ -18,15 +18,38 @@ public class CaravanManager : MonoBehaviour
     public TMP_Text rosterText;
     public TMP_Text messageText;
 
-    [Header("Rest Settings")]
+    [Header("Fire UI")]
+    public CaravanFirePanelUI firePanelUI;
+
+    [HideInInspector]
     [Range(0f, 1f)]
     public float restHealPercent = 0.20f;
+    [HideInInspector]
+    [Range(0f, 1f)]
+    public float armorRepairPercent = 0.20f;
+    [HideInInspector]
+    public int partialRestFoodPerLivingMember = 1;
+    [HideInInspector]
+    public int partialRestWoodCost = 1;
+    [HideInInspector]
+    public int sleepFoodPerLivingMember = 1;
+    [HideInInspector]
+    public int sleepWoodCost = 2;
+    [HideInInspector]
+    public int physicalArmorRepairIronCost = 2;
+    [HideInInspector]
+    public int physicalArmorRepairLeatherCost = 1;
+    [HideInInspector]
+    public int magicalArmorRepairCrystalCost = 2;
+    [HideInInspector]
+    public int magicalArmorRepairLeatherCost = 2;
 
     [Header("Generated UI")]
     public bool buildGeneratedUI = true;
 
     private TMP_Text actionTitleText;
     private TMP_Text actionBodyText;
+    private GameObject actionButtonsRoot;
     private GameObject generatedRoot;
     private string currentSection = "Suministros";
 
@@ -40,10 +63,32 @@ public class CaravanManager : MonoBehaviour
 
     private void Start()
     {
+        if (firePanelUI == null)
+            firePanelUI = GetComponentInChildren<CaravanFirePanelUI>(true);
+
         if (buildGeneratedUI)
             BuildGeneratedUI();
 
         ShowSuppliesPanel();
+        RefreshAllUI();
+    }
+
+    private void OnEnable()
+    {
+        PartyRuntimeState.PartyChanged -= HandlePartyChanged;
+        PartyRuntimeState.PartyChanged += HandlePartyChanged;
+    }
+
+    private void OnDisable()
+    {
+        PartyRuntimeState.PartyChanged -= HandlePartyChanged;
+    }
+
+    private void HandlePartyChanged()
+    {
+        if (!isActiveAndEnabled)
+            return;
+
         RefreshAllUI();
     }
 
@@ -55,6 +100,7 @@ public class CaravanManager : MonoBehaviour
         SetPanelState(suppliesPanel, false);
         SetPanelState(artisansPanel, false);
         RefreshActionPanel();
+        firePanelUI?.Refresh();
         RefreshAllUI();
     }
 
@@ -111,6 +157,7 @@ public class CaravanManager : MonoBehaviour
         RefreshSuppliesUI();
         RefreshRosterUI();
         RefreshActionPanel();
+        firePanelUI?.Refresh();
     }
 
     public void RefreshCaravanUI()
@@ -220,15 +267,17 @@ public class CaravanManager : MonoBehaviour
 
     public void Rest()
     {
+        Sleep();
+    }
+
+    public void PartialRest()
+    {
+        if (firePanelUI != null)
+            return;
+
         if (InventoryRuntimeState.Instance == null)
         {
             SetMessage("No existe InventoryRuntimeState.");
-            return;
-        }
-
-        if (CaravanState.Instance == null)
-        {
-            SetMessage("No existe CaravanState.");
             return;
         }
 
@@ -246,23 +295,179 @@ public class CaravanManager : MonoBehaviour
             return;
         }
 
-        bool paidFood = InventoryRuntimeState.Instance.SpendFood(foodCost);
+        InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
+        foodCost *= Mathf.Max(0, partialRestFoodPerLivingMember);
+        int woodCost = Mathf.Max(0, partialRestWoodCost);
 
-        if (!paidFood)
+        if (inventory.food < foodCost)
         {
             SetMessage($"No hay comida suficiente. Necesitas {foodCost}.");
             return;
         }
 
+        if (inventory.wood < woodCost)
+        {
+            SetMessage($"No hay madera suficiente. Necesitas {woodCost}.");
+            return;
+        }
+
+        inventory.SpendFood(foodCost);
+        inventory.SpendWood(woodCost);
         PartyRuntimeState.Instance.HealAllLivingPercent(restHealPercent);
+        PartyRuntimeState.Instance.RestoreAllLivingStaminaPercent(restHealPercent);
+        PartyRuntimeState.Instance.RestoreAllLivingManaPercent(restHealPercent);
+
+        SetMessage($"Descanso parcial. Comida consumida: {foodCost}. Madera consumida: {woodCost}.");
+
+        RefreshAllUI();
+    }
+
+    public void Sleep()
+    {
+        if (firePanelUI != null)
+            return;
+
+        if (InventoryRuntimeState.Instance == null)
+        {
+            SetMessage("No existe InventoryRuntimeState.");
+            return;
+        }
+
+        if (CaravanState.Instance == null)
+        {
+            SetMessage("No existe CaravanState.");
+            return;
+        }
+
+        if (PartyRuntimeState.Instance == null || !PartyRuntimeState.Instance.HasParty())
+        {
+            SetMessage("No hay party para dormir.");
+            return;
+        }
+
+        int foodCost = PartyRuntimeState.Instance.GetLivingMembersCount();
+
+        if (foodCost <= 0)
+        {
+            SetMessage("No hay miembros vivos para dormir.");
+            return;
+        }
+
+        foodCost *= Mathf.Max(0, sleepFoodPerLivingMember);
+        int woodCost = Mathf.Max(0, sleepWoodCost);
+
+        InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
+
+        if (inventory.food < foodCost)
+        {
+            SetMessage($"No hay comida suficiente. Necesitas {foodCost}.");
+            return;
+        }
+
+        if (inventory.wood < woodCost)
+        {
+            SetMessage($"No hay madera suficiente. Necesitas {woodCost}.");
+            return;
+        }
+
+        inventory.SpendFood(foodCost);
+        inventory.SpendWood(woodCost);
+        PartyRuntimeState.Instance.FullHealAllLiving();
         PartyRuntimeState.Instance.RestoreAllLivingStamina();
         PartyRuntimeState.Instance.RestoreAllLivingMana();
         CaravanState.Instance.RestoreStamina();
         CaravanState.Instance.AdvanceDay();
 
-        SetMessage($"Descanso completo. Comida consumida: {foodCost}.");
+        SetMessage($"La compania durmio hasta el dia {CaravanState.Instance.day}. Comida consumida: {foodCost}. Madera consumida: {woodCost}.");
 
         RefreshAllUI();
+    }
+
+    public void RepairPhysicalArmor()
+    {
+        if (firePanelUI != null)
+            return;
+
+        if (!CanUsePartyAction("reparar armadura fisica"))
+            return;
+
+        InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
+        int ironCost = Mathf.Max(0, physicalArmorRepairIronCost);
+        int leatherCost = Mathf.Max(0, physicalArmorRepairLeatherCost);
+
+        if (inventory.iron < ironCost)
+        {
+            SetMessage($"No hay hierro suficiente. Necesitas {ironCost}.");
+            return;
+        }
+
+        if (inventory.leather < leatherCost)
+        {
+            SetMessage($"No hay cuero suficiente. Necesitas {leatherCost}.");
+            return;
+        }
+
+        inventory.SpendIron(ironCost);
+        inventory.SpendLeather(leatherCost);
+        int restored = PartyRuntimeState.Instance.RestoreAllLivingPhysicalArmorPercent(armorRepairPercent);
+
+        SetMessage($"Armadura fisica reparada: +{restored}. Hierro consumido: {ironCost}. Cuero consumido: {leatherCost}.");
+        RefreshAllUI();
+    }
+
+    public void RepairMagicalArmor()
+    {
+        if (firePanelUI != null)
+            return;
+
+        if (!CanUsePartyAction("reparar armadura magica"))
+            return;
+
+        InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
+        int crystalCost = Mathf.Max(0, magicalArmorRepairCrystalCost);
+        int leatherCost = Mathf.Max(0, magicalArmorRepairLeatherCost);
+
+        if (inventory.crystals < crystalCost)
+        {
+            SetMessage($"No hay cristales suficientes. Necesitas {crystalCost}.");
+            return;
+        }
+
+        if (inventory.leather < leatherCost)
+        {
+            SetMessage($"No hay cuero suficiente. Necesitas {leatherCost}.");
+            return;
+        }
+
+        inventory.SpendCrystals(crystalCost);
+        inventory.SpendLeather(leatherCost);
+        int restored = PartyRuntimeState.Instance.RestoreAllLivingMagicalArmorPercent(armorRepairPercent);
+
+        SetMessage($"Armadura magica reparada: +{restored}. Cristales consumidos: {crystalCost}. Cuero consumido: {leatherCost}.");
+        RefreshAllUI();
+    }
+
+    private bool CanUsePartyAction(string actionName)
+    {
+        if (InventoryRuntimeState.Instance == null)
+        {
+            SetMessage("No existe InventoryRuntimeState.");
+            return false;
+        }
+
+        if (PartyRuntimeState.Instance == null || !PartyRuntimeState.Instance.HasParty())
+        {
+            SetMessage($"No hay party para {actionName}.");
+            return false;
+        }
+
+        if (PartyRuntimeState.Instance.GetLivingMembersCount() <= 0)
+        {
+            SetMessage($"No hay miembros vivos para {actionName}.");
+            return false;
+        }
+
+        return true;
     }
 
     public void ReturnToWorldMap()
@@ -301,7 +506,6 @@ public class CaravanManager : MonoBehaviour
         CreateButton("Barracas", topBar.transform, ShowRosterPanel);
         CreateButton("Suministros", topBar.transform, ShowSuppliesPanel);
         CreateButton("Artesanos", topBar.transform, ShowArtisansPanel);
-        CreateButton("Descansar", topBar.transform, Rest);
         CreateButton("Volver al mapa", topBar.transform, ReturnToWorldMap, 210);
 
         GameObject content = CreateUIObject("Content", generatedRoot.transform);
@@ -326,12 +530,74 @@ public class CaravanManager : MonoBehaviour
         actionTitleText = CreateText("ActionTitle", actionCard.transform, "", 24, FontStyles.Bold, textColor, TextAlignmentOptions.TopLeft);
         Stretch(actionTitleText.rectTransform, Vector2.zero, Vector2.one, new Vector2(22f, 102f), new Vector2(-22f, -68f));
         actionBodyText = CreateText("ActionBody", actionCard.transform, "", 18, FontStyles.Normal, mutedTextColor, TextAlignmentOptions.TopLeft);
-        Stretch(actionBodyText.rectTransform, Vector2.zero, Vector2.one, new Vector2(22f, 22f), new Vector2(-22f, -122f));
+        Stretch(actionBodyText.rectTransform, Vector2.zero, Vector2.one, new Vector2(22f, 132f), new Vector2(-22f, -122f));
+
+        actionButtonsRoot = CreateUIObject("ActionButtons", actionCard.transform);
+        Stretch(actionButtonsRoot.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(22f, 22f), new Vector2(-22f, 118f));
+        VerticalLayoutGroup actionButtonsLayout = actionButtonsRoot.AddComponent<VerticalLayoutGroup>();
+        actionButtonsLayout.spacing = 8;
+        actionButtonsLayout.childControlWidth = true;
+        actionButtonsLayout.childControlHeight = false;
+        actionButtonsLayout.childForceExpandWidth = true;
+        actionButtonsLayout.childForceExpandHeight = false;
+
+        CreateButton("Descanso parcial", actionButtonsRoot.transform, PartialRest, 0f);
+        CreateButton("Reparar armadura fisica", actionButtonsRoot.transform, RepairPhysicalArmor, 0f);
+        CreateButton("Reparar armadura magica", actionButtonsRoot.transform, RepairMagicalArmor, 0f);
+        CreateButton("Dormir", actionButtonsRoot.transform, Sleep, 0f);
 
         GameObject messagePanel = CreatePanel("MessagePanel", generatedRoot.transform, new Color(0.11f, 0.09f, 0.07f, 0.96f));
         Stretch(messagePanel.GetComponent<RectTransform>(), new Vector2(0.48f, 0f), new Vector2(1f, 0f), new Vector2(42f, 28f), new Vector2(-28f, 84f));
         messageText = CreateText("MessageText", messagePanel.transform, "La caravana esta lista.", 18, FontStyles.Normal, textColor, TextAlignmentOptions.MidlineLeft);
         Stretch(messageText.rectTransform, Vector2.zero, Vector2.one, new Vector2(18f, 8f), new Vector2(-18f, -8f));
+    }
+
+    private void BuildSceneFireActionsUI()
+    {
+        if (firePanel == null)
+            return;
+
+        Transform existing = firePanel.transform.Find("FireActionsRuntime");
+
+        if (existing != null)
+        {
+            actionButtonsRoot = existing.gameObject;
+            TMP_Text[] texts = existing.GetComponentsInChildren<TMP_Text>(true);
+
+            foreach (TMP_Text text in texts)
+            {
+                if (text.name == "FireActionsTitle")
+                    actionTitleText = text;
+                else if (text.name == "FireActionsBody")
+                    actionBodyText = text;
+            }
+
+            return;
+        }
+
+        GameObject root = CreatePanel("FireActionsRuntime", firePanel.transform, new Color(0.11f, 0.09f, 0.07f, 0.88f));
+        actionButtonsRoot = root;
+        Stretch(root.GetComponent<RectTransform>(), new Vector2(0.04f, 0.04f), new Vector2(0.96f, 0.96f), Vector2.zero, Vector2.zero);
+
+        VerticalLayoutGroup layout = root.AddComponent<VerticalLayoutGroup>();
+        layout.padding = new RectOffset(14, 14, 12, 12);
+        layout.spacing = 8;
+        layout.childControlWidth = true;
+        layout.childControlHeight = false;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+
+        actionTitleText = CreateText("FireActionsTitle", root.transform, "Hoguera", 22, FontStyles.Bold, textColor, TextAlignmentOptions.Left);
+        actionTitleText.gameObject.AddComponent<LayoutElement>().preferredHeight = 30f;
+
+        actionBodyText = CreateText("FireActionsBody", root.transform, "", 15, FontStyles.Normal, mutedTextColor, TextAlignmentOptions.TopLeft);
+        actionBodyText.overflowMode = TextOverflowModes.Ellipsis;
+        actionBodyText.gameObject.AddComponent<LayoutElement>().preferredHeight = 112f;
+
+        CreateButton("Descanso parcial", root.transform, PartialRest, 0f);
+        CreateButton("Reparar armadura fisica", root.transform, RepairPhysicalArmor, 0f);
+        CreateButton("Reparar armadura magica", root.transform, RepairMagicalArmor, 0f);
+        CreateButton("Dormir", root.transform, Sleep, 0f);
     }
 
     private void DisableExistingCanvasChildren(Canvas canvas)
@@ -393,8 +659,13 @@ public class CaravanManager : MonoBehaviour
         button.colors = colors;
 
         LayoutElement layout = go.AddComponent<LayoutElement>();
-        layout.preferredWidth = width;
-        layout.minWidth = width;
+        layout.preferredHeight = 42f;
+
+        if (width > 0f)
+        {
+            layout.preferredWidth = width;
+            layout.minWidth = width;
+        }
 
         TMP_Text text = CreateText(label + "Label", go.transform, label, 18, FontStyles.Bold, textColor, TextAlignmentOptions.Center);
         Stretch(text.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
@@ -444,15 +715,22 @@ public class CaravanManager : MonoBehaviour
 
         actionTitleText.text = currentSection;
 
+        if (actionButtonsRoot != null)
+            actionButtonsRoot.SetActive(currentSection == "Hoguera");
+
         if (currentSection == "Hoguera")
         {
-            int foodCost = PartyRuntimeState.Instance != null ? PartyRuntimeState.Instance.GetLivingMembersCount() : 0;
+            int livingMembers = PartyRuntimeState.Instance != null ? PartyRuntimeState.Instance.GetLivingMembersCount() : 0;
+            int partialFoodCost = livingMembers * Mathf.Max(0, partialRestFoodPerLivingMember);
+            int sleepFoodCost = livingMembers * Mathf.Max(0, sleepFoodPerLivingMember);
             int healPercent = Mathf.RoundToInt(restHealPercent * 100f);
+            int repairPercent = Mathf.RoundToInt(armorRepairPercent * 100f);
 
             actionBodyText.text =
-                $"Descansar consume {foodCost} de comida.\n" +
-                $"Restaura {healPercent}% de HP, toda la stamina individual y la stamina de viaje.\n\n" +
-                "Usa el boton Descansar cuando quieras cerrar el dia.";
+                $"Descanso parcial: {partialFoodCost} comida, {partialRestWoodCost} madera. Recupera {healPercent}% de HP, energia y mana. No pasa el dia.\n" +
+                $"Armadura fisica: {physicalArmorRepairIronCost} hierro, {physicalArmorRepairLeatherCost} cuero. Repara {repairPercent}%.\n" +
+                $"Armadura magica: {magicalArmorRepairCrystalCost} cristales, {magicalArmorRepairLeatherCost} cuero. Repara {repairPercent}%.\n" +
+                $"Dormir: {sleepFoodCost} comida. Recupera toda la vida, stamina y mana; pasa al dia siguiente.";
         }
         else if (currentSection == "Barracas")
         {

@@ -1,12 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum WorldMapTerrainType
+{
+    Camino,
+    Pueblo,
+    Bosque,
+    BosqueProfundo,
+    CaminoMontañoso,
+    Montaña,
+    RioBajo,
+    Pantano,
+    Ruinas
+}
+
 public class WorldMapNode : MonoBehaviour
 {
     [Header("Info")]
     public string nodeId;
     public string nodeName = "Node";
     [TextArea] public string description;
+
+    [Header("Viaje")]
+    public WorldMapTerrainType terrainType = WorldMapTerrainType.Camino;
+    public bool useTerrainDefaultTravelCosts = true;
+    public int travelStaminaCost = 1;
+    public int travelHourCost = 1;
 
     [Header("Conexiones")]
     public List<WorldMapNode> connectedNodes = new List<WorldMapNode>();
@@ -42,6 +61,12 @@ public class WorldMapNode : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         RefreshVisual();
+    }
+
+    private void OnValidate()
+    {
+        if (useTerrainDefaultTravelCosts)
+            ApplyDefaultTravelCosts();
     }
 
     private void OnMouseDown()
@@ -104,6 +129,49 @@ public class WorldMapNode : MonoBehaviour
         if (unvisitedSprite != null)
         {
             spriteRenderer.sprite = unvisitedSprite;
+        }
+    }
+
+    public void ApplyDefaultTravelCosts()
+    {
+        switch (terrainType)
+        {
+            case WorldMapTerrainType.Pueblo:
+                travelStaminaCost = 0;
+                travelHourCost = 0;
+                break;
+            case WorldMapTerrainType.Bosque:
+                travelStaminaCost = 3;
+                travelHourCost = 3;
+                break;
+            case WorldMapTerrainType.BosqueProfundo:
+                travelStaminaCost = 5;
+                travelHourCost = 5;
+                break;
+            case WorldMapTerrainType.CaminoMontañoso:
+                travelStaminaCost = 3;
+                travelHourCost = 3;
+                break;
+            case WorldMapTerrainType.Montaña:
+                travelStaminaCost = 6;
+                travelHourCost = 6;
+                break;
+            case WorldMapTerrainType.RioBajo:
+                travelStaminaCost = 4;
+                travelHourCost = 3;
+                break;
+            case WorldMapTerrainType.Pantano:
+                travelStaminaCost = 5;
+                travelHourCost = 4;
+                break;
+            case WorldMapTerrainType.Ruinas:
+                travelStaminaCost = 2;
+                travelHourCost = 2;
+                break;
+            default:
+                travelStaminaCost = 1;
+                travelHourCost = 1;
+                break;
         }
     }
 }

@@ -6,6 +6,7 @@ public class CaravanState : MonoBehaviour
 
     [Header("Time")]
     public int day = 1;
+    public int hour = 8;
 
     [Header("Morale")]
     public int morale = 70;
@@ -33,6 +34,21 @@ public class CaravanState : MonoBehaviour
     public void AdvanceDay()
     {
         day++;
+        hour = 8;
+    }
+
+    public void AdvanceHours(int hours)
+    {
+        if (hours <= 0)
+            return;
+
+        hour += hours;
+
+        while (hour >= 24)
+        {
+            hour -= 24;
+            day++;
+        }
     }
 
     public void RestoreStamina()

@@ -38,8 +38,28 @@ public class MercenaryManagementUI : MonoBehaviour
         HookButtons();
     }
 
+    private void OnEnable()
+    {
+        PartyRuntimeState.PartyChanged -= HandlePartyChanged;
+        PartyRuntimeState.PartyChanged += HandlePartyChanged;
+        RefreshFromRuntime();
+    }
+
+    private void OnDisable()
+    {
+        PartyRuntimeState.PartyChanged -= HandlePartyChanged;
+    }
+
     private void Start()
     {
+        RefreshFromRuntime();
+    }
+
+    private void HandlePartyChanged()
+    {
+        if (!isActiveAndEnabled)
+            return;
+
         RefreshFromRuntime();
     }
 

@@ -26,6 +26,20 @@ public class RosterSelectionPanelUI : MonoBehaviour
         Hide();
     }
 
+    private void OnEnable()
+    {
+        PartyRuntimeState.PartyChanged -= HandlePartyChanged;
+        PartyRuntimeState.PartyChanged += HandlePartyChanged;
+
+        if (IsVisible())
+            RefreshFromRuntimeParty();
+    }
+
+    private void OnDisable()
+    {
+        PartyRuntimeState.PartyChanged -= HandlePartyChanged;
+    }
+
     public void Open(MercenaryManagementUI owner)
     {
         this.owner = owner;
@@ -35,9 +49,7 @@ public class RosterSelectionPanelUI : MonoBehaviour
         else
             gameObject.SetActive(true);
 
-        LoadCurrentActiveParty();
-        RebuildCards();
-        RefreshState();
+        RefreshFromRuntimeParty();
     }
 
     public void Hide()
@@ -60,6 +72,29 @@ public class RosterSelectionPanelUI : MonoBehaviour
             if (unit != null && !selectedUnits.Contains(unit))
                 selectedUnits.Add(unit);
         }
+    }
+
+    private void RefreshFromRuntimeParty()
+    {
+        LoadCurrentActiveParty();
+        RebuildCards();
+        RefreshState();
+    }
+
+    private void HandlePartyChanged()
+    {
+        if (!IsVisible())
+            return;
+
+        RefreshFromRuntimeParty();
+    }
+
+    private bool IsVisible()
+    {
+        if (rootPanel != null)
+            return rootPanel.activeInHierarchy;
+
+        return gameObject.activeInHierarchy;
     }
 
     private void RebuildCards()

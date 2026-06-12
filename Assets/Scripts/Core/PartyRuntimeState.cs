@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PartyRuntimeState : MonoBehaviour
 {
     public static PartyRuntimeState Instance { get; private set; }
+    public static event Action PartyChanged;
 
     [Header("Roster")]
     public int maxRosterMembers = 6;
@@ -95,6 +97,7 @@ public class PartyRuntimeState : MonoBehaviour
         initialized = true;
 
         Debug.Log($"PartyRuntimeState: party creada desde BattleSetup con {runtimeRosterUnits.Count} unidades.");
+        NotifyPartyChanged();
     }
 
     public void ResetParty()
@@ -104,6 +107,7 @@ public class PartyRuntimeState : MonoBehaviour
         activePartyUnits.Clear();
 
         Debug.Log("PartyRuntimeState: party reseteada.");
+        NotifyPartyChanged();
     }
 
     public bool HasParty()
@@ -164,6 +168,8 @@ public class PartyRuntimeState : MonoBehaviour
 
         if (makeActive)
             TrySetActive(unit, true);
+        else
+            NotifyPartyChanged();
 
         return true;
     }
@@ -185,6 +191,7 @@ public class PartyRuntimeState : MonoBehaviour
                 return false;
 
             activePartyUnits.Add(unit);
+            NotifyPartyChanged();
             return true;
         }
 
@@ -195,6 +202,7 @@ public class PartyRuntimeState : MonoBehaviour
             return false;
 
         activePartyUnits.Remove(unit);
+        NotifyPartyChanged();
         return true;
     }
 
@@ -235,6 +243,7 @@ public class PartyRuntimeState : MonoBehaviour
         activePartyUnits.Clear();
         activePartyUnits.AddRange(orderedUnits);
         initialized = true;
+        NotifyPartyChanged();
         return true;
     }
 
@@ -255,7 +264,13 @@ public class PartyRuntimeState : MonoBehaviour
         if (runtimeRosterUnits.Count == 0)
             initialized = false;
 
+        NotifyPartyChanged();
         return true;
+    }
+
+    private void NotifyPartyChanged()
+    {
+        PartyChanged?.Invoke();
     }
 
     public void ClearSceneViews()
@@ -313,6 +328,23 @@ public class PartyRuntimeState : MonoBehaviour
         }
     }
 
+    public void FullHealAllLiving()
+    {
+        if (activePartyUnits == null || activePartyUnits.Count == 0)
+        {
+            Debug.LogWarning("PartyRuntimeState: no hay party para curar completo.");
+            return;
+        }
+
+        foreach (Unit unit in activePartyUnits)
+        {
+            if (unit == null || !unit.isAlive)
+                continue;
+
+            unit.FullHeal();
+        }
+    }
+
     public void RestoreAllLivingStamina()
     {
         if (activePartyUnits == null || activePartyUnits.Count == 0)
@@ -327,6 +359,24 @@ public class PartyRuntimeState : MonoBehaviour
                 continue;
 
             unit.currentStamina = unit.maxStamina;
+        }
+    }
+
+    public void RestoreAllLivingStaminaPercent(float percent)
+    {
+        if (activePartyUnits == null || activePartyUnits.Count == 0)
+        {
+            Debug.LogWarning("PartyRuntimeState: no hay party para restaurar stamina.");
+            return;
+        }
+
+        foreach (Unit unit in activePartyUnits)
+        {
+            if (unit == null || !unit.isAlive)
+                continue;
+
+            int amount = Mathf.CeilToInt(unit.maxStamina * percent);
+            unit.RestoreStamina(amount);
         }
     }
 
@@ -345,6 +395,68 @@ public class PartyRuntimeState : MonoBehaviour
 
             unit.currentMana = unit.maxMana;
         }
+    }
+
+    public void RestoreAllLivingManaPercent(float percent)
+    {
+        if (activePartyUnits == null || activePartyUnits.Count == 0)
+        {
+            Debug.LogWarning("PartyRuntimeState: no hay party para restaurar mana.");
+            return;
+        }
+
+        foreach (Unit unit in activePartyUnits)
+        {
+            if (unit == null || !unit.isAlive)
+                continue;
+
+            int amount = Mathf.CeilToInt(unit.maxMana * percent);
+            unit.RestoreMana(amount);
+        }
+    }
+
+    public int RestoreAllLivingPhysicalArmorPercent(float percent)
+    {
+        if (activePartyUnits == null || activePartyUnits.Count == 0)
+        {
+            Debug.LogWarning("PartyRuntimeState: no hay party para reparar armadura fisica.");
+            return 0;
+        }
+
+        int totalRestored = 0;
+
+        foreach (Unit unit in activePartyUnits)
+        {
+            if (unit == null || !unit.isAlive)
+                continue;
+
+            int amount = Mathf.CeilToInt(unit.maxPhysicalArmor * percent);
+            totalRestored += unit.RestorePhysicalArmor(amount);
+        }
+
+        return totalRestored;
+    }
+
+    public int RestoreAllLivingMagicalArmorPercent(float percent)
+    {
+        if (activePartyUnits == null || activePartyUnits.Count == 0)
+        {
+            Debug.LogWarning("PartyRuntimeState: no hay party para reparar armadura magica.");
+            return 0;
+        }
+
+        int totalRestored = 0;
+
+        foreach (Unit unit in activePartyUnits)
+        {
+            if (unit == null || !unit.isAlive)
+                continue;
+
+            int amount = Mathf.CeilToInt(unit.maxMagicalArmor * percent);
+            totalRestored += unit.RestoreMagicalArmor(amount);
+        }
+
+        return totalRestored;
     }
 
     public void LogPartyState()
