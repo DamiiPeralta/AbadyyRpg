@@ -11,6 +11,7 @@ public abstract class ItemBase : ScriptableObject
 
     [Header("Tipo")]
     public ItemType itemType;
+    public ItemTier itemTier = ItemTier.Tier1;
 
     [Header("Economia")]
     public int sellValue = 0;

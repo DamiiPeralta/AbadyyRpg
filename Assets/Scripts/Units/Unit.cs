@@ -19,6 +19,16 @@ public class Unit
     // =========================
     public int level = 1;
     public int experience = 0;
+    public int maxLevel = 5;
+    public List<int> experienceByLevel = new List<int> { 0, 100, 250, 450, 700 };
+    public int strengthGrowthPerLevel = 1;
+    public int dexterityGrowthPerLevel = 1;
+    public int intelligenceGrowthPerLevel = 1;
+    public int constitutionGrowthPerLevel = 1;
+    public int staminaGrowthPerLevel = 5;
+    public int manaGrowthPerLevel = 5;
+    public int physicalArmorGrowthPerLevel = 0;
+    public int magicalArmorGrowthPerLevel = 0;
     public int maxStamina = 100;
     public int currentStamina = 100;
     public int maxMana = 100;
@@ -94,6 +104,137 @@ public class Unit
     {
         unitName = name;
         isAlive = true;
+    }
+
+    // =========================
+    // PROGRESION
+    // =========================
+    public void ConfigureProgression(
+        int maxLevel,
+        List<int> experienceByLevel,
+        int strengthGrowthPerLevel,
+        int dexterityGrowthPerLevel,
+        int intelligenceGrowthPerLevel,
+        int constitutionGrowthPerLevel,
+        int staminaGrowthPerLevel,
+        int manaGrowthPerLevel,
+        int physicalArmorGrowthPerLevel,
+        int magicalArmorGrowthPerLevel)
+    {
+        this.maxLevel = Mathf.Max(1, maxLevel);
+        this.experienceByLevel = NormalizeExperienceTable(experienceByLevel, this.maxLevel);
+        this.strengthGrowthPerLevel = strengthGrowthPerLevel;
+        this.dexterityGrowthPerLevel = dexterityGrowthPerLevel;
+        this.intelligenceGrowthPerLevel = intelligenceGrowthPerLevel;
+        this.constitutionGrowthPerLevel = constitutionGrowthPerLevel;
+        this.staminaGrowthPerLevel = staminaGrowthPerLevel;
+        this.manaGrowthPerLevel = manaGrowthPerLevel;
+        this.physicalArmorGrowthPerLevel = physicalArmorGrowthPerLevel;
+        this.magicalArmorGrowthPerLevel = magicalArmorGrowthPerLevel;
+        level = Mathf.Clamp(level, 1, this.maxLevel);
+    }
+
+    public int AddExperience(int amount)
+    {
+        if (amount <= 0)
+            return 0;
+
+        int previousLevel = level;
+        experience = Mathf.Max(0, experience + amount);
+
+        while (CanLevelUp())
+            ApplyLevelUp();
+
+        int levelsGained = level - previousLevel;
+
+        if (levelsGained > 0)
+            Debug.Log($"{unitName} subio a nivel {level}. XP: {experience}.");
+
+        return levelsGained;
+    }
+
+    public bool CanLevelUp()
+    {
+        if (level >= maxLevel)
+            return false;
+
+        return experience >= GetExperienceRequiredForLevel(level + 1);
+    }
+
+    public int GetExperienceRequiredForLevel(int targetLevel)
+    {
+        int clampedLevel = Mathf.Clamp(targetLevel, 1, maxLevel);
+
+        if (experienceByLevel == null || experienceByLevel.Count == 0)
+            experienceByLevel = NormalizeExperienceTable(null, maxLevel);
+
+        int index = clampedLevel - 1;
+        return index < experienceByLevel.Count ? experienceByLevel[index] : experienceByLevel[experienceByLevel.Count - 1];
+    }
+
+    public int GetExperienceRequiredForNextLevel()
+    {
+        if (level >= maxLevel)
+            return 0;
+
+        return GetExperienceRequiredForLevel(level + 1);
+    }
+
+    public int GetExperienceRemainingForNextLevel()
+    {
+        if (level >= maxLevel)
+            return 0;
+
+        return Mathf.Max(0, GetExperienceRequiredForNextLevel() - experience);
+    }
+
+    private void ApplyLevelUp()
+    {
+        int previousMaxHP = maxHP;
+        int previousMaxStamina = maxStamina;
+        int previousMaxMana = maxMana;
+        int previousMaxPhysicalArmor = maxPhysicalArmor;
+        int previousMaxMagicalArmor = maxMagicalArmor;
+
+        level++;
+        strength += strengthGrowthPerLevel;
+        dexterity += dexterityGrowthPerLevel;
+        intelligence += intelligenceGrowthPerLevel;
+        constitution += constitutionGrowthPerLevel;
+        maxStamina = Mathf.Max(1, maxStamina + staminaGrowthPerLevel);
+        maxMana = Mathf.Max(0, maxMana + manaGrowthPerLevel);
+        baseMaxPhysicalArmor = Mathf.Max(0, baseMaxPhysicalArmor + physicalArmorGrowthPerLevel);
+        baseMaxMagicalArmor = Mathf.Max(0, baseMaxMagicalArmor + magicalArmorGrowthPerLevel);
+
+        RecalculateStats();
+
+        if (isAlive)
+            currentHP = Mathf.Clamp(currentHP + Mathf.Max(0, maxHP - previousMaxHP), 1, maxHP);
+
+        currentStamina = Mathf.Clamp(currentStamina + Mathf.Max(0, maxStamina - previousMaxStamina), 0, maxStamina);
+        currentMana = Mathf.Clamp(currentMana + Mathf.Max(0, maxMana - previousMaxMana), 0, maxMana);
+        currentPhysicalArmor = Mathf.Clamp(currentPhysicalArmor + Mathf.Max(0, maxPhysicalArmor - previousMaxPhysicalArmor), 0, maxPhysicalArmor);
+        currentMagicalArmor = Mathf.Clamp(currentMagicalArmor + Mathf.Max(0, maxMagicalArmor - previousMaxMagicalArmor), 0, maxMagicalArmor);
+    }
+
+    private List<int> NormalizeExperienceTable(List<int> source, int maxLevel)
+    {
+        List<int> normalized = source != null && source.Count > 0
+            ? new List<int>(source)
+            : new List<int> { 0, 100, 250, 450, 700 };
+
+        while (normalized.Count < maxLevel)
+        {
+            int last = normalized.Count > 0 ? normalized[normalized.Count - 1] : 0;
+            int increment = 100 + normalized.Count * 50;
+            normalized.Add(last + increment);
+        }
+
+        for (int i = 0; i < normalized.Count; i++)
+            normalized[i] = Mathf.Max(0, normalized[i]);
+
+        normalized[0] = 0;
+        return normalized;
     }
 
     // =========================

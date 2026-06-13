@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0e689b4229416a97f52eec40a4e83d, type: 3}
+  m_Name: Encounter_Bandit_Patrol_01
+  m_EditorClassIdentifier: 
+  encounterId: bandit_patrol_01
+  encounterName: Patrulla Bandida
+  description: Encuentro comun para probar taunt.
+  enemies:
+  - enemy: {fileID: 11400000, guid: 5fd9c2f6440b331478a34208388dd710, type: 2}
+    amount: 1
+  - enemy: {fileID: 11400000, guid: 87950f0fc6bd96d4da28927a5e88afbf, type: 2}
+    amount: 1
+  reward:
+    gold: 22
+    food: 0
+    wood: 1
+    iron: 2
+    leather: 0
+    experience: 70
+    items: []
+  requiredFlags: []
+  blockedByFlags: []

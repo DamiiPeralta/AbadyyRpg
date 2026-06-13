@@ -12,6 +12,9 @@ public class RewardData
     public int iron;
     public int leather;
 
+    [Header("Progression")]
+    public int experience;
+
     [Header("Items")]
     public List<RewardItemEntry> items = new List<RewardItemEntry>();
 
@@ -22,7 +25,8 @@ public class RewardData
             food > 0 ||
             wood > 0 ||
             iron > 0 ||
-            leather > 0;
+            leather > 0 ||
+            experience > 0;
 
         bool hasItems = items != null && items.Count > 0;
 

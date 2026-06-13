@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a29112801a34ff99f121365ea7a22cc, type: 3}
+  m_Name: Enemy_Ballestero
+  m_EditorClassIdentifier: 
+  enemyId: ballestero
+  enemyName: Ballestero
+  tier: 2
+  kind: 0
+  description: Human de tier 2. Definicion inicial para balance de demo.
+  icon: {fileID: 21300000, guid: 2552aedca67c0304dbe98163162283d1, type: 3}
+  battleSprite: {fileID: 21300000, guid: 2552aedca67c0304dbe98163162283d1, type: 3}
+  visualPrefab: {fileID: 0}
+  level: 2
+  experienceReward: 35
+  strength: 10
+  dexterity: 11
+  intelligence: 2
+  constitution: 7
+  maxStamina: 90
+  maxMana: 0
+  physicalArmor: 12
+  magicalArmor: 5
+  isFrontLine: 0
+  abilities:
+  - {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}
+  tactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 100
+    ability: {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}
+  reward:
+    gold: 10
+    food: 0
+    wood: 1
+    iron: 1
+    leather: 0
+    experience: 35
+    items: []

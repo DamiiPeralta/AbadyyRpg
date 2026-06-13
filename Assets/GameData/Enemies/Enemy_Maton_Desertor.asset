@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a29112801a34ff99f121365ea7a22cc, type: 3}
+  m_Name: Enemy_Maton_Desertor
+  m_EditorClassIdentifier: 
+  enemyId: maton_desertor
+  enemyName: Maton Desertor
+  tier: 3
+  kind: 0
+  description: Human de tier 3. Definicion inicial para balance de demo.
+  icon: {fileID: 21300000, guid: ea77fedce1cd88c4e9f26148b433d6d2, type: 3}
+  battleSprite: {fileID: 21300000, guid: ea77fedce1cd88c4e9f26148b433d6d2, type: 3}
+  visualPrefab: {fileID: 0}
+  level: 3
+  experienceReward: 55
+  strength: 14
+  dexterity: 9
+  intelligence: 3
+  constitution: 12
+  maxStamina: 110
+  maxMana: 0
+  physicalArmor: 40
+  magicalArmor: 10
+  isFrontLine: 1
+  abilities:
+  - {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}
+  - {fileID: 11400000, guid: 24ed33d545bdef04fa3accbd147cf2b2, type: 2}
+  tactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 100
+    ability: {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}
+  - priority: 2
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 100
+    ability: {fileID: 11400000, guid: 24ed33d545bdef04fa3accbd147cf2b2, type: 2}
+  reward:
+    gold: 20
+    food: 0
+    wood: 1
+    iron: 2
+    leather: 0
+    experience: 55
+    items: []

@@ -85,14 +85,14 @@ public class BattleManager : MonoBehaviour
 
         int count = Mathf.Min(
             players.Count,
-            Mathf.Min(battleSetup.allyPrefabs.Count, battleSetup.allyPositions.Count)
+            battleSetup.allyPositions != null ? battleSetup.allyPositions.Count : 0
         );
 
         for (int i = 0; i < count; i++)
         {
             Unit unit = players[i];
-            GameObject prefab = battleSetup.allyPrefabs[i];
             Transform pos = battleSetup.allyPositions[i];
+            GameObject prefab = GetPlayerViewPrefab(unit, i);
 
             if (unit == null || prefab == null || pos == null)
                 continue;
@@ -116,6 +116,22 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private GameObject GetPlayerViewPrefab(Unit unit, int index)
+    {
+        if (unit != null && unit.unitData != null)
+            return unit.unitData.gameObject;
+
+        if (battleSetup != null &&
+            battleSetup.allyPrefabs != null &&
+            index >= 0 &&
+            index < battleSetup.allyPrefabs.Count)
+        {
+            return battleSetup.allyPrefabs[index];
+        }
+
+        return null;
+    }
+
     private List<Unit> CreateEnemyUnitsFromSetup()
     {
         List<Unit> enemies = new List<Unit>();
@@ -124,6 +140,21 @@ public class BattleManager : MonoBehaviour
         {
             Debug.LogError("BattleManager: battleSetup es null al crear enemigos.");
             return enemies;
+        }
+
+        if (GameRunState.Instance != null && !string.IsNullOrWhiteSpace(GameRunState.Instance.currentBattleGroupId))
+        {
+            BattleEncounterSO encounter = battleSetup.GetEncounterById(GameRunState.Instance.currentBattleGroupId);
+
+            if (encounter != null)
+            {
+                Debug.Log($"BattleManager: encounter {encounter.encounterId} encontrado.");
+
+                if (GameRunState.Instance != null)
+                    GameRunState.Instance.SetPendingBattleRewardIfEmpty(encounter.reward);
+
+                return CreateEnemyUnitsFromEncounter(encounter);
+            }
         }
 
         List<GameObject> enemiesToSpawn = battleSetup.enemyPrefabs;
@@ -205,6 +236,107 @@ public class BattleManager : MonoBehaviour
         }
 
         return enemies;
+    }
+
+    private List<Unit> CreateEnemyUnitsFromEncounter(BattleEncounterSO encounter)
+    {
+        List<Unit> enemies = new List<Unit>();
+
+        if (encounter == null)
+            return enemies;
+
+        List<EnemyDefinitionSO> expandedEnemies = encounter.ExpandEnemies();
+
+        int count = Mathf.Min(
+            expandedEnemies != null ? expandedEnemies.Count : 0,
+            battleSetup.enemyPositions != null ? battleSetup.enemyPositions.Count : 0
+        );
+
+        for (int i = 0; i < count; i++)
+        {
+            EnemyDefinitionSO enemyDefinition = expandedEnemies[i];
+            Transform pos = battleSetup.enemyPositions[i];
+
+            if (enemyDefinition == null || pos == null)
+                continue;
+
+            Unit unit = enemyDefinition.CreateUnit();
+            GameObject instanceGO = CreateEnemyViewObject(enemyDefinition, pos);
+
+            UnitData unitData = instanceGO.GetComponent<UnitData>();
+            if (unitData == null)
+                unitData = instanceGO.AddComponent<UnitData>();
+
+            unitData.unitName = enemyDefinition.enemyName;
+            unitData.description = enemyDefinition.description;
+            unitData.icon = enemyDefinition.icon != null ? enemyDefinition.icon : enemyDefinition.battleSprite;
+            unitData.battleSprite = enemyDefinition.battleSprite != null ? enemyDefinition.battleSprite : unitData.icon;
+            unit.unitData = unitData;
+
+            UnitView unitView = instanceGO.GetComponent<UnitView>();
+            if (unitView == null)
+                unitView = instanceGO.AddComponent<UnitView>();
+
+            UnitHealthBar healthBar = instanceGO.GetComponent<UnitHealthBar>();
+            if (healthBar == null)
+                healthBar = instanceGO.AddComponent<UnitHealthBar>();
+
+            unit.unitView = unitView;
+            unitView.SetUnit(unit);
+
+            enemies.Add(unit);
+
+            Debug.Log($"BattleManager: enemigo de encounter creado: {unit.unitName}");
+        }
+
+        if (expandedEnemies != null && expandedEnemies.Count > count)
+            Debug.LogWarning($"BattleManager: encounter {encounter.encounterId} tiene {expandedEnemies.Count} enemigos, pero solo {count} posiciones disponibles.");
+
+        return enemies;
+    }
+
+    private GameObject CreateEnemyViewObject(EnemyDefinitionSO enemyDefinition, Transform pos)
+    {
+        GameObject instanceGO;
+
+        if (enemyDefinition.visualPrefab != null)
+        {
+            instanceGO = Instantiate(enemyDefinition.visualPrefab, pos.position, Quaternion.identity, pos.parent);
+            instanceGO.name = enemyDefinition.enemyName;
+        }
+        else
+        {
+            instanceGO = new GameObject(enemyDefinition.enemyName);
+            instanceGO.transform.SetParent(pos.parent);
+            instanceGO.transform.position = pos.position;
+        }
+
+        SpriteRenderer spriteRenderer = instanceGO.GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+            spriteRenderer = instanceGO.AddComponent<SpriteRenderer>();
+
+        Sprite sprite = enemyDefinition.battleSprite != null ? enemyDefinition.battleSprite : enemyDefinition.icon;
+        if (sprite != null)
+            spriteRenderer.sprite = sprite;
+
+        spriteRenderer.color = sprite != null ? Color.white : GetEnemyColor(enemyDefinition.kind);
+
+        return instanceGO;
+    }
+
+    private Color GetEnemyColor(EnemyKind kind)
+    {
+        switch (kind)
+        {
+            case EnemyKind.Beast:
+                return new Color(0.8f, 0.55f, 0.35f, 1f);
+            case EnemyKind.Cult:
+                return new Color(0.55f, 0.35f, 0.9f, 1f);
+            case EnemyKind.Aberration:
+                return new Color(0.25f, 0.9f, 0.65f, 1f);
+            default:
+                return new Color(0.85f, 0.25f, 0.25f, 1f);
+        }
     }
 
     public void StartBattle(List<Unit> players, List<Unit> enemies)

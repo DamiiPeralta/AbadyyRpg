@@ -8,7 +8,6 @@ public class EnemyGroup
     public List<GameObject> enemyPrefabs = new List<GameObject>();
 }
 
-// Contenedor de configuración para una batalla: prefabs y posiciones de aliados/enemigos
 public class BattleSetup : MonoBehaviour
 {
     [Header("Aliados")]
@@ -22,11 +21,14 @@ public class BattleSetup : MonoBehaviour
     [Header("Enemy Groups")]
     public List<EnemyGroup> enemyGroups = new List<EnemyGroup>();
 
+    [Header("Battle Encounters")]
+    public BattleEncounterDatabase encounterDatabase;
+
     public List<GameObject> GetEnemyPrefabsForGroup(string groupId)
     {
         if (string.IsNullOrWhiteSpace(groupId))
         {
-            Debug.LogWarning("BattleSetup: groupId vacío. Usando enemyPrefabs por defecto.");
+            Debug.LogWarning("BattleSetup: groupId vacio. Usando enemyPrefabs por defecto.");
             return enemyPrefabs;
         }
 
@@ -44,7 +46,20 @@ public class BattleSetup : MonoBehaviour
             }
         }
 
-        Debug.LogWarning($"BattleSetup: no se encontró EnemyGroup con id {groupId}. Usando enemyPrefabs por defecto.");
+        Debug.LogWarning($"BattleSetup: no se encontro EnemyGroup con id {groupId}. Usando enemyPrefabs por defecto.");
         return enemyPrefabs;
+    }
+
+    public BattleEncounterSO GetEncounterById(string encounterId)
+    {
+        if (encounterDatabase == null)
+            return null;
+
+        BattleEncounterSO encounter = encounterDatabase.GetEncounterById(encounterId);
+
+        if (encounter != null && encounter.CanStart(GameRunState.Instance))
+            return encounter;
+
+        return null;
     }
 }

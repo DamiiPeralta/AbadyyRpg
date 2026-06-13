@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba4f39e308e7966469428ea949cf9f6b, type: 3}
+  m_Name: Armor_Worn_Leather
+  m_EditorClassIdentifier: 
+  itemId: Worn_Leather
+  itemName: Cuero Gastado
+  description: Armadura fisica 35. Armadura magica 15.
+  icon: {fileID: 0}
+  itemType: 1
+  itemTier: 0
+  sellValue: 25
+  effects: []
+  slot: 1
+  levelRequirement: 1
+  armorType: 0
+  physicalArmor: 35
+  magicalArmor: 15

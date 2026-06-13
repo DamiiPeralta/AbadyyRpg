@@ -4344,6 +4344,7 @@ MonoBehaviour:
     enemyPrefabs:
     - {fileID: 818537957655157841, guid: d31f97592d4a37446b2efed87140e048, type: 3}
     - {fileID: 818537957655157841, guid: d31f97592d4a37446b2efed87140e048, type: 3}
+  encounterDatabase: {fileID: 11400000, guid: ca490eef10b429942bd225839f854622, type: 2}
 --- !u!114 &1699086955
 MonoBehaviour:
   m_ObjectHideFlags: 0

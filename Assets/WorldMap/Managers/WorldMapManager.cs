@@ -394,7 +394,8 @@ public class WorldMapManager : MonoBehaviour
         if (option == null)
             return;
 
-        Debug.Log($"Option chosen: {option.optionText}");
+        string optionTitle = !string.IsNullOrWhiteSpace(option.title) ? option.title : "Opcion sin titulo";
+        Debug.Log($"Option chosen: {optionTitle}");
 
         foreach (var node in option.nodesToUnlock)
         {

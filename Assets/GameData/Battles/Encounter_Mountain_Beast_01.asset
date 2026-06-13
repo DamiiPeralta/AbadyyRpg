@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0e689b4229416a97f52eec40a4e83d, type: 3}
+  m_Name: Encounter_Mountain_Beast_01
+  m_EditorClassIdentifier: 
+  encounterId: mountain_beast_01
+  encounterName: Bestia del Monte
+  description: Presion fisica fuerte.
+  enemies:
+  - enemy: {fileID: 11400000, guid: 00fa10992055313408086086396fedde, type: 2}
+    amount: 1
+  - enemy: {fileID: 11400000, guid: 4bc65f209832beb4b9951682fc08c0ff, type: 2}
+    amount: 2
+  reward:
+    gold: 0
+    food: 4
+    wood: 0
+    iron: 0
+    leather: 0
+    experience: 90
+    items: []
+  requiredFlags: []
+  blockedByFlags: []

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8ac264951cb1445932ba696c003d5a, type: 3}
+  m_Name: Weapon_Steel_Sword
+  m_EditorClassIdentifier: 
+  itemId: Steel_Sword
+  itemName: Espada de Acero
+  description: Dano fisico 16-24.
+  icon: {fileID: 0}
+  itemType: 0
+  itemTier: 2
+  sellValue: 80
+  effects: []
+  slot: 4
+  levelRequirement: 3
+  weaponType: 0
+  physicalDamageMin: 16
+  physicalDamageMax: 24
+  magicalDamageMin: 0
+  magicalDamageMax: 0

@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2807722316200623218
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: chest
+      value: 
+      objectReference: {fileID: 11400000, guid: 37dbadf7548f5214fb5d5f281aa19424,
+        type: 2}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: level
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: unitName
+      value: Acolita de la Vigilia
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: rightHand
+      value: 
+      objectReference: {fileID: 11400000, guid: ed2a9d0df182c7443873c394cd4b170e,
+        type: 2}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: consumable1
+      value: 
+      objectReference: {fileID: 11400000, guid: 73429285d4089e74f9abbeceb9adcc32,
+        type: 2}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: description
+      value: Soporte inicial. Usa simbolo quebrado, cura heridas y remienda armadura
+        fisica.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: characterClass
+      value: 
+      objectReference: {fileID: 11400000, guid: bfdb19ad0b647104cbe259d6651e9d07,
+        type: 2}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: useClassBaseStats
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: tactics.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: useClassProgression
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: abilities.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390923297637423354, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: includeClassSuggestedTactics
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040344, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040344, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040344, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040345, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092437677006040346, guid: eea5124a3cf3a72458ff274021c20308,
+        type: 3}
+      propertyPath: m_Name
+      value: Merc_Acolita_Base
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: eea5124a3cf3a72458ff274021c20308, type: 3}

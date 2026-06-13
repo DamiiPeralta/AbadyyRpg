@@ -6,6 +6,13 @@ public class UnitData : MonoBehaviour
     [Header("Identidad")]
     public string unitName = "Unidad";
     [TextArea] public string description;
+    public CharacterClassSO characterClass;
+
+    [Header("Usar datos de clase")]
+    public bool useClassBaseStats = false;
+    public bool useClassProgression = false;
+    public bool includeClassAbilities = true;
+    public bool includeClassSuggestedTactics = false;
 
     [Header("Sprites")]
     public Sprite icon;          // Retrato para UI
@@ -20,10 +27,22 @@ public class UnitData : MonoBehaviour
     [Header("Progreso inicial")]
     public int level = 1;
     public int experience = 0;
+    public int maxLevel = 5;
+    public List<int> experienceByLevel = new List<int> { 0, 100, 250, 450, 700 };
     public int maxStamina = 100;
     public int startStamina = -1;
     public int maxMana = 100;
     public int startMana = -1;
+
+    [Header("Crecimiento por nivel")]
+    public int strengthGrowthPerLevel = 1;
+    public int dexterityGrowthPerLevel = 1;
+    public int intelligenceGrowthPerLevel = 1;
+    public int constitutionGrowthPerLevel = 1;
+    public int staminaGrowthPerLevel = 5;
+    public int manaGrowthPerLevel = 5;
+    public int physicalArmorGrowthPerLevel = 0;
+    public int magicalArmorGrowthPerLevel = 0;
 
     [Header("Armaduras base")]
     public int maxPhysicalArmor = 0;
@@ -60,24 +79,35 @@ public class UnitData : MonoBehaviour
 
         unit.unitData = this;
 
-        unit.strength = strength;
-        unit.dexterity = dexterity;
-        unit.intelligence = intelligence;
-        unit.constitution = constitution;
+        unit.strength = useClassBaseStats && characterClass != null ? characterClass.strength : strength;
+        unit.dexterity = useClassBaseStats && characterClass != null ? characterClass.dexterity : dexterity;
+        unit.intelligence = useClassBaseStats && characterClass != null ? characterClass.intelligence : intelligence;
+        unit.constitution = useClassBaseStats && characterClass != null ? characterClass.constitution : constitution;
 
         unit.level = Mathf.Max(1, level);
         unit.experience = Mathf.Max(0, experience);
-        unit.maxStamina = Mathf.Max(1, maxStamina);
+        unit.ConfigureProgression(
+            useClassProgression && characterClass != null ? characterClass.maxLevel : maxLevel,
+            useClassProgression && characterClass != null ? characterClass.experienceByLevel : experienceByLevel,
+            useClassProgression && characterClass != null ? characterClass.strengthGrowthPerLevel : strengthGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.dexterityGrowthPerLevel : dexterityGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.intelligenceGrowthPerLevel : intelligenceGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.constitutionGrowthPerLevel : constitutionGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.staminaGrowthPerLevel : staminaGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.manaGrowthPerLevel : manaGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.physicalArmorGrowthPerLevel : physicalArmorGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.magicalArmorGrowthPerLevel : magicalArmorGrowthPerLevel);
+        unit.maxStamina = Mathf.Max(1, useClassBaseStats && characterClass != null ? characterClass.maxStamina : maxStamina);
         unit.currentStamina = startStamina >= 0
             ? Mathf.Clamp(startStamina, 0, unit.maxStamina)
             : unit.maxStamina;
-        unit.maxMana = Mathf.Max(0, maxMana);
+        unit.maxMana = Mathf.Max(0, useClassBaseStats && characterClass != null ? characterClass.maxMana : maxMana);
         unit.currentMana = startMana >= 0
             ? Mathf.Clamp(startMana, 0, unit.maxMana)
             : unit.maxMana;
 
-        unit.baseMaxPhysicalArmor = maxPhysicalArmor;
-        unit.baseMaxMagicalArmor = maxMagicalArmor;
+        unit.baseMaxPhysicalArmor = useClassBaseStats && characterClass != null ? characterClass.basePhysicalArmor : maxPhysicalArmor;
+        unit.baseMaxMagicalArmor = useClassBaseStats && characterClass != null ? characterClass.baseMagicalArmor : maxMagicalArmor;
 
         unit.EquipItem(helmet);
         unit.EquipItem(chest);
@@ -108,24 +138,58 @@ public class UnitData : MonoBehaviour
         else
             unit.currentMagicalArmor = unit.maxMagicalArmor;
 
-        if (abilities != null && abilities.Count > 0)
-            unit.abilities = new List<AbilitySO>(abilities);
+        unit.abilities = BuildAbilitiesForUnit(unit.level);
 
-        if (tactics != null && tactics.Count > 0)
-        {
-            unit.tactics = new List<TacticRule>();
-
-            foreach (TacticRule tactic in tactics)
-            {
-                if (tactic != null)
-                    unit.tactics.Add(tactic.Clone());
-            }
-        }
+        unit.tactics = BuildTacticsForUnit();
 
         unit.consumable1 = consumable1;
         unit.consumable2 = consumable2;
 
         return unit;
+    }
+
+    private List<AbilitySO> BuildAbilitiesForUnit(int unitLevel)
+    {
+        List<AbilitySO> result = new List<AbilitySO>();
+
+        if (includeClassAbilities && characterClass != null)
+            AddUniqueAbilities(result, characterClass.GetAbilitiesForLevel(unitLevel));
+
+        if (abilities != null)
+            AddUniqueAbilities(result, abilities);
+
+        return result;
+    }
+
+    private List<TacticRule> BuildTacticsForUnit()
+    {
+        List<TacticRule> result = new List<TacticRule>();
+
+        if (includeClassSuggestedTactics && characterClass != null)
+            result.AddRange(characterClass.CloneSuggestedTactics());
+
+        if (tactics != null)
+        {
+            foreach (TacticRule tactic in tactics)
+            {
+                if (tactic != null)
+                    result.Add(tactic.Clone());
+            }
+        }
+
+        return result;
+    }
+
+    private void AddUniqueAbilities(List<AbilitySO> target, List<AbilitySO> source)
+    {
+        if (target == null || source == null)
+            return;
+
+        foreach (AbilitySO ability in source)
+        {
+            if (ability != null && !target.Contains(ability))
+                target.Add(ability);
+        }
     }
 
     public void ClearRuntimeConsumable1()

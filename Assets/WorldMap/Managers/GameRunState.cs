@@ -98,6 +98,18 @@ public class GameRunState : MonoBehaviour
         hasPendingBattleReward = false;
     }
 
+    public void SetPendingBattleRewardIfEmpty(RewardData reward)
+    {
+        if (hasPendingBattleReward)
+            return;
+
+        if (reward == null || reward.IsEmpty())
+            return;
+
+        pendingBattleReward = reward;
+        hasPendingBattleReward = true;
+    }
+
     public void RegisterCurrentNode(string nodeId)
     {
         if (!string.IsNullOrWhiteSpace(nodeId))

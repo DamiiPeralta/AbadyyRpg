@@ -6,6 +6,14 @@ public enum ItemType
     Material
 }
 
+public enum ItemTier
+{
+    Tier1,
+    Tier2,
+    Tier3,
+    Special
+}
+
 public enum EffectType
 {
     ModifyStat,

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e72af9a0a4e443682e0442c4fabb3b0, type: 3}
+  m_Name: Class_Asesino
+  m_EditorClassIdentifier: 
+  classId: asesino
+  className: Asesino
+  role: 1
+  description: DPS fisico rapido. Elimina objetivos vulnerables y remata enemigos
+    heridos.
+  strength: 14
+  dexterity: 15
+  intelligence: 1
+  constitution: 9
+  maxStamina: 120
+  maxMana: 10
+  basePhysicalArmor: 0
+  baseMagicalArmor: 0
+  maxLevel: 5
+  experienceByLevel: 0000000064000000fa000000c2010000bc020000
+  strengthGrowthPerLevel: 2
+  dexterityGrowthPerLevel: 2
+  intelligenceGrowthPerLevel: 0
+  constitutionGrowthPerLevel: 1
+  staminaGrowthPerLevel: 7
+  manaGrowthPerLevel: 1
+  physicalArmorGrowthPerLevel: 0
+  magicalArmorGrowthPerLevel: 0
+  abilityUnlocks:
+  - level: 1
+    ability: {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}
+  - level: 1
+    ability: {fileID: 11400000, guid: 2933c36a6f46fb343b895eadbc594bbb, type: 2}
+  - level: 2
+    ability: {fileID: 11400000, guid: 2e4083a8afe055d43ac04c7a3e646fed, type: 2}
+  - level: 3
+    ability: {fileID: 11400000, guid: 9d69609aa1d5f6143acfcfc96bf2138c, type: 2}
+  suggestedTactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 1
+    thresholdPercent: 35
+    ability: {fileID: 11400000, guid: 9d69609aa1d5f6143acfcfc96bf2138c, type: 2}
+  - priority: 2
+    isActive: 1
+    conditionType: 3
+    thresholdPercent: 35
+    ability: {fileID: 11400000, guid: 2933c36a6f46fb343b895eadbc594bbb, type: 2}
+  - priority: 5
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 100
+    ability: {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}

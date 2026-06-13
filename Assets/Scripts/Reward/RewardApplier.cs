@@ -24,6 +24,9 @@ public static class RewardApplier
         inventory.AddIron(reward.iron);
         inventory.AddLeather(reward.leather);
 
+        if (reward.experience > 0 && PartyRuntimeState.Instance != null)
+            PartyRuntimeState.Instance.AddExperienceToActiveParty(reward.experience);
+
         if (reward.items != null)
         {
             foreach (RewardItemEntry entry in reward.items)
@@ -61,6 +64,7 @@ public static class RewardApplier
         AddPart(sb, ref hasPrevious, reward.wood, "madera");
         AddPart(sb, ref hasPrevious, reward.iron, "hierro");
         AddPart(sb, ref hasPrevious, reward.leather, "cuero");
+        AddPart(sb, ref hasPrevious, reward.experience, "XP");
 
         if (reward.items != null)
         {

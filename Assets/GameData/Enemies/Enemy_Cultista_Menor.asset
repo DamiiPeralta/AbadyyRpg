@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a29112801a34ff99f121365ea7a22cc, type: 3}
+  m_Name: Enemy_Cultista_Menor
+  m_EditorClassIdentifier: 
+  enemyId: cultista_menor
+  enemyName: Cultista Menor
+  tier: 2
+  kind: 2
+  description: Cult de tier 2. Definicion inicial para balance de demo.
+  icon: {fileID: 21300000, guid: c203f6768d4ac4448b88a5eb78c72662, type: 3}
+  battleSprite: {fileID: 21300000, guid: c203f6768d4ac4448b88a5eb78c72662, type: 3}
+  visualPrefab: {fileID: 0}
+  level: 2
+  experienceReward: 40
+  strength: 3
+  dexterity: 8
+  intelligence: 12
+  constitution: 7
+  maxStamina: 50
+  maxMana: 100
+  physicalArmor: 5
+  magicalArmor: 35
+  isFrontLine: 0
+  abilities:
+  - {fileID: 11400000, guid: 61b5a908e38d5f64f99ecb8b11f4bfef, type: 2}
+  tactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 100
+    ability: {fileID: 11400000, guid: 61b5a908e38d5f64f99ecb8b11f4bfef, type: 2}
+  reward:
+    gold: 8
+    food: 0
+    wood: 0
+    iron: 0
+    leather: 0
+    experience: 40
+    items:
+    - itemId: Crystal_Shard
+      amount: 1

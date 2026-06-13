@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a29112801a34ff99f121365ea7a22cc, type: 3}
+  m_Name: Enemy_Saqueador
+  m_EditorClassIdentifier: 
+  enemyId: saqueador
+  enemyName: Saqueador
+  tier: 2
+  kind: 0
+  description: Human de tier 2. Definicion inicial para balance de demo.
+  icon: {fileID: 21300000, guid: a38873e402ef7da4e80f3795a01e24f2, type: 3}
+  battleSprite: {fileID: 21300000, guid: a38873e402ef7da4e80f3795a01e24f2, type: 3}
+  visualPrefab: {fileID: 0}
+  level: 2
+  experienceReward: 35
+  strength: 12
+  dexterity: 7
+  intelligence: 2
+  constitution: 10
+  maxStamina: 90
+  maxMana: 0
+  physicalArmor: 25
+  magicalArmor: 5
+  isFrontLine: 1
+  abilities:
+  - {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}
+  tactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 100
+    ability: {fileID: 11400000, guid: 20bd6d3d43ae78f499ffe76078208beb, type: 2}
+  reward:
+    gold: 12
+    food: 0
+    wood: 0
+    iron: 1
+    leather: 0
+    experience: 35
+    items: []

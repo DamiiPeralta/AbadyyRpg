@@ -141,6 +141,35 @@ public class PartyRuntimeState : MonoBehaviour
         return reserve;
     }
 
+    public void AddExperienceToActiveParty(int amount)
+    {
+        if (amount <= 0)
+            return;
+
+        if (activePartyUnits == null || activePartyUnits.Count == 0)
+        {
+            Debug.LogWarning("PartyRuntimeState: no hay party activa para recibir experiencia.");
+            return;
+        }
+
+        int affectedUnits = 0;
+
+        foreach (Unit unit in activePartyUnits)
+        {
+            if (unit == null)
+                continue;
+
+            unit.AddExperience(amount);
+            affectedUnits++;
+        }
+
+        if (affectedUnits > 0)
+        {
+            Debug.Log($"PartyRuntimeState: {amount} XP otorgada a {affectedUnits} miembros activos.");
+            NotifyPartyChanged();
+        }
+    }
+
     public bool IsActiveMember(Unit unit)
     {
         return unit != null && activePartyUnits != null && activePartyUnits.Contains(unit);

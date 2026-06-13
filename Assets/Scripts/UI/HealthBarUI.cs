@@ -45,6 +45,13 @@ public class HealthBarUI : MonoBehaviour
             if (unit.unitData != null)
                 icon = unit.unitData.icon;
 
+            if (icon == null && unit.unitView != null)
+            {
+                SpriteRenderer spriteRenderer = unit.unitView.GetComponent<SpriteRenderer>();
+                if (spriteRenderer != null)
+                    icon = spriteRenderer.sprite;
+            }
+
             iconImage.sprite = icon;
             iconImage.enabled = icon != null;
         }
