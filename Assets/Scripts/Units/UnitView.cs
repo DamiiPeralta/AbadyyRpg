@@ -268,6 +268,9 @@ public class UnitView : MonoBehaviour
 
     public void AttackMotion()
     {
+        if (GameSfxPlayer.Instance != null)
+            GameSfxPlayer.Instance.PlayBasicAttack();
+
         StartAttackMotion();
     }
 

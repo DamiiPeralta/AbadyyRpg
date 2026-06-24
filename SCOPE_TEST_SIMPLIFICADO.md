@@ -340,14 +340,25 @@ Receta: 14 oro, 1 cuero, 1 madera, 1 cristal
 
 ## 11. Consumibles Tier 1
 
-Los consumibles no se usan automaticamente por fuera del sistema.
+Los consumibles no se usan automaticamente desde el inventario libre.
 
-Los consumibles deben poder usarse mediante tacticas.
+Para la demo actual se usan desde los 2 slots equipados y con las condiciones existentes del item.
+Esto mantiene la preparacion previa sin abrir UI nueva de combate.
+
+El sistema ideal futuro es usarlos como acciones elegibles dentro de tacticas.
 
 Ejemplo:
 
 ```text
 Si HP < 40% -> usar pocion de salud
+```
+
+Lectura de implementacion actual:
+
+```text
+Pocion: se consume si esta equipada y HP <= 40%.
+Molotov: se consume al primer turno valido si esta equipada.
+Pergamino: se consume automaticamente al caer.
 ```
 
 ### Pocion de salud

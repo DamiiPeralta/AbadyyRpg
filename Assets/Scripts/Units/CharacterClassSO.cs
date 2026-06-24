@@ -41,7 +41,7 @@ public class CharacterClassSO : ScriptableObject
 
     [Header("Progression")]
     public int maxLevel = 5;
-    public List<int> experienceByLevel = new List<int> { 0, 100, 250, 450, 700 };
+    public List<int> experienceByLevel = new List<int> { 0, 40, 100, 180, 300 };
 
     [Header("Growth Per Level")]
     public int strengthGrowthPerLevel = 1;
@@ -52,6 +52,7 @@ public class CharacterClassSO : ScriptableObject
     public int manaGrowthPerLevel = 5;
     public int physicalArmorGrowthPerLevel = 0;
     public int magicalArmorGrowthPerLevel = 0;
+    public List<UnitLevelGrowth> levelGrowths = new List<UnitLevelGrowth>();
 
     [Header("Abilities")]
     public List<ClassAbilityUnlock> abilityUnlocks = new List<ClassAbilityUnlock>();

@@ -19,8 +19,11 @@ public class WorldMapManager : MonoBehaviour
     [Header("UI")]
     public EventPanelUI eventPanelUI;
     public WorldMapHudUI hudUI;
+    public WorldMapTimeOfDayOverlayUI timeOfDayOverlayUI;
 
     private WorldMapEvent currentEvent;
+    private bool caravanDefeatPanelShown;
+    private bool demoVictoryPanelShown;
 
     private void Awake()
     {
@@ -29,6 +32,11 @@ public class WorldMapManager : MonoBehaviour
 
     private void Start()
     {
+        GameSfxPlayer.GetOrCreate();
+        timeOfDayOverlayUI = timeOfDayOverlayUI != null
+            ? timeOfDayOverlayUI
+            : WorldMapTimeOfDayOverlayUI.GetOrCreate();
+
         if (eventPanelUI != null)
             eventPanelUI.Hide();
 
@@ -43,12 +51,15 @@ public class WorldMapManager : MonoBehaviour
             return;
         }
 
+        if (hudUI != null)
+            hudUI.BindSearchResources(SearchCurrentNodeResources);
+
         currentNode.SetVisited(true);
         currentNode.SetCurrent(true);
 
         if (GameRunState.Instance != null)
         {
-            GameRunState.Instance.RegisterCurrentNode(currentNode.nodeId);
+            GameRunState.Instance.RegisterCurrentNode(currentNode);
             GameRunState.Instance.RegisterVisitedNode(currentNode.nodeId);
         }
 
@@ -61,6 +72,13 @@ public class WorldMapManager : MonoBehaviour
     {
         if (targetNode == null)
             return;
+
+        if (IsExpeditionFailed())
+        {
+            Debug.Log("La expedicion ya fracaso. No se puede viajar.");
+            RefreshHud();
+            return;
+        }
 
         if (currentEvent != null)
         {
@@ -133,6 +151,13 @@ public class WorldMapManager : MonoBehaviour
 
     private void MoveToNode(WorldMapNode targetNode)
     {
+        if (IsExpeditionFailed())
+        {
+            Debug.Log("La expedicion fracaso durante el viaje. Movimiento detenido.");
+            RefreshHud();
+            return;
+        }
+
         Debug.Log($"Moving from {currentNode.nodeName} to {targetNode.nodeName}");
 
         currentNode.SetCurrent(false);
@@ -142,9 +167,12 @@ public class WorldMapManager : MonoBehaviour
         currentNode.SetVisited(true);
         currentNode.SetCurrent(true);
 
+        if (GameSfxPlayer.Instance != null)
+            GameSfxPlayer.Instance.PlayNodeTravel();
+
         if (GameRunState.Instance != null)
         {
-            GameRunState.Instance.RegisterCurrentNode(currentNode.nodeId);
+            GameRunState.Instance.RegisterCurrentNode(currentNode);
             GameRunState.Instance.RegisterVisitedNode(currentNode.nodeId);
         }
 
@@ -152,7 +180,7 @@ public class WorldMapManager : MonoBehaviour
 
         Debug.Log($"Current node: {currentNode.nodeName}");
 
-        if (currentNode.isCombatNode && !currentNode.isCompleted)
+        if (currentNode.isCombatNode && (!currentNode.isCompleted || currentNode.isRepeatableCombat))
         {
             StartCombatFromNode(currentNode);
             return;
@@ -165,6 +193,13 @@ public class WorldMapManager : MonoBehaviour
     {
         if (node == null)
             return;
+
+        if (IsExpeditionFailed())
+        {
+            Debug.Log("La expedicion ya fracaso. No se puede iniciar combate.");
+            RefreshHud();
+            return;
+        }
 
         if (GameRunState.Instance == null)
         {
@@ -187,6 +222,13 @@ public class WorldMapManager : MonoBehaviour
     {
         if (option == null)
             return;
+
+        if (IsExpeditionFailed())
+        {
+            Debug.Log("La expedicion ya fracaso. No se puede iniciar combate de evento.");
+            RefreshHud();
+            return;
+        }
 
         if (currentNode == null)
         {
@@ -230,6 +272,8 @@ public class WorldMapManager : MonoBehaviour
             Debug.Log("Volvimos de combate, pero no hubo victoria.");
             GameRunState.Instance.ClearPendingBattleReward();
             GameRunState.Instance.ClearPendingCombatResult();
+            RefreshAllNodesVisualState();
+            RefreshHud();
             return;
         }
 
@@ -248,9 +292,13 @@ public class WorldMapManager : MonoBehaviour
         completedNode.isCompleted = true;
         completedNode.SetVisited(true);
 
+        CompleteEventAfterCombatVictory(completedNode);
+
         SetCurrentNodeAfterSceneReturn(completedNode);
 
         Debug.Log($"Nodo de combate completado: {completedNode.nodeName}");
+
+        RegisterDemoBossVictoryFlags(completedNode);
 
         RewardData pendingEventReward = GameRunState.Instance.ConsumePendingBattleReward();
 
@@ -279,6 +327,30 @@ public class WorldMapManager : MonoBehaviour
         GameRunState.Instance.ClearPendingCombatResult();
 
         RefreshAllNodesVisualState();
+    }
+
+    private void CompleteEventAfterCombatVictory(WorldMapNode completedNode)
+    {
+        if (completedNode == null || !completedNode.hasEvent || completedNode.eventCompleted)
+            return;
+
+        completedNode.eventCompleted = true;
+
+        if (GameRunState.Instance != null)
+            GameRunState.Instance.RegisterEventCompleted(completedNode.nodeId);
+    }
+
+    private void RegisterDemoBossVictoryFlags(WorldMapNode completedNode)
+    {
+        if (completedNode == null || GameRunState.Instance == null)
+            return;
+
+        if (completedNode.nodeId != "node_portal_excavadores")
+            return;
+
+        GameRunState.Instance.RegisterFlag(GameRunState.BossDefeatedFlag);
+        GameRunState.Instance.RegisterFlag("flag_frontera_abierta");
+        Debug.Log("Demo Tier 1: jefe derrotado y frontera abierta.");
     }
 
     private void ApplyPersistentMapState()
@@ -366,6 +438,13 @@ public class WorldMapManager : MonoBehaviour
         if (node == null)
             return;
 
+        if (IsExpeditionFailed())
+        {
+            Debug.Log("La expedicion ya fracaso. No se puede iniciar evento.");
+            RefreshHud();
+            return;
+        }
+
         if (!node.hasEvent)
             return;
 
@@ -394,9 +473,49 @@ public class WorldMapManager : MonoBehaviour
         if (option == null)
             return;
 
+        if (IsExpeditionFailed())
+        {
+            Debug.Log("La expedicion ya fracaso. No se puede resolver opcion de evento.");
+            RefreshHud();
+            return;
+        }
+
         string optionTitle = !string.IsNullOrWhiteSpace(option.title) ? option.title : "Opcion sin titulo";
         Debug.Log($"Option chosen: {optionTitle}");
 
+        if (option.startsCombat)
+        {
+            StartCombatFromEventOption(option);
+            return;
+        }
+
+        ApplyOptionResults(option);
+
+        if (IsExpeditionFailed())
+        {
+            RefreshHud();
+            return;
+        }
+
+        if (option.reward != null && !option.reward.IsEmpty())
+        {
+            RewardApplier.ApplyReward(option.reward);
+            RefreshHud();
+        }
+
+        if (option.returnToStartNode)
+        {
+            MoveToNode(currentNode); // pendiente: mejorar con startNode real
+        }
+
+        currentEvent = null;
+
+        if (eventPanelUI != null)
+            eventPanelUI.Hide();
+    }
+
+    private void ApplyOptionResults(WorldMapEventOption option)
+    {
         foreach (var node in option.nodesToUnlock)
         {
             if (node != null)
@@ -420,6 +539,8 @@ public class WorldMapManager : MonoBehaviour
             }
 
             Debug.Log($"Flag added: {option.flagToAdd}");
+
+            UnlockDemoBridgeBranchesIfNeeded(option.flagToAdd);
         }
 
         if (option.completesEvent)
@@ -437,28 +558,36 @@ public class WorldMapManager : MonoBehaviour
         {
             Debug.Log($"Event NOT completed at node: {currentNode.nodeName}");
         }
+    }
 
-        if (option.startsCombat)
-        {
-            StartCombatFromEventOption(option);
+    private void UnlockDemoBridgeBranchesIfNeeded(string flag)
+    {
+        if (flag != "flag_puente_reparado")
             return;
-        }
 
-        if (option.reward != null && !option.reward.IsEmpty())
-        {
-            RewardApplier.ApplyReward(option.reward);
-            RefreshHud();
-        }
+        UnlockNodeById("node_cruce_central");
+        UnlockNodeById("node_bosque_aldheron");
+        UnlockNodeById("node_torre_vigia");
+    }
 
-        if (option.returnToStartNode)
-        {
-            MoveToNode(currentNode); // pendiente: mejorar con startNode real
-        }
+    private void UnlockNodeById(string nodeId)
+    {
+        WorldMapNode node = FindNodeById(nodeId);
 
-        currentEvent = null;
+        if (node == null)
+            return;
 
-        if (eventPanelUI != null)
-            eventPanelUI.Hide();
+        node.SetUnlocked(true);
+
+        if (GameRunState.Instance != null)
+            GameRunState.Instance.RegisterUnlockedNode(node.nodeId);
+
+        Debug.Log($"Unlocked node: {node.nodeName}");
+    }
+
+    private bool IsExpeditionFailed()
+    {
+        return GameRunState.Instance != null && GameRunState.Instance.expeditionFailed;
     }
 
     private void SetCurrentNodeAfterSceneReturn(WorldMapNode node)
@@ -478,7 +607,7 @@ public class WorldMapManager : MonoBehaviour
 
         if (GameRunState.Instance != null)
         {
-            GameRunState.Instance.RegisterCurrentNode(currentNode.nodeId);
+            GameRunState.Instance.RegisterCurrentNode(currentNode);
             GameRunState.Instance.RegisterVisitedNode(currentNode.nodeId);
         }
 
@@ -487,8 +616,175 @@ public class WorldMapManager : MonoBehaviour
 
     private void RefreshHud()
     {
+        EvaluateCaravanDefeatConditions();
+
         if (hudUI != null)
             hudUI.Refresh(currentNode);
+
+        if (timeOfDayOverlayUI != null)
+            timeOfDayOverlayUI.Refresh();
+
+        ShowExpeditionFailureIfNeeded();
+        ShowDemoVictoryIfNeeded();
+    }
+
+    private void EvaluateCaravanDefeatConditions()
+    {
+        if (GameRunState.Instance == null || GameRunState.Instance.expeditionFailed)
+            return;
+
+        PartyRuntimeState party = PartyRuntimeState.Instance;
+
+        if (party == null || !party.HasInitializedParty())
+            return;
+
+        if (GetRosterCount(party) == 0)
+        {
+            GameRunState.Instance.RegisterExpeditionFailure("No tienes mas expedicionarios para continuar la caravana.");
+            return;
+        }
+
+        if (GetLivingRosterCount(party) <= 0)
+        {
+            GameRunState.Instance.RegisterExpeditionFailure("No tienes mas expedicionarios vivos para continuar la caravana.");
+            return;
+        }
+
+        InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
+        CaravanState caravan = CaravanState.Instance;
+
+        bool noFood = inventory != null && inventory.food <= 0;
+        bool noCaravanEnergy = caravan != null && caravan.caravanStamina <= 0;
+        bool noExpeditionaryEnergy = GetLivingRosterStamina(party) <= 0;
+
+        if (noFood && noCaravanEnergy && noExpeditionaryEnergy)
+        {
+            GameRunState.Instance.RegisterExpeditionFailure(
+                "El hambre hizo que todos desertaran: no queda comida, la caravana no tiene energia de viaje y ningun expedicionario conserva energia para seguir."
+            );
+        }
+    }
+
+    private int GetRosterCount(PartyRuntimeState party)
+    {
+        if (party == null || party.GetRoster() == null)
+            return 0;
+
+        int count = 0;
+
+        foreach (Unit unit in party.GetRoster())
+        {
+            if (unit != null)
+                count++;
+        }
+
+        return count;
+    }
+
+    private int GetLivingRosterCount(PartyRuntimeState party)
+    {
+        if (party == null || party.GetRoster() == null)
+            return 0;
+
+        int count = 0;
+
+        foreach (Unit unit in party.GetRoster())
+        {
+            if (unit != null && unit.isAlive)
+                count++;
+        }
+
+        return count;
+    }
+
+    private int GetLivingRosterStamina(PartyRuntimeState party)
+    {
+        if (party == null || party.GetRoster() == null)
+            return 0;
+
+        int total = 0;
+
+        foreach (Unit unit in party.GetRoster())
+        {
+            if (unit != null && unit.isAlive)
+                total += Mathf.Max(0, unit.currentStamina);
+        }
+
+        return total;
+    }
+
+    private void ShowExpeditionFailureIfNeeded()
+    {
+        if (GameRunState.Instance == null || !GameRunState.Instance.expeditionFailed)
+            return;
+
+        ShowCaravanDefeatPanel(GameRunState.Instance.expeditionFailureReason);
+    }
+
+    private void ShowCaravanDefeatPanel(string reason)
+    {
+        if (caravanDefeatPanelShown)
+            return;
+
+        caravanDefeatPanelShown = true;
+        CaravanDefeatPanelUI.GetOrCreate().Show(reason);
+    }
+
+    private void ShowDemoVictoryIfNeeded()
+    {
+        if (currentNode == null || GameRunState.Instance == null)
+            return;
+
+        if (demoVictoryPanelShown || GameRunState.Instance.demoCompleted)
+            return;
+
+        if (GameRunState.Instance.expeditionFailed)
+            return;
+
+        if (currentNode.nodeId != "node_frontera_abierta")
+            return;
+
+        if (!GameRunState.Instance.IsBossDefeated())
+            return;
+
+        GameRunState.Instance.RegisterDemoCompleted();
+        demoVictoryPanelShown = true;
+        DemoVictoryPanelUI.GetOrCreate().Show();
+    }
+
+    public void SearchCurrentNodeResources()
+    {
+        if (IsExpeditionFailed())
+        {
+            Debug.Log("La expedicion ya fracaso. No se puede buscar recursos.");
+            RefreshHud();
+            return;
+        }
+
+        if (currentEvent != null)
+        {
+            WorldMapActionToastUI.GetOrCreate().ShowFailure("No puedes buscar recursos mientras hay un evento activo.");
+            return;
+        }
+
+        bool success = CaravanResourceSearchUtility.TrySearchResources(currentNode, out string message);
+
+        if (success)
+        {
+            if (GameSfxPlayer.Instance != null)
+                GameSfxPlayer.Instance.PlayCraftSuccess();
+
+            WorldMapActionToastUI.GetOrCreate().ShowSuccess(message);
+        }
+        else
+        {
+            if (GameSfxPlayer.Instance != null)
+                GameSfxPlayer.Instance.PlayCraftFail();
+
+            WorldMapActionToastUI.GetOrCreate().ShowFailure(message);
+        }
+
+        RefreshHud();
     }
 
     public void GoToCaravanScene()

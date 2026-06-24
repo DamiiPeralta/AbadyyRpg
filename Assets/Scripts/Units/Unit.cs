@@ -2,6 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
+[System.Serializable]
+public class UnitLevelGrowth
+{
+    public int strength;
+    public int dexterity;
+    public int intelligence;
+    public int constitution;
+    public int stamina;
+    public int mana;
+    public int physicalArmor;
+    public int magicalArmor;
+}
+
 public class Unit
 {
     public string unitName;
@@ -20,7 +33,8 @@ public class Unit
     public int level = 1;
     public int experience = 0;
     public int maxLevel = 5;
-    public List<int> experienceByLevel = new List<int> { 0, 100, 250, 450, 700 };
+    public List<int> experienceByLevel = new List<int> { 0, 40, 100, 180, 300 };
+    public List<UnitLevelGrowth> levelGrowths = new List<UnitLevelGrowth>();
     public int strengthGrowthPerLevel = 1;
     public int dexterityGrowthPerLevel = 1;
     public int intelligenceGrowthPerLevel = 1;
@@ -119,10 +133,12 @@ public class Unit
         int staminaGrowthPerLevel,
         int manaGrowthPerLevel,
         int physicalArmorGrowthPerLevel,
-        int magicalArmorGrowthPerLevel)
+        int magicalArmorGrowthPerLevel,
+        List<UnitLevelGrowth> levelGrowths = null)
     {
         this.maxLevel = Mathf.Max(1, maxLevel);
         this.experienceByLevel = NormalizeExperienceTable(experienceByLevel, this.maxLevel);
+        this.levelGrowths = levelGrowths != null ? new List<UnitLevelGrowth>(levelGrowths) : new List<UnitLevelGrowth>();
         this.strengthGrowthPerLevel = strengthGrowthPerLevel;
         this.dexterityGrowthPerLevel = dexterityGrowthPerLevel;
         this.intelligenceGrowthPerLevel = intelligenceGrowthPerLevel;
@@ -143,7 +159,10 @@ public class Unit
         experience = Mathf.Max(0, experience + amount);
 
         while (CanLevelUp())
+        {
             ApplyLevelUp();
+            LearnClassAbilitiesForCurrentLevel();
+        }
 
         int levelsGained = level - previousLevel;
 
@@ -197,14 +216,16 @@ public class Unit
         int previousMaxMagicalArmor = maxMagicalArmor;
 
         level++;
-        strength += strengthGrowthPerLevel;
-        dexterity += dexterityGrowthPerLevel;
-        intelligence += intelligenceGrowthPerLevel;
-        constitution += constitutionGrowthPerLevel;
-        maxStamina = Mathf.Max(1, maxStamina + staminaGrowthPerLevel);
-        maxMana = Mathf.Max(0, maxMana + manaGrowthPerLevel);
-        baseMaxPhysicalArmor = Mathf.Max(0, baseMaxPhysicalArmor + physicalArmorGrowthPerLevel);
-        baseMaxMagicalArmor = Mathf.Max(0, baseMaxMagicalArmor + magicalArmorGrowthPerLevel);
+        UnitLevelGrowth growth = GetGrowthForLevel(level);
+
+        strength += growth.strength;
+        dexterity += growth.dexterity;
+        intelligence += growth.intelligence;
+        constitution += growth.constitution;
+        maxStamina = Mathf.Max(1, maxStamina + growth.stamina);
+        maxMana = Mathf.Max(0, maxMana + growth.mana);
+        baseMaxPhysicalArmor = Mathf.Max(0, baseMaxPhysicalArmor + growth.physicalArmor);
+        baseMaxMagicalArmor = Mathf.Max(0, baseMaxMagicalArmor + growth.magicalArmor);
 
         RecalculateStats();
 
@@ -221,7 +242,7 @@ public class Unit
     {
         List<int> normalized = source != null && source.Count > 0
             ? new List<int>(source)
-            : new List<int> { 0, 100, 250, 450, 700 };
+            : new List<int> { 0, 40, 100, 180, 300 };
 
         while (normalized.Count < maxLevel)
         {
@@ -237,19 +258,58 @@ public class Unit
         return normalized;
     }
 
+    public UnitLevelGrowth GetGrowthForLevel(int targetLevel)
+    {
+        int index = Mathf.Max(0, targetLevel - 2);
+
+        if (levelGrowths != null && index < levelGrowths.Count && levelGrowths[index] != null)
+            return levelGrowths[index];
+
+        return new UnitLevelGrowth
+        {
+            strength = strengthGrowthPerLevel,
+            dexterity = dexterityGrowthPerLevel,
+            intelligence = intelligenceGrowthPerLevel,
+            constitution = constitutionGrowthPerLevel,
+            stamina = staminaGrowthPerLevel,
+            mana = manaGrowthPerLevel,
+            physicalArmor = physicalArmorGrowthPerLevel,
+            magicalArmor = magicalArmorGrowthPerLevel
+        };
+    }
+
+    private void LearnClassAbilitiesForCurrentLevel()
+    {
+        if (unitData == null || !unitData.includeClassAbilities || unitData.characterClass == null)
+            return;
+
+        List<AbilitySO> classAbilities = unitData.characterClass.GetAbilitiesForLevel(level);
+
+        if (classAbilities == null || classAbilities.Count == 0)
+            return;
+
+        if (abilities == null)
+            abilities = new List<AbilitySO>();
+
+        foreach (AbilitySO ability in classAbilities)
+        {
+            if (ability != null && !abilities.Contains(ability))
+                abilities.Add(ability);
+        }
+    }
+
     // =========================
     // RECALCULAR STATS
     // =========================
     public void RecalculateStats()
     {
-        maxHP = constitution * 10;
+        maxHP = constitution * 2;
         physicalDamageMin = strength;
-        physicalDamageMax = strength * 2;
-        magicalDamageMin = Mathf.Max(0, intelligence / 2);
-        magicalDamageMax = intelligence;
+        physicalDamageMax = Mathf.CeilToInt(strength * 1.5f);
+        magicalDamageMin = intelligence;
+        magicalDamageMax = Mathf.CeilToInt(intelligence * 1.5f);
 
-        speed = 30 + Mathf.RoundToInt(dexterity * 2f);
-        speed = Mathf.Clamp(speed, 30, 70);
+        speed = 10 + dexterity;
 
         maxPhysicalArmor = baseMaxPhysicalArmor;
         maxMagicalArmor = baseMaxMagicalArmor;
@@ -261,6 +321,7 @@ public class Unit
 
         ApplyEquipmentStatEffects(false);
         ApplyEquipmentStatEffects(true);
+        ApplyStatusStatEffects();
 
         maxHP = Mathf.Max(1, maxHP);
         physicalDamage = Mathf.Max(0, physicalDamage);
@@ -384,6 +445,21 @@ public class Unit
             return currentValue + Mathf.RoundToInt(currentValue * (modifier / 100f));
 
         return currentValue + modifier;
+    }
+
+    private void ApplyStatusStatEffects()
+    {
+        int attackDown = GetTotalStatusValue(StatusEffectType.AttackDown);
+
+        if (attackDown <= 0)
+            return;
+
+        physicalDamageMin -= attackDown;
+        physicalDamageMax -= attackDown;
+        magicalDamageMin -= attackDown;
+        magicalDamageMax -= attackDown;
+        physicalDamage -= attackDown;
+        magicalDamage -= attackDown;
     }
 
     public void ResetTurnMeter()
@@ -663,10 +739,15 @@ public class Unit
         if (!isAlive)
             return;
 
+        int previousHP = currentHP;
+
         currentHP += amount;
 
         if (currentHP > maxHP)
             currentHP = maxHP;
+
+        if (currentHP > previousHP && GameSfxPlayer.Instance != null)
+            GameSfxPlayer.Instance.PlayHeal();
     }
 
     public void RestoreStamina(int amount)
@@ -757,7 +838,11 @@ public class Unit
             currentHP = 0;
 
         if (currentHP == 0)
+        {
             isAlive = false;
+
+            TryUseAutoReviveConsumable();
+        }
 
         return (physArmorAbsorbed, magArmorAbsorbed, totalHPDamage);
     }
@@ -765,6 +850,68 @@ public class Unit
     public void TakeDamage(int damage)
     {
         TakeDamage(damage, 0);
+    }
+
+    private bool TryUseAutoReviveConsumable()
+    {
+        ConsumableItem reviveItem = null;
+        int slot = 0;
+
+        if (IsAutoReviveConsumable(consumable1))
+        {
+            reviveItem = consumable1;
+            slot = 1;
+        }
+        else if (IsAutoReviveConsumable(consumable2))
+        {
+            reviveItem = consumable2;
+            slot = 2;
+        }
+
+        if (reviveItem == null)
+            return false;
+
+        float revivePercent = reviveItem.hpThreshold > 0f ? reviveItem.hpThreshold : 0.3f;
+        int revivedHP = Mathf.Clamp(Mathf.CeilToInt(maxHP * revivePercent), 1, maxHP);
+
+        if (slot == 1)
+        {
+            RemoveConsumable1();
+
+            if (unitData != null)
+                unitData.ClearRuntimeConsumable1();
+        }
+        else
+        {
+            RemoveConsumable2();
+
+            if (unitData != null)
+                unitData.ClearRuntimeConsumable2();
+        }
+
+        isAlive = true;
+        currentHP = revivedHP;
+
+        if (unitView != null)
+        {
+            unitView.ShowItemText(reviveItem.itemName);
+            unitView.ShowStatusText("REVIVE");
+            unitView.ShowDamageText(revivedHP, DamageFeedbackType.Heal);
+            unitView.HealMotion();
+            unitView.FlashHit(Color.yellow);
+            unitView.UpdateVisuals();
+            unitView.RefreshStatusVisuals(activeEffects);
+        }
+
+        Debug.Log($"{unitName} revivio automaticamente con {revivedHP}/{maxHP} HP usando {reviveItem.itemName}.");
+        return true;
+    }
+
+    private bool IsAutoReviveConsumable(ConsumableItem item)
+    {
+        return item != null &&
+               item.consumableEffectType == ConsumableEffectType.ReviveAlly &&
+               item.useCondition == ConsumableUseCondition.AnyAllyDead;
     }
 
     // =========================
@@ -918,6 +1065,60 @@ public class Unit
         }
 
         return false;
+    }
+
+    public int RemoveNegativeStatusEffects()
+    {
+        if (activeEffects == null || activeEffects.Count == 0)
+            return 0;
+
+        int removed = activeEffects.RemoveAll(IsNegativeStatusEffect);
+
+        if (removed > 0)
+        {
+            RefreshTemporaryTauntMaxFromEffects();
+
+            if (unitView != null)
+            {
+                unitView.ShowStatusText("CLEANSE");
+                unitView.RefreshStatusVisuals(activeEffects);
+            }
+        }
+
+        return removed;
+    }
+
+    private bool IsNegativeStatusEffect(StatusEffect effect)
+    {
+        if (effect == null)
+            return false;
+
+        switch (effect.type)
+        {
+            case StatusEffectType.Poison:
+            case StatusEffectType.Stun:
+            case StatusEffectType.AttackDown:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private int GetTotalStatusValue(StatusEffectType type)
+    {
+        int total = 0;
+
+        if (activeEffects == null)
+            return total;
+
+        foreach (StatusEffect effect in activeEffects)
+        {
+            if (effect != null && effect.type == type)
+                total += Mathf.Max(0, effect.value);
+        }
+
+        return total;
     }
 
     public int CountStatusStacks(StatusEffectType type)

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a29112801a34ff99f121365ea7a22cc, type: 3}
+  m_Name: Enemy_Gusano_T1
+  m_EditorClassIdentifier: 
+  enemyId: enemy_gusano_t1
+  enemyName: Gusano
+  tier: 3
+  kind: 1
+  description: Beast de tier 3. Definicion inicial para balance de demo.
+  icon: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
+  battleSprite: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
+  visualPrefab: {fileID: 5888213713635325529, guid: 43ec5056342d1d744ab6b9da6276eb2a,
+    type: 3}
+  level: 3
+  experienceReward: 28
+  strength: 3
+  dexterity: 1
+  intelligence: 1
+  constitution: 8
+  maxStamina: 10
+  maxMana: 0
+  physicalArmor: 3
+  magicalArmor: 4
+  isFrontLine: 1
+  abilities: []
+  tactics: []
+  reward:
+    gold: 10
+    food: 1
+    wood: 0
+    stone: 0
+    iron: 0
+    leather: 1
+    crystals: 1
+    experience: 28
+    items: []

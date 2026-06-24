@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0e689b4229416a97f52eec40a4e83d, type: 3}
+  m_Name: Encounter_Ratas_02_T1
+  m_EditorClassIdentifier: 
+  encounterId: encounter_ratas_02_t1
+  encounterName: Dos ratas gigantes
+  description: Primer desgaste real contra dos enemigos rapidos.
+  enemies:
+  - enemy: {fileID: 11400000, guid: ffa44ef44b072f44f9891c994362200c, type: 2}
+    amount: 2
+  reward:
+    gold: 6
+    food: 2
+    wood: 0
+    stone: 0
+    iron: 0
+    leather: 2
+    crystals: 0
+    experience: 16
+    items: []
+  requiredFlags: []
+  blockedByFlags: []

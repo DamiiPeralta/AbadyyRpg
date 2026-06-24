@@ -28,6 +28,10 @@ public class SuppliesPanelUI : MonoBehaviour
     public TMP_Text detailBodyText;
     public ItemDetailPanelUI detailPanel;
 
+    [Header("Venta por nodo")]
+    public TMP_Text cannotSellHereText;
+    [TextArea] public string defaultCannotSellHereMessage = "No puedes vender aqui, no hay mercado.";
+
     [Header("Refs")]
     public SuppliesResourcesPanelUI resourcesPanel;
 
@@ -72,10 +76,12 @@ public class SuppliesPanelUI : MonoBehaviour
             SuppliesItemRowUI row = Instantiate(rowPrefab, rowsRoot);
             row.gameObject.SetActive(true);
             row.Bind(entry, item, SelectItem, SellOne);
+            row.SetCanSell(CanSellHere());
             rows.Add(row);
         }
 
         resourcesPanel?.Refresh();
+        RefreshTradingStateText();
         detailPanel?.RefreshSellTexts();
     }
 
@@ -128,6 +134,12 @@ public class SuppliesPanelUI : MonoBehaviour
         if (entry == null || item == null || InventoryRuntimeState.Instance == null)
             return;
 
+        if (!CanSellHere())
+        {
+            RefreshTradingStateText();
+            return;
+        }
+
         if (!InventoryRuntimeState.Instance.RemoveItem(entry.itemId, 1))
             return;
 
@@ -140,6 +152,12 @@ public class SuppliesPanelUI : MonoBehaviour
     {
         if (entry == null || item == null || InventoryRuntimeState.Instance == null)
             return;
+
+        if (!CanSellHere())
+        {
+            RefreshTradingStateText();
+            return;
+        }
 
         int amount = Mathf.Max(0, entry.amount);
 
@@ -219,6 +237,33 @@ public class SuppliesPanelUI : MonoBehaviour
         }
 
         return true;
+    }
+
+    private bool CanSellHere()
+    {
+        return GameRunState.Instance == null || GameRunState.Instance.currentNodeAllowsTrading;
+    }
+
+    private string GetCannotSellHereMessage()
+    {
+        if (GameRunState.Instance != null && !string.IsNullOrWhiteSpace(GameRunState.Instance.currentNodeNoTradingMessage))
+            return GameRunState.Instance.currentNodeNoTradingMessage;
+
+        return defaultCannotSellHereMessage;
+    }
+
+    private void RefreshTradingStateText()
+    {
+        bool canSell = CanSellHere();
+
+        if (cannotSellHereText != null)
+        {
+            cannotSellHereText.gameObject.SetActive(!canSell);
+            cannotSellHereText.text = GetCannotSellHereMessage();
+        }
+
+        if (detailPanel != null)
+            detailPanel.SetCanSellHere(canSell);
     }
 
     private void HookButtons()

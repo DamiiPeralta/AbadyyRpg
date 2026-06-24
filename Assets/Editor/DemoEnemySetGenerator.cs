@@ -12,41 +12,19 @@ public static class DemoEnemySetGenerator
         EnsureFolder("Assets/GameData");
         EnsureFolder(EnemiesFolder);
 
-        CreateNormalEnemies();
-        CreateEliteEnemies();
-        CreateBosses();
+        CreateTier1Enemies();
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log("Enemigos de demo creados/actualizados en Assets/GameData/Enemies.");
     }
 
-    private static void CreateNormalEnemies()
+    private static void CreateTier1Enemies()
     {
-        CreateEnemy("Enemy_Bandido_Raso", "bandido_raso", "Bandido Raso", EnemyTier.Basic, EnemyKind.Human, 1, 20, 8, 8, 2, 7, 80, 0, 10, 0, true, 6, 0, 1, 0, 0);
-        CreateEnemy("Enemy_Perro_Hambriento", "perro_hambriento", "Perro Hambriento", EnemyTier.Basic, EnemyKind.Beast, 1, 15, 7, 12, 1, 6, 90, 0, 5, 0, true, 0, 1, 0, 0, 0);
-        CreateEnemy("Enemy_Cuervo_Carronero", "cuervo_carronero", "Cuervo Carronero", EnemyTier.Basic, EnemyKind.Beast, 1, 15, 5, 14, 2, 5, 70, 0, 0, 8, false, 0, 0, 0, 0, 1);
-
-        CreateEnemy("Enemy_Saqueador", "saqueador", "Saqueador", EnemyTier.Common, EnemyKind.Human, 2, 35, 12, 7, 2, 10, 90, 0, 25, 5, true, 12, 0, 0, 1, 0);
-        CreateEnemy("Enemy_Ballestero", "ballestero", "Ballestero", EnemyTier.Common, EnemyKind.Human, 2, 35, 10, 11, 2, 7, 90, 0, 12, 5, false, 10, 0, 1, 1, 0);
-        CreateEnemy("Enemy_Escudero_Bandido", "escudero_bandido", "Escudero Bandido", EnemyTier.Common, EnemyKind.Human, 2, 40, 8, 6, 2, 13, 100, 0, 55, 8, true, 14, 0, 0, 2, 0);
-        CreateEnemy("Enemy_Cultista_Menor", "cultista_menor", "Cultista Menor", EnemyTier.Common, EnemyKind.Cult, 2, 40, 3, 8, 12, 7, 50, 100, 5, 35, false, 8, 0, 0, 0, 1);
-
-        CreateEnemy("Enemy_Maton_Desertor", "maton_desertor", "Maton Desertor", EnemyTier.Dangerous, EnemyKind.Human, 3, 55, 14, 9, 3, 12, 110, 0, 40, 10, true, 20, 0, 1, 2, 0);
-        CreateEnemy("Enemy_Bestia_Del_Monte", "bestia_del_monte", "Bestia del Monte", EnemyTier.Dangerous, EnemyKind.Beast, 3, 60, 16, 10, 1, 14, 120, 0, 30, 0, true, 0, 2, 0, 0, 0);
-        CreateEnemy("Enemy_Acolito_Corrupto", "acolito_corrupto", "Acolito Corrupto", EnemyTier.Dangerous, EnemyKind.Cult, 3, 60, 4, 9, 14, 10, 60, 120, 10, 45, false, 12, 0, 0, 0, 2);
-    }
-
-    private static void CreateEliteEnemies()
-    {
-        CreateEnemy("Enemy_Capitan_Desertor", "capitan_desertor", "Capitan Desertor", EnemyTier.Elite, EnemyKind.Human, 4, 140, 18, 12, 4, 16, 140, 20, 90, 20, true, 55, 0, 2, 3, 0);
-        CreateEnemy("Enemy_Bruja_Del_Circulo", "bruja_del_circulo", "Bruja del Circulo", EnemyTier.Elite, EnemyKind.Cult, 4, 140, 5, 12, 18, 12, 70, 160, 20, 95, false, 35, 0, 0, 0, 4);
-    }
-
-    private static void CreateBosses()
-    {
-        CreateEnemy("Enemy_Senor_Del_Camino", "senor_del_camino", "Senor del Camino", EnemyTier.Boss, EnemyKind.Human, 5, 240, 22, 12, 6, 20, 170, 40, 150, 45, true, 100, 2, 3, 4, 1);
-        CreateEnemy("Enemy_Cosa_Bajo_Abadia", "cosa_bajo_abadia", "La Cosa Bajo la Abadia", EnemyTier.FinalBoss, EnemyKind.Aberration, 5, 0, 20, 14, 20, 22, 180, 180, 130, 130, true, 150, 0, 3, 3, 6);
+        CreateEnemy("Enemy_Rata_Gigante_T1", "enemy_rata_gigante_t1", "Rata Gigante", EnemyTier.Basic, EnemyKind.Beast, 1, 8, 1, 3, 0, 4, 6, 0, 1, 0, true, 3, 1, 0, 0, 0, 1, 0);
+        CreateEnemy("Enemy_Esqueleto_T1", "enemy_esqueleto_t1", "Esqueleto", EnemyTier.Common, EnemyKind.Aberration, 2, 16, 2, 1, 0, 6, 8, 0, 5, 1, true, 6, 0, 0, 1, 1, 0, 0);
+        CreateEnemy("Enemy_Gusano_T1", "enemy_gusano_t1", "Gusano", EnemyTier.Dangerous, EnemyKind.Beast, 3, 28, 3, 1, 1, 8, 10, 0, 3, 4, true, 10, 1, 0, 0, 0, 1, 1);
+        CreateEnemy("Enemy_Demonio_Menor_T1", "enemy_demonio_menor_t1", "Demonio Menor", EnemyTier.Boss, EnemyKind.Cult, 4, 60, 2, 2, 4, 14, 8, 14, 5, 8, true, 25, 0, 0, 0, 1, 1, 3);
     }
 
     private static void CreateEnemy(
@@ -69,8 +47,10 @@ public static class DemoEnemySetGenerator
         int gold,
         int food,
         int wood,
+        int stone,
         int iron,
-        int leatherOrCrystals)
+        int leather,
+        int crystals)
     {
         EnemyDefinitionSO enemy = LoadOrCreate<EnemyDefinitionSO>($"{EnemiesFolder}/{assetName}.asset");
         enemy.enemyId = enemyId;
@@ -92,7 +72,7 @@ public static class DemoEnemySetGenerator
         enemy.battleSprite = LoadEnemySprite(enemyName, kind);
         enemy.icon = enemy.battleSprite;
         enemy.visualPrefab = null;
-        enemy.reward = BuildReward(xp, gold, food, wood, iron, kind == EnemyKind.Cult || kind == EnemyKind.Aberration ? 0 : leatherOrCrystals, kind == EnemyKind.Cult || kind == EnemyKind.Aberration ? leatherOrCrystals : 0);
+        enemy.reward = BuildReward(xp, gold, food, wood, stone, iron, leather, crystals);
         enemy.abilities = BuildAbilities(kind, tier);
         enemy.tactics = BuildTactics(enemy.abilities);
         EditorUtility.SetDirty(enemy);
@@ -109,7 +89,7 @@ public static class DemoEnemySetGenerator
         switch (kind)
         {
             case EnemyKind.Beast:
-                return AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/GeneratedUI/enemigos/Perro.png");
+                return AssetDatabase.LoadAssetAtPath<Sprite>(enemyName == "Gusano" ? "Assets/Sprites/GeneratedUI/enemigos/Bestia del Monte.png" : "Assets/Sprites/GeneratedUI/enemigos/Perro.png");
             case EnemyKind.Cult:
                 return AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/GeneratedUI/enemigos/Cultista Menor.png");
             case EnemyKind.Aberration:
@@ -151,12 +131,20 @@ public static class DemoEnemySetGenerator
                 return "Assets/Sprites/GeneratedUI/enemigos/se?or del camino.png";
             case "La Cosa Bajo la Abadia":
                 return "Assets/Sprites/GeneratedUI/enemigos/la cosa bajo la abadia.png";
+            case "Rata Gigante":
+                return "Assets/Sprites/GeneratedUI/enemigos/Perro.png";
+            case "Esqueleto":
+                return "Assets/Sprites/GeneratedUI/enemigos/Bandido.png";
+            case "Gusano":
+                return "Assets/Sprites/GeneratedUI/enemigos/Bestia del Monte.png";
+            case "Demonio Menor":
+                return "Assets/Sprites/GeneratedUI/enemigos/Cultista Menor.png";
             default:
                 return null;
         }
     }
 
-    private static RewardData BuildReward(int xp, int gold, int food, int wood, int iron, int leather, int crystals)
+    private static RewardData BuildReward(int xp, int gold, int food, int wood, int stone, int iron, int leather, int crystals)
     {
         RewardData reward = new RewardData
         {
@@ -164,12 +152,11 @@ public static class DemoEnemySetGenerator
             gold = gold,
             food = food,
             wood = wood,
+            stone = stone,
             iron = iron,
-            leather = leather
+            leather = leather,
+            crystals = crystals
         };
-
-        if (crystals > 0)
-            reward.items.Add(new RewardItemEntry { itemId = "Crystal_Shard", amount = crystals });
 
         return reward;
     }
@@ -181,26 +168,16 @@ public static class DemoEnemySetGenerator
         switch (kind)
         {
             case EnemyKind.Human:
-                AddAbility(abilities, "Ability_Assassin_QuickCut");
-                if (tier >= EnemyTier.Dangerous)
-                    AddAbility(abilities, "Ability_Defender_GuardBreaker");
                 break;
             case EnemyKind.Beast:
-                AddAbility(abilities, "Ability_Assassin_QuickCut");
-                if (tier >= EnemyTier.Dangerous)
-                    AddAbility(abilities, "Ability_Assassin_Bleed");
+                AddAbility(abilities, tier >= EnemyTier.Dangerous ? "Ability_Enemy_Deep_Bite_T1" : "Ability_Enemy_Rat_Bite_T1");
                 break;
             case EnemyKind.Cult:
-                AddAbility(abilities, "Ability_Mage_ArcaneDart");
-                if (tier >= EnemyTier.Dangerous)
-                    AddAbility(abilities, "Ability_Mage_CircleMark");
-                if (tier >= EnemyTier.Elite)
-                    AddAbility(abilities, "Ability_Mage_MagicPulse");
+                AddAbility(abilities, "Ability_Enemy_Infernal_Lash_T1");
+                AddAbility(abilities, "Ability_Enemy_Claw_T1");
                 break;
             case EnemyKind.Aberration:
-                AddAbility(abilities, "Ability_Mage_MagicPulse");
-                AddAbility(abilities, "Ability_Assassin_Bleed");
-                AddAbility(abilities, "Ability_Mage_EssenceDrain");
+                AddAbility(abilities, "Ability_Enemy_Rusty_Blow_T1");
                 break;
         }
 

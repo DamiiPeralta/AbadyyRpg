@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public class BattleManager : MonoBehaviour
 {
@@ -28,6 +28,7 @@ public class BattleManager : MonoBehaviour
     private List<Unit> currentRoundOrder = new List<Unit>();
     private int currentTurnIndex = 0;
     private bool cleanedRuntimeViews = false;
+    private BattleResultPanelUI battleResultPanelUI;
 
     public GameManager GameManager;
     public bool battleActive;
@@ -342,6 +343,9 @@ public class BattleManager : MonoBehaviour
     public void StartBattle(List<Unit> players, List<Unit> enemies)
     {
         cleanedRuntimeViews = false;
+        GameSfxPlayer.GetOrCreate();
+        battleResultPanelUI = BattleResultPanelUI.GetOrCreate();
+        battleResultPanelUI.Hide();
 
         playerUnits = new List<Unit>(players);
         enemyUnits = new List<Unit>(enemies);
@@ -594,6 +598,11 @@ public class BattleManager : MonoBehaviour
             target.unitView.ShakeOnHit();
         }
 
+        bool attackDealtDamage = physArmorAbsorbed > 0 || magArmorAbsorbed > 0 || hpDamage > 0;
+
+        if (GameSfxPlayer.Instance != null && attackDealtDamage)
+            GameSfxPlayer.Instance.PlayHitDelayed();
+
         bool attackerIsPlayer = playerUnits.Contains(attacker);
 
         if (attackerIsPlayer)
@@ -605,7 +614,12 @@ public class BattleManager : MonoBehaviour
         Debug.Log($"   {target.GetInfo()}");
 
         if (!target.isAlive)
+        {
+            if (GameSfxPlayer.Instance != null)
+                GameSfxPlayer.Instance.PlayDeathDelayed();
+
             Debug.Log($"💀 {target.unitName} ha sido derrotado.");
+        }
 
         UpdateUnitVisualsIfExists(target);
     }
@@ -638,22 +652,232 @@ public class BattleManager : MonoBehaviour
         CleanupRuntimePartyViews();
 
         if (playerWon)
-            Debug.Log("\n🎉 ¡EL JUGADOR HA GANADO!\n");
-        else
-            Debug.Log("\n💀 ¡LOS ENEMIGOS HAN GANADO!\n");
+        {
+            if (GameSfxPlayer.Instance != null)
+                GameSfxPlayer.Instance.PlayVictory();
 
-        if (GameRunState.Instance != null && !string.IsNullOrWhiteSpace(GameRunState.Instance.returnSceneName))
+            Debug.Log("\n🎉 ¡EL JUGADOR HA GANADO!\n");
+        }
+        else
+        {
+            if (GameSfxPlayer.Instance != null)
+                GameSfxPlayer.Instance.PlayDefeat();
+
+            Debug.Log("\n💀 ¡LOS ENEMIGOS HAN GANADO!\n");
+        }
+
+        if (GameRunState.Instance != null)
         {
             GameRunState.Instance.RegisterCombatResult(playerWon);
 
-            Debug.Log($"BattleManager: volviendo a escena {GameRunState.Instance.returnSceneName}");
+            string returnSceneName = string.IsNullOrWhiteSpace(GameRunState.Instance.returnSceneName)
+                ? "WorldMapScene"
+                : GameRunState.Instance.returnSceneName;
 
-            SceneManager.LoadScene(GameRunState.Instance.returnSceneName);
+            ShowBattleResultPanel(playerWon, returnSceneName);
         }
         else
         {
-            Debug.Log("BattleManager: combate terminado sin GameRunState. No se cambia de escena.");
+            Debug.Log("BattleManager: combate terminado sin GameRunState. Usando WorldMapScene como retorno por defecto.");
+            ShowBattleResultPanel(playerWon, "WorldMapScene");
         }
+    }
+
+    private void ShowBattleResultPanel(bool playerWon, string returnSceneName)
+    {
+        if (battleResultPanelUI == null)
+            battleResultPanelUI = BattleResultPanelUI.GetOrCreate();
+
+        if (playerWon)
+        {
+            battleResultPanelUI.ShowVictory(BuildVictoryRewardText(), returnSceneName);
+        }
+        else
+        {
+            battleResultPanelUI.ShowDefeat(returnSceneName);
+        }
+    }
+
+    private string BuildVictoryRewardText()
+    {
+        RewardData reward = null;
+
+        if (GameRunState.Instance != null && GameRunState.Instance.hasPendingBattleReward)
+            reward = GameRunState.Instance.pendingBattleReward;
+
+        if (reward == null || reward.IsEmpty())
+            return "Victoria. Sin recompensas registradas.";
+
+        StringBuilder builder = new StringBuilder();
+        builder.Append(RewardApplier.BuildRewardSummary(reward));
+
+        AppendLevelUpPreview(builder, reward);
+
+        return builder.ToString();
+    }
+
+    private void AppendLevelUpPreview(StringBuilder builder, RewardData reward)
+    {
+        if (builder == null || reward == null || reward.experience <= 0)
+            return;
+
+        List<Unit> party = PartyRuntimeState.Instance != null
+            ? PartyRuntimeState.Instance.GetCurrentParty()
+            : playerUnits;
+
+        if (party == null || party.Count == 0)
+            return;
+
+        foreach (Unit unit in party)
+        {
+            if (unit == null)
+                continue;
+
+            int projectedLevel = GetProjectedLevelAfterExperience(unit, reward.experience);
+
+            if (projectedLevel <= unit.level)
+                continue;
+
+            builder.AppendLine();
+            builder.Append(unit.unitName);
+            builder.Append(" ha subido al nivel ");
+            builder.Append(projectedLevel);
+            builder.Append(".");
+
+            AppendLevelUpRewards(builder, unit, projectedLevel);
+        }
+    }
+
+    private void AppendLevelUpRewards(StringBuilder builder, Unit unit, int projectedLevel)
+    {
+        if (builder == null || unit == null || projectedLevel <= unit.level)
+            return;
+
+        UnitLevelGrowth totalGrowth = BuildTotalGrowth(unit, unit.level + 1, projectedLevel);
+        List<AbilitySO> learnedAbilities = GetProjectedLearnedAbilities(unit, projectedLevel);
+
+        string growthText = BuildGrowthText(totalGrowth);
+        if (!string.IsNullOrWhiteSpace(growthText))
+        {
+            builder.AppendLine();
+            builder.Append(growthText);
+        }
+
+        if (learnedAbilities.Count == 0)
+            return;
+
+        foreach (AbilitySO ability in learnedAbilities)
+        {
+            builder.AppendLine();
+            builder.Append("Aprende ");
+            builder.Append(!string.IsNullOrWhiteSpace(ability.abilityName) ? ability.abilityName : ability.name);
+            builder.Append(".");
+        }
+    }
+
+    private UnitLevelGrowth BuildTotalGrowth(Unit unit, int firstLevel, int lastLevel)
+    {
+        UnitLevelGrowth total = new UnitLevelGrowth();
+
+        if (unit == null)
+            return total;
+
+        for (int level = firstLevel; level <= lastLevel; level++)
+        {
+            UnitLevelGrowth growth = unit.GetGrowthForLevel(level);
+
+            if (growth == null)
+                continue;
+
+            total.strength += growth.strength;
+            total.dexterity += growth.dexterity;
+            total.intelligence += growth.intelligence;
+            total.constitution += growth.constitution;
+            total.stamina += growth.stamina;
+            total.mana += growth.mana;
+            total.physicalArmor += growth.physicalArmor;
+            total.magicalArmor += growth.magicalArmor;
+        }
+
+        return total;
+    }
+
+    private string BuildGrowthText(UnitLevelGrowth growth)
+    {
+        if (growth == null)
+            return "";
+
+        List<string> parts = new List<string>();
+
+        AddGrowthPart(parts, growth.strength, "Fuerza");
+        AddGrowthPart(parts, growth.dexterity, "Destreza");
+        AddGrowthPart(parts, growth.intelligence, "Inteligencia");
+        AddGrowthPart(parts, growth.constitution, "Constitucion");
+        AddGrowthPart(parts, growth.stamina, "Stamina");
+        AddGrowthPart(parts, growth.mana, "Mana");
+        AddGrowthPart(parts, growth.physicalArmor, "Armadura fisica");
+        AddGrowthPart(parts, growth.magicalArmor, "Armadura magica");
+
+        return parts.Count > 0 ? string.Join(", ", parts) + "." : "";
+    }
+
+    private void AddGrowthPart(List<string> parts, int amount, string label)
+    {
+        if (parts == null || amount == 0)
+            return;
+
+        string sign = amount > 0 ? "+" : "";
+        parts.Add(label + " " + sign + amount);
+    }
+
+    private List<AbilitySO> GetProjectedLearnedAbilities(Unit unit, int projectedLevel)
+    {
+        List<AbilitySO> learned = new List<AbilitySO>();
+
+        if (unit == null ||
+            unit.unitData == null ||
+            !unit.unitData.includeClassAbilities ||
+            unit.unitData.characterClass == null)
+        {
+            return learned;
+        }
+
+        List<AbilitySO> previousAbilities = unit.unitData.characterClass.GetAbilitiesForLevel(unit.level);
+        List<AbilitySO> projectedAbilities = unit.unitData.characterClass.GetAbilitiesForLevel(projectedLevel);
+
+        if (projectedAbilities == null)
+            return learned;
+
+        foreach (AbilitySO ability in projectedAbilities)
+        {
+            if (ability == null)
+                continue;
+
+            bool alreadyAvailableByLevel = previousAbilities != null && previousAbilities.Contains(ability);
+            bool alreadyKnown = unit.abilities != null && unit.abilities.Contains(ability);
+
+            if (!alreadyAvailableByLevel && !alreadyKnown && !learned.Contains(ability))
+                learned.Add(ability);
+        }
+
+        return learned;
+    }
+
+    private int GetProjectedLevelAfterExperience(Unit unit, int experienceReward)
+    {
+        if (unit == null || experienceReward <= 0)
+            return unit != null ? unit.level : 0;
+
+        int projectedLevel = unit.level;
+        int projectedExperience = Mathf.Max(0, unit.experience + experienceReward);
+
+        while (projectedLevel < unit.maxLevel &&
+               projectedExperience >= unit.GetExperienceRequiredForLevel(projectedLevel + 1))
+        {
+            projectedLevel++;
+        }
+
+        return projectedLevel;
     }
 
     private void CleanupRuntimePartyViews()

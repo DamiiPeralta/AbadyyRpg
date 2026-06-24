@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 548e84f0bc444f74c8556989634ae95b, type: 3}
+  m_Name: Recipe_Daga_Mellada_T1
+  m_EditorClassIdentifier: 
+  recipeId: recipe_daga_mellada_t1
+  recipeName: Daga Mellada
+  description: Forja una daga barata para builds rapidas.
+  icon: {fileID: 0}
+  stationType: 0
+  previewItem: {fileID: 11400000, guid: ad1352defb92a2c4eae76181f3d6ded4, type: 2}
+  inputs:
+  - stackType: 1
+    item: {fileID: 0}
+    itemId: 
+    amount: 8
+  - stackType: 5
+    item: {fileID: 0}
+    itemId: 
+    amount: 1
+  - stackType: 6
+    item: {fileID: 0}
+    itemId: 
+    amount: 1
+  outputs:
+  - stackType: 0
+    item: {fileID: 11400000, guid: ad1352defb92a2c4eae76181f3d6ded4, type: 2}
+    itemId: weapon_daga_mellada_t1
+    amount: 1

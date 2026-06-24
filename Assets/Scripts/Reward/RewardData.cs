@@ -9,8 +9,10 @@ public class RewardData
     public int gold;
     public int food;
     public int wood;
+    public int stone;
     public int iron;
     public int leather;
+    public int crystals;
 
     [Header("Progression")]
     public int experience;
@@ -24,8 +26,10 @@ public class RewardData
             gold > 0 ||
             food > 0 ||
             wood > 0 ||
+            stone > 0 ||
             iron > 0 ||
             leather > 0 ||
+            crystals > 0 ||
             experience > 0;
 
         bool hasItems = items != null && items.Count > 0;

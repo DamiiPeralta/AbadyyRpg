@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a29112801a34ff99f121365ea7a22cc, type: 3}
+  m_Name: Enemy_Rata_Gigante_T1
+  m_EditorClassIdentifier: 
+  enemyId: enemy_rata_gigante_t1
+  enemyName: Rata Gigante
+  tier: 1
+  kind: 1
+  description: Beast de tier 1. Definicion inicial para balance de demo.
+  icon: {fileID: 21300000, guid: f58864ae607f9074eabc8916bc1eddd4, type: 3}
+  battleSprite: {fileID: 21300000, guid: f58864ae607f9074eabc8916bc1eddd4, type: 3}
+  visualPrefab: {fileID: 0}
+  level: 1
+  experienceReward: 8
+  strength: 1
+  dexterity: 3
+  intelligence: 0
+  constitution: 4
+  maxStamina: 6
+  maxMana: 0
+  physicalArmor: 1
+  magicalArmor: 0
+  isFrontLine: 1
+  abilities:
+  - {fileID: 11400000, guid: 91e6a9b10c7648a088450b1f019ba5de, type: 2}
+  tactics:
+  - priority: 1
+    isActive: 1
+    conditionType: 0
+    thresholdPercent: 100
+    ability: {fileID: 11400000, guid: 91e6a9b10c7648a088450b1f019ba5de, type: 2}
+  reward:
+    gold: 3
+    food: 1
+    wood: 0
+    stone: 0
+    iron: 0
+    leather: 1
+    crystals: 0
+    experience: 8
+    items: []

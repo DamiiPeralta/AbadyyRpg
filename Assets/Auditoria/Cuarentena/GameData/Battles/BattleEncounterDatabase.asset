@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8a3892b124e46e992cbb301c619755c, type: 3}
+  m_Name: BattleEncounterDatabase
+  m_EditorClassIdentifier: 
+  encounters:
+  - {fileID: 11400000, guid: 42f5cf119d934144b9a7299697189f8c, type: 2}
+  - {fileID: 11400000, guid: 140c44665ad44529b2af9dcc4f849ce9, type: 2}
+  - {fileID: 11400000, guid: 1310188b8c294a98ba072f09827c30ee, type: 2}
+  - {fileID: 11400000, guid: 6be29b7446c74af0a126389f45154442, type: 2}
+  - {fileID: 11400000, guid: e587000ee0514d7f962833912fa02ad5, type: 2}
+  - {fileID: 11400000, guid: beef2cfb436e4607b11afa0d3e853226, type: 2}
+  - {fileID: 11400000, guid: e07adb0005254bf1be51d3b9d4facf80, type: 2}

@@ -35,28 +35,29 @@ MonoBehaviour:
   manaGrowthPerLevel: 8
   physicalArmorGrowthPerLevel: 1
   magicalArmorGrowthPerLevel: 1
+  levelGrowths: []
   abilityUnlocks:
   - level: 1
-    ability: {fileID: 11400000, guid: e1da28fa37d6aca468ada73d36a24009, type: 2}
+    ability: {fileID: 11400000, guid: 99f227e9fd5005d408d3d8a7dc5098ab, type: 2}
   - level: 1
-    ability: {fileID: 11400000, guid: 223ce44d25ba80548b575eb75a500f55, type: 2}
+    ability: {fileID: 11400000, guid: 032c5085684fb5b4588a9ac16f216894, type: 2}
   - level: 2
-    ability: {fileID: 11400000, guid: bd969ae41a5a2e1459a6b2c5c60347f9, type: 2}
+    ability: {fileID: 11400000, guid: 10d0f5c903dd8dc4fa69fd0e7ace269a, type: 2}
   - level: 3
-    ability: {fileID: 11400000, guid: 885052b218623784380bd73294a6ce33, type: 2}
+    ability: {fileID: 11400000, guid: aa54a38ffa4542a48968c8ce115cf90e, type: 2}
   suggestedTactics:
   - priority: 1
     isActive: 1
     conditionType: 2
     thresholdPercent: 35
-    ability: {fileID: 11400000, guid: e1da28fa37d6aca468ada73d36a24009, type: 2}
+    ability: {fileID: 11400000, guid: 99f227e9fd5005d408d3d8a7dc5098ab, type: 2}
   - priority: 2
     isActive: 1
     conditionType: 5
     thresholdPercent: 35
-    ability: {fileID: 11400000, guid: bd969ae41a5a2e1459a6b2c5c60347f9, type: 2}
+    ability: {fileID: 11400000, guid: 10d0f5c903dd8dc4fa69fd0e7ace269a, type: 2}
   - priority: 3
     isActive: 1
     conditionType: 2
     thresholdPercent: 70
-    ability: {fileID: 11400000, guid: 223ce44d25ba80548b575eb75a500f55, type: 2}
+    ability: {fileID: 11400000, guid: 032c5085684fb5b4588a9ac16f216894, type: 2}

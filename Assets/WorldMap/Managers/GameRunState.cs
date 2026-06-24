@@ -5,6 +5,9 @@ public class GameRunState : MonoBehaviour
 {
     public static GameRunState Instance { get; private set; }
 
+    public const string BossDefeatedFlag = "flag_jefe_derrotado";
+    public const int ExpeditionFailureDay = 11;
+
     [Header("Scene Flow")]
     public string returnSceneName = "WorldMapScene";
 
@@ -23,6 +26,13 @@ public class GameRunState : MonoBehaviour
 
     [Header("Map State")]
     public string currentNodeId;
+    public bool currentNodeAllowsTrading = true;
+    public string currentNodeNoTradingMessage = "No puedes vender aqui, no hay mercado.";
+
+    [Header("Expedition Result")]
+    public bool expeditionFailed;
+    public string expeditionFailureReason;
+    public bool demoCompleted;
 
     public List<string> completedNodeIds = new List<string>();
     public List<string> unlockedNodeIds = new List<string>();
@@ -70,8 +80,16 @@ public class GameRunState : MonoBehaviour
         lastCombatWasVictory = victory;
         lastCompletedCombatNodeId = returnNodeId;
 
-        RegisterCurrentNode(returnNodeId);
-        RegisterVisitedNode(returnNodeId);
+        if (victory)
+        {
+            RegisterCurrentNode(returnNodeId);
+            RegisterVisitedNode(returnNodeId);
+        }
+        else
+        {
+            RegisterCurrentNode(returnNodeId);
+            RegisterVisitedNode(returnNodeId);
+        }
 
         if (victory && !completedNodeIds.Contains(returnNodeId))
         {
@@ -118,6 +136,18 @@ public class GameRunState : MonoBehaviour
         }
     }
 
+    public void RegisterCurrentNode(WorldMapNode node)
+    {
+        if (node == null)
+            return;
+
+        RegisterCurrentNode(node.nodeId);
+        currentNodeAllowsTrading = node.allowsTrading;
+        currentNodeNoTradingMessage = string.IsNullOrWhiteSpace(node.noTradingMessage)
+            ? "No puedes vender aqui, no hay mercado."
+            : node.noTradingMessage;
+    }
+
     public void RegisterVisitedNode(string nodeId)
     {
         if (!string.IsNullOrWhiteSpace(nodeId) && !visitedNodeIds.Contains(nodeId))
@@ -148,6 +178,34 @@ public class GameRunState : MonoBehaviour
         {
             flags.Add(flag);
         }
+    }
+
+    public bool IsBossDefeated()
+    {
+        return HasFlag(BossDefeatedFlag);
+    }
+
+    public bool ShouldFailByTime(int day)
+    {
+        return day >= ExpeditionFailureDay && !IsBossDefeated();
+    }
+
+    public void RegisterExpeditionFailure(string reason)
+    {
+        if (expeditionFailed)
+            return;
+
+        expeditionFailed = true;
+        expeditionFailureReason = string.IsNullOrWhiteSpace(reason)
+            ? "La expedicion fracaso."
+            : reason;
+
+        Debug.Log(expeditionFailureReason);
+    }
+
+    public void RegisterDemoCompleted()
+    {
+        demoCompleted = true;
     }
 
     public bool HasCompletedNode(string nodeId)

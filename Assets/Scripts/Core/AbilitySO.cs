@@ -88,6 +88,9 @@ public class AbilitySO : ScriptableObject
     public float intelligenceToStatusValue = 0f;
     public float constitutionToStatusValue = 0f;
 
+    [Header("Limpieza")]
+    public bool cleansesNegativeStatus = false;
+
     [Header("Taunt")]
     public bool generatesTaunt = true;
 
@@ -126,6 +129,7 @@ public class AbilitySO : ScriptableObject
         int totalHealDone = 0;
         int totalArmorRestored = 0;
         bool appliedAnyStatus = false;
+        bool cleansedAnyStatus = false;
 
         if (selfTauntChange != 0)
             user.AddTaunt(selfTauntChange);
@@ -139,6 +143,19 @@ public class AbilitySO : ScriptableObject
 
             if (targetTauntChange != 0)
                 target.AddTaunt(targetTauntChange);
+
+            if (cleansesNegativeStatus)
+            {
+                int removed = target.RemoveNegativeStatusEffects();
+
+                if (removed > 0)
+                {
+                    cleansedAnyStatus = true;
+                    if (battleManager != null)
+                        battleManager.UpdateUnitVisualsIfExists(target);
+                    Debug.Log($"   {target.unitName} limpia {removed} estados negativos.");
+                }
+            }
 
             int healAmount = CalculateHeal(user, target);
 
@@ -246,7 +263,7 @@ public class AbilitySO : ScriptableObject
             battleManager.UpdateUnitVisualsIfExists(user);
         }
 
-        GenerateTauntIfPlayer(user, battleManager, totalHpDamageDealt, totalHealDone, totalArmorRestored, appliedAnyStatus);
+        GenerateTauntIfPlayer(user, battleManager, totalHpDamageDealt, totalHealDone, totalArmorRestored, appliedAnyStatus || cleansedAnyStatus);
     }
 
     private void GenerateTauntIfPlayer(Unit user, BattleManager battleManager, int hpDamage, int healing, int armorRestored, bool appliedAnyStatus)

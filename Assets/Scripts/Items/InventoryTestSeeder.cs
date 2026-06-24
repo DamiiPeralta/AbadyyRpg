@@ -8,19 +8,19 @@ using UnityEditor;
 public class InventoryTestSeeder : MonoBehaviour
 {
     [Header("Modo")]
-    public bool seedOnStart = true;
+    public bool seedOnStart = false;
     public bool clearInventoryBeforeSeed = true;
     public bool setResources = true;
     public int defaultItemAmount = 3;
 
     [Header("Recursos iniciales")]
-    public int gold = 2450;
-    public int food = 2450;
-    public int wood = 2450;
-    public int stone = 2450;
-    public int iron = 2450;
-    public int leather = 2450;
-    public int crystals = 2450;
+    public int gold = 0;
+    public int food = 0;
+    public int wood = 0;
+    public int stone = 0;
+    public int iron = 0;
+    public int leather = 0;
+    public int crystals = 0;
 
     [Header("Items por asset")]
     public List<SeedItemAssetEntry> itemAssets = new List<SeedItemAssetEntry>();

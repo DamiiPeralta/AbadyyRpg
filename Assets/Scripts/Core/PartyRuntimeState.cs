@@ -9,7 +9,7 @@ public class PartyRuntimeState : MonoBehaviour
 
     [Header("Roster")]
     public int maxRosterMembers = 6;
-    public int maxActiveMembers = 4;
+    public int maxActiveMembers = 1;
 
     private List<Unit> runtimeRosterUnits = new List<Unit>();
     private List<Unit> activePartyUnits = new List<Unit>();
@@ -113,6 +113,11 @@ public class PartyRuntimeState : MonoBehaviour
     public bool HasParty()
     {
         return initialized && activePartyUnits != null && activePartyUnits.Count > 0;
+    }
+
+    public bool HasInitializedParty()
+    {
+        return initialized;
     }
 
     public List<Unit> GetCurrentParty()

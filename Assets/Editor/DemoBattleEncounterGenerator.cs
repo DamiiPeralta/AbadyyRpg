@@ -16,17 +16,13 @@ public static class DemoBattleEncounterGenerator
 
         List<BattleEncounterSO> encounters = new List<BattleEncounterSO>
         {
-            CreateEncounter("Encounter_Road_Ambush_01", "road_ambush_01", "Emboscada del Camino", "Primer combate facil contra bandidos.", ("Enemy_Bandido_Raso", 2)),
-            CreateEncounter("Encounter_Hungry_Beasts_01", "hungry_beasts_01", "Bestias Hambrientas", "Bestias fragiles y rapidas.", ("Enemy_Perro_Hambriento", 2), ("Enemy_Cuervo_Carronero", 1)),
-            CreateEncounter("Encounter_Bandit_Patrol_01", "bandit_patrol_01", "Patrulla Bandida", "Encuentro comun para probar taunt.", ("Enemy_Saqueador", 1), ("Enemy_Ballestero", 1)),
-            CreateEncounter("Encounter_Bandit_Shield_01", "bandit_shield_01", "Escuderos del Camino", "Introduce armadura fisica alta.", ("Enemy_Escudero_Bandido", 1), ("Enemy_Bandido_Raso", 1), ("Enemy_Cuervo_Carronero", 1)),
-            CreateEncounter("Encounter_Cult_Rites_01", "cult_rites_01", "Rito Menor del Culto", "Dano magico y soporte enemigo.", ("Enemy_Cultista_Menor", 1), ("Enemy_Acolito_Corrupto", 1)),
-            CreateEncounter("Encounter_Deserter_Group_01", "deserter_group_01", "Grupo Desertor", "Combate fisico de media demo.", ("Enemy_Maton_Desertor", 1), ("Enemy_Saqueador", 1), ("Enemy_Ballestero", 1)),
-            CreateEncounter("Encounter_Mountain_Beast_01", "mountain_beast_01", "Bestia del Monte", "Presion fisica fuerte.", ("Enemy_Bestia_Del_Monte", 1), ("Enemy_Perro_Hambriento", 2)),
-            CreateEncounter("Encounter_Elite_Captain_01", "elite_captain_01", "Capitan Desertor", "Elite humano.", ("Enemy_Capitan_Desertor", 1), ("Enemy_Bandido_Raso", 1), ("Enemy_Ballestero", 1)),
-            CreateEncounter("Encounter_Elite_Witch_01", "elite_witch_01", "Bruja del Circulo", "Elite magico.", ("Enemy_Bruja_Del_Circulo", 1), ("Enemy_Cultista_Menor", 2)),
-            CreateEncounter("Encounter_Boss_RoadLord_01", "boss_road_lord_01", "Senor del Camino", "Jefe regional.", ("Enemy_Senor_Del_Camino", 1)),
-            CreateEncounter("Encounter_Final_AbbeyThing_01", "final_abbey_thing_01", "La Cosa Bajo la Abadia", "Jefe final de demo.", ("Enemy_Cosa_Bajo_Abadia", 1))
+            CreateEncounter("Encounter_Rata_01_T1", "encounter_rata_01_t1", "Rata solitaria", "Tutorial de combate contra una rata gigante.", ("Enemy_Rata_Gigante_T1", 1)),
+            CreateEncounter("Encounter_Ratas_02_T1", "encounter_ratas_02_t1", "Dos ratas gigantes", "Primer desgaste real contra dos enemigos rapidos.", ("Enemy_Rata_Gigante_T1", 2)),
+            CreateEncounter("Encounter_Rata_Esqueleto_T1", "encounter_rata_esqueleto_t1", "Rata y esqueleto", "Prueba de prioridad contra desgaste y armadura fisica.", ("Enemy_Rata_Gigante_T1", 1), ("Enemy_Esqueleto_T1", 1)),
+            CreateEncounter("Encounter_Esqueleto_01_T1", "encounter_esqueleto_01_t1", "Esqueleto", "Test simple de armadura fisica alta.", ("Enemy_Esqueleto_T1", 1)),
+            CreateEncounter("Encounter_Gusano_01_T1", "encounter_gusano_01_t1", "Gusano", "Mini-check de preparacion fisica y sustain.", ("Enemy_Gusano_T1", 1)),
+            CreateEncounter("Encounter_Esqueleto_Gusano_T1", "encounter_esqueleto_gusano_t1", "Esqueleto y gusano", "Pelea de preparacion final antes del jefe.", ("Enemy_Esqueleto_T1", 1), ("Enemy_Gusano_T1", 1)),
+            CreateEncounter("Encounter_Demonio_Menor_T1", "encounter_demonio_menor_t1", "Demonio menor", "Jefe Tier 1. Combate final de la demo simplificada.", ("Enemy_Demonio_Menor_T1", 1))
         };
 
         BattleEncounterDatabase database = AssetDatabase.LoadAssetAtPath<BattleEncounterDatabase>(DatabasePath);
@@ -82,8 +78,10 @@ public static class DemoBattleEncounterGenerator
         target.gold += source.gold * multiplier;
         target.food += source.food * multiplier;
         target.wood += source.wood * multiplier;
+        target.stone += source.stone * multiplier;
         target.iron += source.iron * multiplier;
         target.leather += source.leather * multiplier;
+        target.crystals += source.crystals * multiplier;
         target.experience += source.experience * multiplier;
 
         if (source.items == null)

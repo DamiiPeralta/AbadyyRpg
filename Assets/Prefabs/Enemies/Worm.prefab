@@ -1,155 +1,197 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &8734975799873128954
-PrefabInstance:
+--- !u!1 &5888213713635325529
+GameObject:
   m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5888213713635325530}
+  - component: {fileID: 5888213713635325531}
+  - component: {fileID: 5470093464246140734}
+  - component: {fileID: 7498535008682230713}
+  - component: {fileID: 2360869059693327075}
+  m_Layer: 0
+  m_Name: Worm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5888213713635325530
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5888213713635325529}
   serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: icon
-      value: 
-      objectReference: {fileID: 1233016105, guid: 05408f35652d4f041bc5bb1febd2a2de,
-        type: 3}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: strength
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: unitName
-      value: Gusano
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: dexterity
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: description
-      value: Lento, resistente y venenoso.
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: battleSprite
-      value: 
-      objectReference: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba,
-        type: 3}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: constitution
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: intelligence
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: maxMagicalArmor
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: maxPhysicalArmor
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: abilities.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: abilities.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: c7383422933d10743b7cc0ab1b264c8d,
-        type: 2}
-    - target: {fileID: 1236515076954360387, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: abilities.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: fa506be699f112d41950d7a602948630,
-        type: 2}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.38352543
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.500859
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4.06
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.21
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765728, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922832967602765729, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba,
-        type: 3}
-    - target: {fileID: 2922832967602765731, guid: f5f7922e992504e4c86a4c853ac8cc7a,
-        type: 3}
-      propertyPath: m_Name
-      value: Worm
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f5f7922e992504e4c86a4c853ac8cc7a, type: 3}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.6900866, y: -1.7774475, z: 0}
+  m_LocalScale: {x: 0.38352543, y: 0.500859, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &5888213713635325531
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5888213713635325529}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
+  m_Sprite: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.16, y: 0.16}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &5470093464246140734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5888213713635325529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b6bc97437b66a4fb47f5f0b8edbca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableStatusPulse: 1
+  statusPulseInTime: 0.18
+  statusPulseHoldTime: 0.08
+  statusPulseOutTime: 0.18
+  statusPulseRestTime: 0.12
+  statusIconUI: {fileID: 0}
+  floatingTextPrefab: {fileID: 6977658439239612171, guid: be030e909c0726140a48ccb9e64891d0,
+    type: 3}
+  floatingTextDelay: 0.12
+  flashDuration: 0.25
+  shakeDuration: 0.25
+  shakeMagnitude: 0.1
+  attackDistance: 0.2
+  attackDuration: 0.25
+  healFloatDistance: 0.15
+  healDuration: 0.45
+--- !u!114 &7498535008682230713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5888213713635325529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d46a26b382696fb49add3362a259cd9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: Gusano
+  description: Lento, resistente y venenoso.
+  characterClass: {fileID: 0}
+  useClassBaseStats: 0
+  useClassProgression: 0
+  includeClassAbilities: 1
+  includeClassSuggestedTactics: 0
+  icon: {fileID: 1233016105, guid: 05408f35652d4f041bc5bb1febd2a2de, type: 3}
+  battleSprite: {fileID: -1541703692, guid: 7810e42caf0bb154e912ea5726d2ccba, type: 3}
+  strength: 14
+  dexterity: 4
+  intelligence: 4
+  constitution: 18
+  level: 1
+  experience: 0
+  maxLevel: 5
+  experienceByLevel: 000000002800000064000000b40000002c010000
+  maxStamina: 100
+  startStamina: -1
+  maxMana: 100
+  startMana: -1
+  strengthGrowthPerLevel: 1
+  dexterityGrowthPerLevel: 1
+  intelligenceGrowthPerLevel: 1
+  constitutionGrowthPerLevel: 1
+  staminaGrowthPerLevel: 5
+  manaGrowthPerLevel: 5
+  physicalArmorGrowthPerLevel: 0
+  magicalArmorGrowthPerLevel: 0
+  levelGrowths: []
+  maxPhysicalArmor: 10
+  maxMagicalArmor: 5
+  startHP: -1
+  startPhysicalArmor: -1
+  startMagicalArmor: -1
+  abilities:
+  - {fileID: 11400000, guid: c7383422933d10743b7cc0ab1b264c8d, type: 2}
+  - {fileID: 11400000, guid: fa506be699f112d41950d7a602948630, type: 2}
+  tactics: []
+  helmet: {fileID: 0}
+  chest: {fileID: 0}
+  feet: {fileID: 0}
+  hands: {fileID: 0}
+  rightHand: {fileID: 0}
+  leftHand: {fileID: 0}
+  ring: {fileID: 0}
+  amulet: {fileID: 0}
+  consumable1: {fileID: 0}
+  consumable2: {fileID: 0}
+--- !u!114 &2360869059693327075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5888213713635325529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4119f28c8773ff54385b21b46f2cb14c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSlider: {fileID: 0}
+  nameText: {fileID: 0}
+  healthText: {fileID: 0}
+  physicalArmorSlider: {fileID: 0}
+  magicalArmorSlider: {fileID: 0}
+  physicalArmorText: {fileID: 0}
+  magicalArmorText: {fileID: 0}

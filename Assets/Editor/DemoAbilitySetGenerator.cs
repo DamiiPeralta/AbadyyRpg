@@ -17,6 +17,7 @@ public static class DemoAbilitySetGenerator
         CreateAssassinAbilities();
         CreateMageAbilities();
         CreateAcolyteAbilities();
+        CreateGenericTier1Abilities();
         UpdateDemoClasses();
 
         AssetDatabase.SaveAssets();
@@ -147,6 +148,58 @@ public static class DemoAbilitySetGenerator
         vigorPrayer.customTauntGenerated = 40;
     }
 
+    private static void CreateGenericTier1Abilities()
+    {
+        AbilitySO powerStrike = CreateAbility("Ability_Generic_PowerStrike_T1", "Ataque Poderoso", "Dano fisico alto con coste medio de energia.", AbilityTarget.Enemy, AbilityTargetMode.Single, 3, 0);
+        powerStrike.flatPhysicalDamage = 1;
+        powerStrike.physicalPowerMultiplier = 1.15f;
+        powerStrike.strengthToPhysicalDamage = 2f;
+        powerStrike.customTauntGenerated = 30;
+
+        AbilitySO magicMissile = CreateAbility("Ability_Generic_MagicMissile_T1", "Misil Magico", "Dano magico estable para enemigos con armadura fisica.", AbilityTarget.Enemy, AbilityTargetMode.Single, 0, 3);
+        magicMissile.flatMagicalDamage = 1;
+        magicMissile.magicalPowerMultiplier = 1f;
+        magicMissile.intelligenceToMagicalDamage = 2f;
+        magicMissile.customTauntGenerated = 25;
+
+        AbilitySO heal = CreateAbility("Ability_Generic_Heal_T1", "Curar", "Cura una pequena cantidad de HP.", AbilityTarget.Ally, AbilityTargetMode.Single, 0, 3);
+        heal.flatHeal = 3;
+        heal.intelligenceToHeal = 0.5f;
+        heal.customTauntGenerated = 25;
+
+        AbilitySO regeneration = CreateAbility("Ability_Generic_Regeneration_T1", "Regeneracion", "Aplica una regeneracion leve durante varios turnos.", AbilityTarget.Ally, AbilityTargetMode.Single, 0, 4);
+        regeneration.appliesStatusEffect = true;
+        regeneration.statusEffectType = StatusEffectType.Regeneration;
+        regeneration.statusDuration = 3;
+        regeneration.statusValue = 1;
+        regeneration.intelligenceToStatusValue = 0.15f;
+        regeneration.customTauntGenerated = 25;
+
+        AbilitySO guard = CreateAbility("Ability_Generic_Guard_T1", "Guardia", "Restaura armadura fisica propia.", AbilityTarget.Self, AbilityTargetMode.Single, 3, 0);
+        guard.restorePhysicalArmor = 3;
+        guard.constitutionToPhysicalArmorRestore = 0.25f;
+        guard.customTauntGenerated = 20;
+
+        AbilitySO magicShield = CreateAbility("Ability_Generic_MagicShield_T1", "Escudo Magico", "Restaura armadura magica propia.", AbilityTarget.Self, AbilityTargetMode.Single, 0, 3);
+        magicShield.restoreMagicalArmor = 3;
+        magicShield.intelligenceToMagicalArmorRestore = 0.25f;
+        magicShield.customTauntGenerated = 20;
+
+        AbilitySO cleanse = CreateAbility("Ability_Generic_Cleanse_T1", "Purificar", "Limpia veneno, aturdimiento y reduccion de ataque.", AbilityTarget.Ally, AbilityTargetMode.Single, 0, 3);
+        cleanse.cleansesNegativeStatus = true;
+        cleanse.customTauntGenerated = 20;
+
+        AbilitySO armBreaker = CreateAbility("Ability_Generic_ArmBreaker_T1", "Rompebrazo", "Dano fisico bajo y reduce el ataque del enemigo.", AbilityTarget.Enemy, AbilityTargetMode.Single, 2, 0);
+        armBreaker.flatPhysicalDamage = 1;
+        armBreaker.physicalPowerMultiplier = 0.6f;
+        armBreaker.strengthToPhysicalDamage = 1f;
+        armBreaker.appliesStatusEffect = true;
+        armBreaker.statusEffectType = StatusEffectType.AttackDown;
+        armBreaker.statusDuration = 2;
+        armBreaker.statusValue = 1;
+        armBreaker.customTauntGenerated = 25;
+    }
+
     private static AbilitySO CreateAbility(string assetName, string abilityName, string description, AbilityTarget target, AbilityTargetMode targetMode, int staminaCost, int manaCost)
     {
         AbilitySO ability = LoadOrCreate<AbilitySO>($"{AbilitiesFolder}/{assetName}.asset");
@@ -206,6 +259,7 @@ public static class DemoAbilitySetGenerator
         ability.dexterityToStatusValue = 0f;
         ability.intelligenceToStatusValue = 0f;
         ability.constitutionToStatusValue = 0f;
+        ability.cleansesNegativeStatus = false;
         ability.generatesTaunt = true;
         ability.customTauntGenerated = -1;
         ability.selfTauntChange = 0;

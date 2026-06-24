@@ -23,26 +23,34 @@ public class CaravanManager : MonoBehaviour
 
     [HideInInspector]
     [Range(0f, 1f)]
-    public float restHealPercent = 0.20f;
+    public float restHealPercent = 0.50f;
     [HideInInspector]
     [Range(0f, 1f)]
-    public float armorRepairPercent = 0.20f;
+    public float armorRepairPercent = 0.50f;
     [HideInInspector]
     public int partialRestFoodPerLivingMember = 1;
     [HideInInspector]
-    public int partialRestWoodCost = 1;
+    public int partialRestWoodCost = 0;
+    [HideInInspector]
+    public int partialRestCaravanStaminaCost = 0;
+    [HideInInspector]
+    public int partialRestHoursCost = 2;
     [HideInInspector]
     public int sleepFoodPerLivingMember = 1;
     [HideInInspector]
     public int sleepWoodCost = 2;
     [HideInInspector]
-    public int physicalArmorRepairIronCost = 2;
+    public int physicalArmorRepairIronCost = 0;
     [HideInInspector]
     public int physicalArmorRepairLeatherCost = 1;
     [HideInInspector]
-    public int magicalArmorRepairCrystalCost = 2;
+    public int physicalArmorRepairHoursCost = 2;
     [HideInInspector]
-    public int magicalArmorRepairLeatherCost = 2;
+    public int magicalArmorRepairCrystalCost = 0;
+    [HideInInspector]
+    public int magicalArmorRepairLeatherCost = 0;
+    [HideInInspector]
+    public int magicalArmorRepairHoursCost = 2;
 
     [Header("Generated UI")]
     public bool buildGeneratedUI = true;
@@ -63,6 +71,9 @@ public class CaravanManager : MonoBehaviour
 
     private void Start()
     {
+        GameSfxPlayer.GetOrCreate();
+        ScreenFadeUI.GetOrCreate();
+
         if (firePanelUI == null)
             firePanelUI = GetComponentInChildren<CaravanFirePanelUI>(true);
 
@@ -298,6 +309,8 @@ public class CaravanManager : MonoBehaviour
         InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
         foodCost *= Mathf.Max(0, partialRestFoodPerLivingMember);
         int woodCost = Mathf.Max(0, partialRestWoodCost);
+        int staminaCost = Mathf.Max(0, partialRestCaravanStaminaCost);
+        int hoursCost = Mathf.Max(0, partialRestHoursCost);
 
         if (inventory.food < foodCost)
         {
@@ -311,13 +324,32 @@ public class CaravanManager : MonoBehaviour
             return;
         }
 
+        if (staminaCost > 0 && CaravanState.Instance == null)
+        {
+            SetMessage("No existe CaravanState para gastar energia de viaje.");
+            return;
+        }
+
+        if (CaravanState.Instance != null && CaravanState.Instance.caravanStamina < staminaCost)
+        {
+            SetMessage($"No hay energia de viaje suficiente. Necesitas {staminaCost}.");
+            return;
+        }
+
         inventory.SpendFood(foodCost);
-        inventory.SpendWood(woodCost);
+        if (woodCost > 0)
+            inventory.SpendWood(woodCost);
+
         PartyRuntimeState.Instance.HealAllLivingPercent(restHealPercent);
         PartyRuntimeState.Instance.RestoreAllLivingStaminaPercent(restHealPercent);
-        PartyRuntimeState.Instance.RestoreAllLivingManaPercent(restHealPercent);
 
-        SetMessage($"Descanso parcial. Comida consumida: {foodCost}. Madera consumida: {woodCost}.");
+        if (CaravanState.Instance != null)
+        {
+            CaravanState.Instance.ChangeStamina(-staminaCost);
+            CaravanState.Instance.AdvanceHours(hoursCost);
+        }
+
+        SetMessage($"Descanso parcial. Comida: {foodCost}. Recupera {Mathf.RoundToInt(restHealPercent * 100f)}% de HP y energia. Horas: {hoursCost}.");
 
         RefreshAllUI();
     }
@@ -370,17 +402,22 @@ public class CaravanManager : MonoBehaviour
             return;
         }
 
-        inventory.SpendFood(foodCost);
-        inventory.SpendWood(woodCost);
-        PartyRuntimeState.Instance.FullHealAllLiving();
-        PartyRuntimeState.Instance.RestoreAllLivingStamina();
-        PartyRuntimeState.Instance.RestoreAllLivingMana();
-        CaravanState.Instance.RestoreStamina();
-        CaravanState.Instance.AdvanceDay();
+        int finalFoodCost = foodCost;
+        int finalWoodCost = woodCost;
 
-        SetMessage($"La compania durmio hasta el dia {CaravanState.Instance.day}. Comida consumida: {foodCost}. Madera consumida: {woodCost}.");
+        ScreenFadeUI.GetOrCreate().PlaySleepTransition(() =>
+        {
+            inventory.SpendFood(finalFoodCost);
+            inventory.SpendWood(finalWoodCost);
+            PartyRuntimeState.Instance.FullHealAllLiving();
+            PartyRuntimeState.Instance.RestoreAllLivingStamina();
+            PartyRuntimeState.Instance.RestoreAllLivingMana();
+            CaravanState.Instance.RestoreStamina();
+            CaravanState.Instance.AdvanceDay();
 
-        RefreshAllUI();
+            SetMessage($"La compania durmio hasta el dia {CaravanState.Instance.day}. Comida consumida: {finalFoodCost}. Madera consumida: {finalWoodCost}.");
+            RefreshAllUI();
+        });
     }
 
     public void RepairPhysicalArmor()
@@ -388,14 +425,21 @@ public class CaravanManager : MonoBehaviour
         if (firePanelUI != null)
             return;
 
-        if (!CanUsePartyAction("reparar armadura fisica"))
+        if (!CanUsePartyAction("reparar armaduras"))
             return;
 
         InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
         int ironCost = Mathf.Max(0, physicalArmorRepairIronCost);
         int leatherCost = Mathf.Max(0, physicalArmorRepairLeatherCost);
+        int hoursCost = Mathf.Max(0, physicalArmorRepairHoursCost);
 
-        if (inventory.iron < ironCost)
+        if (hoursCost > 0 && CaravanState.Instance == null)
+        {
+            SetMessage("No existe CaravanState para avanzar el tiempo.");
+            return;
+        }
+
+        if (ironCost > 0 && inventory.iron < ironCost)
         {
             SetMessage($"No hay hierro suficiente. Necesitas {ironCost}.");
             return;
@@ -407,43 +451,44 @@ public class CaravanManager : MonoBehaviour
             return;
         }
 
-        inventory.SpendIron(ironCost);
-        inventory.SpendLeather(leatherCost);
-        int restored = PartyRuntimeState.Instance.RestoreAllLivingPhysicalArmorPercent(armorRepairPercent);
+        if (ironCost > 0)
+            inventory.SpendIron(ironCost);
 
-        SetMessage($"Armadura fisica reparada: +{restored}. Hierro consumido: {ironCost}. Cuero consumido: {leatherCost}.");
+        inventory.SpendLeather(leatherCost);
+        int restoredPhysical = PartyRuntimeState.Instance.RestoreAllLivingPhysicalArmorPercent(armorRepairPercent);
+        int restoredMagical = PartyRuntimeState.Instance.RestoreAllLivingMagicalArmorPercent(armorRepairPercent);
+
+        if (CaravanState.Instance != null)
+            CaravanState.Instance.AdvanceHours(hoursCost);
+
+        SetMessage($"Armaduras reparadas: +{restoredPhysical} fisica, +{restoredMagical} magica. Cuero: {leatherCost}. Horas: {hoursCost}.");
         RefreshAllUI();
     }
 
     public void RepairMagicalArmor()
     {
+        PartialRest();
+    }
+
+    public void SearchResources()
+    {
         if (firePanelUI != null)
-            return;
-
-        if (!CanUsePartyAction("reparar armadura magica"))
-            return;
-
-        InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
-        int crystalCost = Mathf.Max(0, magicalArmorRepairCrystalCost);
-        int leatherCost = Mathf.Max(0, magicalArmorRepairLeatherCost);
-
-        if (inventory.crystals < crystalCost)
         {
-            SetMessage($"No hay cristales suficientes. Necesitas {crystalCost}.");
+            if (CaravanResourceSearchUtility.TrySearchResources(out string firePanelMessage))
+                SetMessage(firePanelMessage);
+            else
+                SetMessage(firePanelMessage);
+
+            firePanelUI.Refresh();
+            RefreshAllUI();
             return;
         }
 
-        if (inventory.leather < leatherCost)
-        {
-            SetMessage($"No hay cuero suficiente. Necesitas {leatherCost}.");
-            return;
-        }
+        if (CaravanResourceSearchUtility.TrySearchResources(out string message))
+            SetMessage(message);
+        else
+            SetMessage(message);
 
-        inventory.SpendCrystals(crystalCost);
-        inventory.SpendLeather(leatherCost);
-        int restored = PartyRuntimeState.Instance.RestoreAllLivingMagicalArmorPercent(armorRepairPercent);
-
-        SetMessage($"Armadura magica reparada: +{restored}. Cristales consumidos: {crystalCost}. Cuero consumido: {leatherCost}.");
         RefreshAllUI();
     }
 
@@ -542,8 +587,8 @@ public class CaravanManager : MonoBehaviour
         actionButtonsLayout.childForceExpandHeight = false;
 
         CreateButton("Descanso parcial", actionButtonsRoot.transform, PartialRest, 0f);
-        CreateButton("Reparar armadura fisica", actionButtonsRoot.transform, RepairPhysicalArmor, 0f);
-        CreateButton("Reparar armadura magica", actionButtonsRoot.transform, RepairMagicalArmor, 0f);
+        CreateButton("Reparar armaduras", actionButtonsRoot.transform, RepairPhysicalArmor, 0f);
+        CreateButton("Descanso parcial", actionButtonsRoot.transform, RepairMagicalArmor, 0f);
         CreateButton("Dormir", actionButtonsRoot.transform, Sleep, 0f);
 
         GameObject messagePanel = CreatePanel("MessagePanel", generatedRoot.transform, new Color(0.11f, 0.09f, 0.07f, 0.96f));
@@ -595,8 +640,8 @@ public class CaravanManager : MonoBehaviour
         actionBodyText.gameObject.AddComponent<LayoutElement>().preferredHeight = 112f;
 
         CreateButton("Descanso parcial", root.transform, PartialRest, 0f);
-        CreateButton("Reparar armadura fisica", root.transform, RepairPhysicalArmor, 0f);
-        CreateButton("Reparar armadura magica", root.transform, RepairMagicalArmor, 0f);
+        CreateButton("Reparar armaduras", root.transform, RepairPhysicalArmor, 0f);
+        CreateButton("Descanso parcial", root.transform, RepairMagicalArmor, 0f);
         CreateButton("Dormir", root.transform, Sleep, 0f);
     }
 
@@ -727,10 +772,10 @@ public class CaravanManager : MonoBehaviour
             int repairPercent = Mathf.RoundToInt(armorRepairPercent * 100f);
 
             actionBodyText.text =
-                $"Descanso parcial: {partialFoodCost} comida, {partialRestWoodCost} madera. Recupera {healPercent}% de HP, energia y mana. No pasa el dia.\n" +
-                $"Armadura fisica: {physicalArmorRepairIronCost} hierro, {physicalArmorRepairLeatherCost} cuero. Repara {repairPercent}%.\n" +
-                $"Armadura magica: {magicalArmorRepairCrystalCost} cristales, {magicalArmorRepairLeatherCost} cuero. Repara {repairPercent}%.\n" +
-                $"Dormir: {sleepFoodCost} comida. Recupera toda la vida, stamina y mana; pasa al dia siguiente.";
+                $"Descanso parcial: {partialFoodCost} comida, {partialRestHoursCost} h. Recupera {healPercent}% de HP y energia.\n" +
+                $"Buscar recursos: {CaravanResourceSearchUtility.CaravanStaminaCost} energia de viaje, {CaravanResourceSearchUtility.HoursCost} h. Gana 1 recurso basico aleatorio o comida. No da XP.\n" +
+                $"Reparar armaduras: {physicalArmorRepairLeatherCost} cuero, {physicalArmorRepairHoursCost} h. Repara {repairPercent}% fisica y magica.\n" +
+                $"Dormir: {sleepFoodCost} comida, {sleepWoodCost} madera. Recupera toda la vida, stamina y mana; pasa al dia siguiente.";
         }
         else if (currentSection == "Barracas")
         {

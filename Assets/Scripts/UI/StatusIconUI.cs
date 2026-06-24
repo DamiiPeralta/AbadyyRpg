@@ -13,6 +13,7 @@ public class StatusIconUI : MonoBehaviour
     public Sprite regenIcon;
     public Sprite stunIcon;
     public Sprite invisIcon;
+    public Sprite attackDownIcon;
 
     private List<GameObject> activeIcons = new List<GameObject>();
 
@@ -53,6 +54,7 @@ public class StatusIconUI : MonoBehaviour
             case StatusEffectType.Regeneration: return regenIcon;
             case StatusEffectType.Stun: return stunIcon;
             case StatusEffectType.Invisibility: return invisIcon;
+            case StatusEffectType.AttackDown: return attackDownIcon != null ? attackDownIcon : stunIcon;
         }
 
         return null;

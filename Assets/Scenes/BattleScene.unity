@@ -4313,9 +4313,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allyPrefabs:
   - {fileID: 3092437677006040346, guid: 2a6b98c40573ec24982f324d1311c4dd, type: 3}
-  - {fileID: 3092437677006040346, guid: 0014dfc6076fb314781d3c5a5516a060, type: 3}
-  - {fileID: 3092437677006040346, guid: be09a38a8399e5a4f9aeec461ffc49a8, type: 3}
-  - {fileID: 3092437677006040346, guid: eea5124a3cf3a72458ff274021c20308, type: 3}
   allyPositions:
   - {fileID: 3291507592339909440}
   - {fileID: 2128175665}
@@ -4344,7 +4341,7 @@ MonoBehaviour:
     enemyPrefabs:
     - {fileID: 818537957655157841, guid: d31f97592d4a37446b2efed87140e048, type: 3}
     - {fileID: 818537957655157841, guid: d31f97592d4a37446b2efed87140e048, type: 3}
-  encounterDatabase: {fileID: 11400000, guid: ca490eef10b429942bd225839f854622, type: 2}
+  encounterDatabase: {fileID: 11400000, guid: b5d60ec042cdc8b4b8a14971b3a26108, type: 2}
 --- !u!114 &1699086955
 MonoBehaviour:
   m_ObjectHideFlags: 0

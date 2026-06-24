@@ -68,6 +68,12 @@ public class SuppliesItemRowUI : MonoBehaviour
         }
     }
 
+    public void SetCanSell(bool canSell)
+    {
+        if (sellButton != null)
+            sellButton.interactable = canSell;
+    }
+
     private void HookButtons()
     {
         if (selectButton != null)

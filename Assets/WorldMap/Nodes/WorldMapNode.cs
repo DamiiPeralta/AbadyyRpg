@@ -35,8 +35,21 @@ public class WorldMapNode : MonoBehaviour
     public bool isVisited = false;
     public bool isCurrent = false;
 
+    [Header("Mercado")]
+    public bool allowsTrading = false;
+    [TextArea] public string noTradingMessage = "No puedes vender aqui, no hay mercado.";
+
+    [Header("Buscar recursos")]
+    public bool useTerrainDefaultResourceSearch = true;
+    public bool allowsResourceSearch = false;
+    public int resourceSearchStaminaCost = 4;
+    public int resourceSearchHourCost = 2;
+    public List<WorldMapResourceDrop> resourceSearchDrops = new List<WorldMapResourceDrop>();
+
     [Header("Combat")]
     public bool isCombatNode = false;
+    [Tooltip("Permite volver a iniciar combate al entrar al nodo aunque ya se haya completado antes.")]
+    public bool isRepeatableCombat = false;
     public string battleGroupId = "TestBattle";
     public List<WorldMapNode> unlockOnCombatVictory = new List<WorldMapNode>();
     public bool isCompleted = false;
@@ -59,6 +72,9 @@ public class WorldMapNode : MonoBehaviour
 
     private void Awake()
     {
+        if (useTerrainDefaultResourceSearch)
+            ApplyDefaultResourceSearch();
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         RefreshVisual();
     }
@@ -67,6 +83,9 @@ public class WorldMapNode : MonoBehaviour
     {
         if (useTerrainDefaultTravelCosts)
             ApplyDefaultTravelCosts();
+
+        if (useTerrainDefaultResourceSearch)
+            ApplyDefaultResourceSearch();
     }
 
     private void OnMouseDown()
@@ -173,5 +192,87 @@ public class WorldMapNode : MonoBehaviour
                 travelHourCost = 1;
                 break;
         }
+    }
+
+    public void ApplyDefaultResourceSearch()
+    {
+        resourceSearchStaminaCost = 4;
+        resourceSearchHourCost = 2;
+
+        if (resourceSearchDrops == null)
+            resourceSearchDrops = new List<WorldMapResourceDrop>();
+
+        resourceSearchDrops.Clear();
+
+        switch (terrainType)
+        {
+            case WorldMapTerrainType.Pueblo:
+                allowsResourceSearch = false;
+                break;
+
+            case WorldMapTerrainType.Bosque:
+                allowsResourceSearch = true;
+                AddResourceDrop(CaravanResourceType.Wood, 1, 2, 5);
+                AddResourceDrop(CaravanResourceType.Food, 1, 1, 2);
+                AddResourceDrop(CaravanResourceType.Leather, 1, 1, 1);
+                break;
+
+            case WorldMapTerrainType.BosqueProfundo:
+                allowsResourceSearch = true;
+                resourceSearchStaminaCost = 5;
+                resourceSearchHourCost = 3;
+                AddResourceDrop(CaravanResourceType.Wood, 2, 3, 5);
+                AddResourceDrop(CaravanResourceType.Food, 1, 2, 2);
+                AddResourceDrop(CaravanResourceType.Leather, 1, 2, 2);
+                break;
+
+            case WorldMapTerrainType.Camino:
+            case WorldMapTerrainType.CaminoMontañoso:
+                allowsResourceSearch = true;
+                AddResourceDrop(CaravanResourceType.Stone, 1, 2, 3);
+                AddResourceDrop(CaravanResourceType.Wood, 1, 1, 2);
+                break;
+
+            case WorldMapTerrainType.Montaña:
+                allowsResourceSearch = true;
+                resourceSearchStaminaCost = 5;
+                resourceSearchHourCost = 3;
+                AddResourceDrop(CaravanResourceType.Stone, 2, 3, 4);
+                AddResourceDrop(CaravanResourceType.Iron, 1, 2, 2);
+                AddResourceDrop(CaravanResourceType.Crystals, 1, 1, 1);
+                break;
+
+            case WorldMapTerrainType.RioBajo:
+                allowsResourceSearch = true;
+                AddResourceDrop(CaravanResourceType.Food, 1, 2, 4);
+                AddResourceDrop(CaravanResourceType.Stone, 1, 1, 1);
+                break;
+
+            case WorldMapTerrainType.Pantano:
+                allowsResourceSearch = true;
+                resourceSearchStaminaCost = 5;
+                AddResourceDrop(CaravanResourceType.Food, 1, 1, 2);
+                AddResourceDrop(CaravanResourceType.Leather, 1, 2, 3);
+                AddResourceDrop(CaravanResourceType.Wood, 1, 1, 1);
+                break;
+
+            case WorldMapTerrainType.Ruinas:
+                allowsResourceSearch = true;
+                AddResourceDrop(CaravanResourceType.Stone, 1, 2, 3);
+                AddResourceDrop(CaravanResourceType.Crystals, 1, 2, 2);
+                AddResourceDrop(CaravanResourceType.Iron, 1, 1, 1);
+                break;
+        }
+    }
+
+    private void AddResourceDrop(CaravanResourceType resourceType, int minAmount, int maxAmount, int weight)
+    {
+        resourceSearchDrops.Add(new WorldMapResourceDrop
+        {
+            resourceType = resourceType,
+            minAmount = minAmount,
+            maxAmount = maxAmount,
+            weight = weight
+        });
     }
 }

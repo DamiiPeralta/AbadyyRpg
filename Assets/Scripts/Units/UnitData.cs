@@ -28,7 +28,7 @@ public class UnitData : MonoBehaviour
     public int level = 1;
     public int experience = 0;
     public int maxLevel = 5;
-    public List<int> experienceByLevel = new List<int> { 0, 100, 250, 450, 700 };
+    public List<int> experienceByLevel = new List<int> { 0, 40, 100, 180, 300 };
     public int maxStamina = 100;
     public int startStamina = -1;
     public int maxMana = 100;
@@ -43,6 +43,7 @@ public class UnitData : MonoBehaviour
     public int manaGrowthPerLevel = 5;
     public int physicalArmorGrowthPerLevel = 0;
     public int magicalArmorGrowthPerLevel = 0;
+    public List<UnitLevelGrowth> levelGrowths = new List<UnitLevelGrowth>();
 
     [Header("Armaduras base")]
     public int maxPhysicalArmor = 0;
@@ -96,7 +97,8 @@ public class UnitData : MonoBehaviour
             useClassProgression && characterClass != null ? characterClass.staminaGrowthPerLevel : staminaGrowthPerLevel,
             useClassProgression && characterClass != null ? characterClass.manaGrowthPerLevel : manaGrowthPerLevel,
             useClassProgression && characterClass != null ? characterClass.physicalArmorGrowthPerLevel : physicalArmorGrowthPerLevel,
-            useClassProgression && characterClass != null ? characterClass.magicalArmorGrowthPerLevel : magicalArmorGrowthPerLevel);
+            useClassProgression && characterClass != null ? characterClass.magicalArmorGrowthPerLevel : magicalArmorGrowthPerLevel,
+            useClassProgression && characterClass != null ? characterClass.levelGrowths : levelGrowths);
         unit.maxStamina = Mathf.Max(1, useClassBaseStats && characterClass != null ? characterClass.maxStamina : maxStamina);
         unit.currentStamina = startStamina >= 0
             ? Mathf.Clamp(startStamina, 0, unit.maxStamina)

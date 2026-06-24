@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a29112801a34ff99f121365ea7a22cc, type: 3}
+  m_Name: Enemy_Demonio_Menor_T1
+  m_EditorClassIdentifier: 
+  enemyId: enemy_demonio_menor_t1
+  enemyName: Demonio Menor
+  tier: 5
+  kind: 2
+  description: Cult de tier 5. Definicion inicial para balance de demo.
+  icon: {fileID: -1254585911, guid: 05408f35652d4f041bc5bb1febd2a2de, type: 3}
+  battleSprite: {fileID: -834639069, guid: 96c22ffc1d14e2046b3c7ac2c1e048ec, type: 3}
+  visualPrefab: {fileID: 5499962501057416477, guid: c7f8bb8460c7d834cbc18d7b0d573a40,
+    type: 3}
+  level: 4
+  experienceReward: 60
+  strength: 2
+  dexterity: 2
+  intelligence: 4
+  constitution: 14
+  maxStamina: 8
+  maxMana: 14
+  physicalArmor: 5
+  magicalArmor: 8
+  isFrontLine: 1
+  abilities: []
+  tactics: []
+  reward:
+    gold: 25
+    food: 0
+    wood: 0
+    stone: 0
+    iron: 1
+    leather: 1
+    crystals: 3
+    experience: 60
+    items: []

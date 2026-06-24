@@ -149,7 +149,10 @@ public class AbilityPickerModalUI : MonoBehaviour
         if (ability == null)
             return "-";
 
-        if (ability.targetType == AbilityTarget.Ally && ability.flatHeal > 0 || ability.healPercent > 0f)
+        if (ability.cleansesNegativeStatus)
+            return "Limpieza";
+
+        if (ability.targetType == AbilityTarget.Ally && (ability.flatHeal > 0 || ability.healPercent > 0f))
             return "Curacion";
 
         if (ability.restorePhysicalArmor > 0 || ability.restoreMagicalArmor > 0)

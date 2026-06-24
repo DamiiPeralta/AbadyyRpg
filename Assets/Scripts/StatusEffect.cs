@@ -3,7 +3,8 @@ public enum StatusEffectType
     Poison,
     Regeneration,
     Stun,
-    Invisibility
+    Invisibility,
+    AttackDown
 }
 
 public class StatusEffect

@@ -35,6 +35,7 @@ public class ItemDetailPanelUI : MonoBehaviour
     private ItemBase currentItem;
     private System.Action<InventoryEntry, ItemBase> onSellOne;
     private System.Action<InventoryEntry, ItemBase> onSellAll;
+    private bool canSellHere = true;
 
     private void Awake()
     {
@@ -104,10 +105,16 @@ public class ItemDetailPanelUI : MonoBehaviour
         SetText(sellAllPriceText, sellAllValue.ToString("N0"));
 
         if (sellOneButton != null)
-            sellOneButton.interactable = currentEntry != null && currentItem != null && amount > 0;
+            sellOneButton.interactable = canSellHere && currentEntry != null && currentItem != null && amount > 0;
 
         if (sellAllButton != null)
-            sellAllButton.interactable = currentEntry != null && currentItem != null && amount > 0;
+            sellAllButton.interactable = canSellHere && currentEntry != null && currentItem != null && amount > 0;
+    }
+
+    public void SetCanSellHere(bool canSell)
+    {
+        canSellHere = canSell;
+        RefreshSellTexts();
     }
 
     private string BuildTypeText(ItemBase item)
@@ -169,7 +176,7 @@ public class ItemDetailPanelUI : MonoBehaviour
 
     private void HandleSellOne()
     {
-        if (currentEntry == null || currentItem == null)
+        if (!canSellHere || currentEntry == null || currentItem == null)
             return;
 
         onSellOne?.Invoke(currentEntry, currentItem);
@@ -177,7 +184,7 @@ public class ItemDetailPanelUI : MonoBehaviour
 
     private void HandleSellAll()
     {
-        if (currentEntry == null || currentItem == null)
+        if (!canSellHere || currentEntry == null || currentItem == null)
             return;
 
         onSellAll?.Invoke(currentEntry, currentItem);

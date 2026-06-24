@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 548e84f0bc444f74c8556989634ae95b, type: 3}
+  m_Name: Recipe_Pocion_Salud_T1
+  m_EditorClassIdentifier: 
+  recipeId: recipe_pocion_salud_t1
+  recipeName: Pocion de Salud
+  description: Prepara una pocion de emergencia.
+  icon: {fileID: 0}
+  stationType: 2
+  previewItem: {fileID: 11400000, guid: 86c5a655b54d06a4b9bf421481a46223, type: 2}
+  inputs:
+  - stackType: 1
+    item: {fileID: 0}
+    itemId: 
+    amount: 6
+  - stackType: 2
+    item: {fileID: 0}
+    itemId: 
+    amount: 1
+  - stackType: 7
+    item: {fileID: 0}
+    itemId: 
+    amount: 1
+  outputs:
+  - stackType: 0
+    item: {fileID: 11400000, guid: 86c5a655b54d06a4b9bf421481a46223, type: 2}
+    itemId: consumable_pocion_salud_t1
+    amount: 1

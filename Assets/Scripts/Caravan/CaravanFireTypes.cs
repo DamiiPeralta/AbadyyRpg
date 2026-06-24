@@ -6,13 +6,15 @@ public enum CaravanFireActionType
     PartialRest,
     RepairPhysicalArmor,
     RepairMagicalArmor,
-    Sleep
+    Sleep,
+    GatherResources
 }
 
 public enum CaravanResourceType
 {
     Food,
     Wood,
+    Stone,
     Iron,
     Leather,
     Crystals

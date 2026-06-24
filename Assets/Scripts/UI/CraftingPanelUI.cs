@@ -37,12 +37,15 @@ public class CraftingPanelUI : MonoBehaviour
 
     private readonly List<RecipeRowUI> rowInstances = new List<RecipeRowUI>();
     private CraftingRecipeSO selectedRecipe;
+    private CraftingResultPanelUI resultPanelUI;
     private int quantity = 1;
 
     private void Awake()
     {
         AutoBind();
         HookButtons();
+        GameSfxPlayer.GetOrCreate();
+        resultPanelUI = CraftingResultPanelUI.GetOrCreate();
     }
 
     private void OnEnable()
@@ -259,9 +262,12 @@ public class CraftingPanelUI : MonoBehaviour
     {
         if (selectedRecipe == null || !CanProcess(selectedRecipe, quantity))
         {
+            ShowCraftingFailure();
             RefreshDetails();
             return;
         }
+
+        string successText = BuildCraftingSuccessText(selectedRecipe, quantity);
 
         foreach (RecipeStack input in selectedRecipe.inputs)
             SpendStack(input, quantity);
@@ -270,7 +276,134 @@ public class CraftingPanelUI : MonoBehaviour
             AddStack(output, quantity);
 
         SetText(messageText, $"Procesado x{quantity}: {selectedRecipe.GetDisplayName()}");
+        ShowCraftingSuccess(successText);
         RefreshDetails();
+    }
+
+    private void ShowCraftingSuccess(string successText)
+    {
+        if (GameSfxPlayer.Instance != null)
+            GameSfxPlayer.Instance.PlayCraftSuccess();
+
+        if (resultPanelUI == null)
+            resultPanelUI = CraftingResultPanelUI.GetOrCreate();
+
+        resultPanelUI.ShowSuccess(successText);
+    }
+
+    private void ShowCraftingFailure()
+    {
+        if (GameSfxPlayer.Instance != null)
+            GameSfxPlayer.Instance.PlayCraftFail();
+
+        if (resultPanelUI == null)
+            resultPanelUI = CraftingResultPanelUI.GetOrCreate();
+
+        string body = selectedRecipe == null
+            ? "No hay receta seleccionada."
+            : BuildCraftingFailureText(selectedRecipe, quantity);
+
+        resultPanelUI.ShowFailure(body);
+    }
+
+    private string BuildCraftingSuccessText(CraftingRecipeSO recipe, int amount)
+    {
+        string outputs = BuildCraftedOutputsSummary(recipe != null ? recipe.outputs : null, amount);
+
+        if (!string.IsNullOrWhiteSpace(outputs))
+            return outputs;
+
+        return "Creaste " + (recipe != null ? recipe.GetDisplayName() : "receta") + ".";
+    }
+
+    private string BuildCraftedOutputsSummary(List<RecipeStack> outputs, int amount)
+    {
+        if (outputs == null || outputs.Count == 0)
+            return "";
+
+        StringBuilder builder = new StringBuilder();
+        builder.Append("Creaste ");
+
+        bool hasPrevious = false;
+
+        foreach (RecipeStack output in outputs)
+        {
+            if (output == null)
+                continue;
+
+            int total = Mathf.Max(0, output.amount) * amount;
+            if (total <= 0)
+                continue;
+
+            if (hasPrevious)
+                builder.Append(", ");
+
+            builder.Append(GetStackName(output));
+            builder.Append(" x");
+            builder.Append(total.ToString("00"));
+            hasPrevious = true;
+        }
+
+        builder.Append(".");
+        return builder.ToString();
+    }
+
+    private string BuildCraftingFailureText(CraftingRecipeSO recipe, int amount)
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append("No se pudo crear ");
+        builder.Append(recipe != null ? recipe.GetDisplayName() : "la receta");
+        builder.Append(".");
+
+        string missing = BuildMissingStacksSummary(recipe != null ? recipe.inputs : null, amount);
+
+        if (!string.IsNullOrWhiteSpace(missing))
+        {
+            builder.AppendLine();
+            builder.Append(missing);
+        }
+        else
+        {
+            builder.AppendLine();
+            builder.Append("Faltan recursos.");
+        }
+
+        return builder.ToString();
+    }
+
+    private string BuildMissingStacksSummary(List<RecipeStack> stacks, int amount)
+    {
+        if (stacks == null || stacks.Count == 0)
+            return "";
+
+        StringBuilder builder = new StringBuilder();
+        builder.Append("Faltan: ");
+
+        bool hasPrevious = false;
+
+        foreach (RecipeStack stack in stacks)
+        {
+            if (stack == null)
+                continue;
+
+            int needed = Mathf.Max(0, stack.amount) * amount;
+            int owned = GetOwnedAmount(stack);
+            int missing = needed - owned;
+
+            if (missing <= 0)
+                continue;
+
+            if (hasPrevious)
+                builder.Append(", ");
+
+            builder.Append(GetStackName(stack));
+            builder.Append(" x");
+            builder.Append(missing);
+            hasPrevious = true;
+        }
+
+        builder.Append(".");
+        return hasPrevious ? builder.ToString() : "";
     }
 
     private int GetOwnedAmount(RecipeStack stack)

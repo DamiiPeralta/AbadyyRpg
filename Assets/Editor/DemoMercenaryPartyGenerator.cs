@@ -7,7 +7,7 @@ public static class DemoMercenaryPartyGenerator
 {
     private const string CharactersFolder = "Assets/GameData/Characters";
     private const string MercenariesFolder = "Assets/GameData/Characters/Mercenaries";
-    private const int DemoLevel = 3;
+    private const int DemoLevel = 1;
 
     [MenuItem("CaravanRPG/Game Data/Create Demo Mercenary Party")]
     public static void CreateDemoMercenaryParty()
@@ -20,51 +20,21 @@ public static class DemoMercenaryPartyGenerator
         EnsureFolder(CharactersFolder);
         EnsureFolder(MercenariesFolder);
 
-        GameObject defender = CreateMercenary(
+        GameObject expedicionario = CreateMercenary(
             "Merc_Defensor_Base",
-            "Defensor",
-            "Defensor de Valdoran",
-            "Tanque inicial. Usa placas oxidadas, sostiene la linea y recupera armadura fisica.",
-            "Class_Defensor",
-            "Weapon_Rusty_Sword",
-            "Armor_Rusty_Plates",
+            "Expedicionario",
+            "Expedicionario",
+            "Personaje flexible de la demo Tier 1. Empieza sin equipo ni consumibles.",
+            string.Empty,
+            string.Empty,
+            string.Empty,
             "Assets/Prefabs/Mercs/Caballero.prefab");
 
-        GameObject assassin = CreateMercenary(
-            "Merc_Asesino_Base",
-            "Asesino",
-            "Asesino de Claravalle",
-            "DPS fisico inicial. Usa daga mellada, remata enemigos heridos y baja su amenaza.",
-            "Class_Asesino",
-            "Weapon_Dull_Dagger",
-            "Armor_Worn_Leather",
-            "Assets/Prefabs/Mercs/Asesino.prefab");
-
-        GameObject mage = CreateMercenary(
-            "Merc_MagoDelCirculo_Base",
-            "Mago del Circulo",
-            "Mago del Circulo",
-            "DPS magico inicial. Usa baston partido, marca objetivos y drena esencia cuando peligra.",
-            "Class_MagoDelCirculo",
-            "Weapon_Broken_Staff",
-            "Armor_Torn_Robe",
-            "Assets/Prefabs/Mercs/Mago.prefab");
-
-        GameObject acolyte = CreateMercenary(
-            "Merc_Acolita_Base",
-            "Acolita",
-            "Acolita de la Vigilia",
-            "Soporte inicial. Usa simbolo quebrado, cura heridas y remienda armadura fisica.",
-            "Class_Acolita",
-            "Weapon_Broken_Symbol",
-            "Armor_Patched_Vestment",
-            "Assets/Prefabs/Mercs/Mago.prefab");
-
-        AssignToOpenSceneStartingSetup(new List<GameObject> { defender, assassin, mage, acolyte });
+        AssignToOpenSceneStartingSetup(new List<GameObject> { expedicionario });
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Party demo de mercenarios creada/actualizada con equipo tier 1, habilidades y tacticas de clase.");
+        Debug.Log("Party demo Tier 1 creada/actualizada con 1 expedicionario sin equipo inicial.");
     }
 
     private static GameObject CreateMercenary(
@@ -100,17 +70,35 @@ public static class DemoMercenaryPartyGenerator
         CharacterClassSO characterClass = LoadClass(classAssetName);
         Weapon weapon = LoadWeapon(weaponAssetName);
         Armor armor = LoadArmor(armorAssetName);
-        ConsumableItem potion = LoadConsumable("Consumable_Health_Potion");
 
         unitData.unitName = unitName;
         unitData.description = description;
         unitData.characterClass = characterClass;
-        unitData.useClassBaseStats = true;
-        unitData.useClassProgression = true;
-        unitData.includeClassAbilities = true;
-        unitData.includeClassSuggestedTactics = true;
+        unitData.useClassBaseStats = characterClass != null;
+        unitData.useClassProgression = characterClass != null;
+        unitData.includeClassAbilities = characterClass != null;
+        unitData.includeClassSuggestedTactics = characterClass != null;
+        unitData.strength = 2;
+        unitData.dexterity = 2;
+        unitData.intelligence = 2;
+        unitData.constitution = 5;
         unitData.level = DemoLevel;
         unitData.experience = 0;
+        unitData.maxLevel = 5;
+        unitData.experienceByLevel = new List<int> { 0, 40, 100, 180, 300 };
+        unitData.strengthGrowthPerLevel = 0;
+        unitData.dexterityGrowthPerLevel = 0;
+        unitData.intelligenceGrowthPerLevel = 0;
+        unitData.constitutionGrowthPerLevel = 0;
+        unitData.staminaGrowthPerLevel = 0;
+        unitData.manaGrowthPerLevel = 0;
+        unitData.physicalArmorGrowthPerLevel = 0;
+        unitData.magicalArmorGrowthPerLevel = 0;
+        unitData.levelGrowths = CreateDemoLevelGrowths();
+        unitData.maxStamina = 10;
+        unitData.maxMana = 10;
+        unitData.maxPhysicalArmor = 0;
+        unitData.maxMagicalArmor = 0;
         unitData.startHP = -1;
         unitData.startStamina = -1;
         unitData.startMana = -1;
@@ -124,9 +112,17 @@ public static class DemoMercenaryPartyGenerator
         unitData.leftHand = null;
         unitData.ring = null;
         unitData.amulet = null;
-        unitData.consumable1 = potion;
+        unitData.consumable1 = null;
         unitData.consumable2 = null;
         unitData.abilities.Clear();
+        AddAbility(unitData.abilities, "Ability_Generic_PowerStrike_T1");
+        AddAbility(unitData.abilities, "Ability_Generic_MagicMissile_T1");
+        AddAbility(unitData.abilities, "Ability_Generic_Heal_T1");
+        AddAbility(unitData.abilities, "Ability_Generic_Regeneration_T1");
+        AddAbility(unitData.abilities, "Ability_Generic_Guard_T1");
+        AddAbility(unitData.abilities, "Ability_Generic_MagicShield_T1");
+        AddAbility(unitData.abilities, "Ability_Generic_Cleanse_T1");
+        AddAbility(unitData.abilities, "Ability_Generic_ArmBreaker_T1");
         unitData.tactics.Clear();
 
         if (unitData.battleSprite == null && spriteRenderer.sprite != null)
@@ -137,8 +133,6 @@ public static class DemoMercenaryPartyGenerator
 
         if (unitData.battleSprite != null)
             spriteRenderer.sprite = unitData.battleSprite;
-
-        ApplyAcolyteTintIfNeeded(objectName, spriteRenderer);
 
         GameObject prefab = PrefabUtility.SaveAsPrefabAsset(workingObject, prefabPath);
         Object.DestroyImmediate(workingObject);
@@ -166,32 +160,47 @@ public static class DemoMercenaryPartyGenerator
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
 
-    private static void ApplyAcolyteTintIfNeeded(string objectName, SpriteRenderer spriteRenderer)
-    {
-        if (objectName != "Acolita" || spriteRenderer == null)
-            return;
-
-        spriteRenderer.color = new Color(0.95f, 0.9f, 0.75f, 1f);
-    }
-
     private static CharacterClassSO LoadClass(string assetName)
     {
+        if (string.IsNullOrWhiteSpace(assetName))
+            return null;
+
         return AssetDatabase.LoadAssetAtPath<CharacterClassSO>($"Assets/GameData/Classes/{assetName}.asset");
     }
 
     private static Weapon LoadWeapon(string assetName)
     {
+        if (string.IsNullOrWhiteSpace(assetName))
+            return null;
+
         return AssetDatabase.LoadAssetAtPath<Weapon>($"Assets/GameData/Items/Weapons/{assetName}.asset");
     }
 
     private static Armor LoadArmor(string assetName)
     {
+        if (string.IsNullOrWhiteSpace(assetName))
+            return null;
+
         return AssetDatabase.LoadAssetAtPath<Armor>($"Assets/GameData/Items/Armors/{assetName}.asset");
     }
 
-    private static ConsumableItem LoadConsumable(string assetName)
+    private static void AddAbility(List<AbilitySO> abilities, string assetName)
     {
-        return AssetDatabase.LoadAssetAtPath<ConsumableItem>($"Assets/GameData/Items/Consumables/{assetName}.asset");
+        AbilitySO ability = AssetDatabase.LoadAssetAtPath<AbilitySO>($"Assets/GameData/Abilities/{assetName}.asset");
+
+        if (ability != null)
+            abilities.Add(ability);
+    }
+
+    private static List<UnitLevelGrowth> CreateDemoLevelGrowths()
+    {
+        return new List<UnitLevelGrowth>
+        {
+            new UnitLevelGrowth { strength = 1, constitution = 1, stamina = 1, mana = 1 },
+            new UnitLevelGrowth { dexterity = 1, intelligence = 1, stamina = 1, mana = 1 },
+            new UnitLevelGrowth { strength = 1, intelligence = 1, constitution = 1 },
+            new UnitLevelGrowth { dexterity = 1, stamina = 1, mana = 1 }
+        };
     }
 
     private static void EnsureFolder(string path)

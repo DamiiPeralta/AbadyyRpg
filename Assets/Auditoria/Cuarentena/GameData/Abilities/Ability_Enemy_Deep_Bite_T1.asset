@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c17a45cb415523488ad22bed35fd996, type: 3}
+  m_Name: Ability_Enemy_Deep_Bite_T1
+  m_EditorClassIdentifier: 
+  abilityName: Mordida Profunda
+  icon: {fileID: 0}
+  description: Ataque fisico peligroso del gusano.
+  targetType: 2
+  targetMode: 0
+  staminaCost: 3
+  manaCost: 0
+  flatPhysicalDamage: 3
+  physicalPowerMultiplier: 0
+  strengthToPhysicalDamage: 0
+  dexterityToPhysicalDamage: 0
+  intelligenceToPhysicalDamage: 0
+  constitutionToPhysicalDamage: 0
+  flatMagicalDamage: 0
+  magicalPowerMultiplier: 0
+  strengthToMagicalDamage: 0
+  dexterityToMagicalDamage: 0
+  intelligenceToMagicalDamage: 0
+  constitutionToMagicalDamage: 0
+  flatHeal: 0
+  healPercent: 0
+  strengthToHeal: 0
+  dexterityToHeal: 0
+  intelligenceToHeal: 0
+  constitutionToHeal: 0
+  restorePhysicalArmor: 0
+  restoreMagicalArmor: 0
+  strengthToPhysicalArmorRestore: 0
+  dexterityToPhysicalArmorRestore: 0
+  intelligenceToPhysicalArmorRestore: 0
+  constitutionToPhysicalArmorRestore: 0
+  strengthToMagicalArmorRestore: 0
+  dexterityToMagicalArmorRestore: 0
+  intelligenceToMagicalArmorRestore: 0
+  constitutionToMagicalArmorRestore: 0
+  vampirismPercent: 0
+  appliesStatusEffect: 0
+  statusEffectType: 0
+  statusDuration: 1
+  statusValue: 0
+  strengthToStatusValue: 0
+  dexterityToStatusValue: 0
+  intelligenceToStatusValue: 0
+  constitutionToStatusValue: 0
+  generatesTaunt: 1
+  customTauntGenerated: 20
+  selfTauntChange: 0
+  targetTauntChange: 0
+  singleAttackTaunt: 30
+  areaAttackTaunt: 40
+  singleHealTaunt: 30
+  areaHealTaunt: 40
+  armorRestoreTaunt: 20
+  statusOnlyTaunt: 20

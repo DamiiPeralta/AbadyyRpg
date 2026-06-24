@@ -9,43 +9,41 @@ public static class WorldMapDemoRouteGenerator
     private const string NodePrefabPath = "Assets/WorldMap/Nodes/NodePrefab.prefab";
     private const string WorldMapScenePath = "Assets/Scenes/WorldMapScene.unity";
 
+    private const string FlagBridgeRepaired = "flag_puente_reparado";
+    private const string FlagBossClueFound = "flag_pista_jefe_encontrada";
+    private const string FlagBossRouteUnlocked = "flag_ruta_jefe_desbloqueada";
+    private const string FlagBossDefeated = "flag_jefe_derrotado";
+    private const string FlagFrontierOpen = "flag_frontera_abierta";
+
     private static readonly List<NodeSpec> ZoneNodes = new List<NodeSpec>
     {
-        new NodeSpec("demo_start", "Ciudad de Valdoran", "La caravana parte desde la ciudad amurallada hacia las tierras fronterizas.", WorldMapTerrainType.Pueblo, new Vector3(-5.65f, 2.25f, 0f), true),
-        new NodeSpec("demo_crossroads", "Puente de Valdoran", "El puente exterior conecta la ciudad con la red de caminos del valle.", WorldMapTerrainType.RioBajo, new Vector3(-4.55f, 0.65f, 0f), true),
-        new NodeSpec("demo_bridge_event", "Aldea de Claravalle", "La aldea marca el primer punto de decision de la ruta.", WorldMapTerrainType.Pueblo, new Vector3(-5.45f, -0.35f, 0f), true),
-        new NodeSpec("demo_low_forest_combat", "Bosque de Aldheron", "Criaturas hambrientas rondan entre los arboles del bosque central.", WorldMapTerrainType.Bosque, new Vector3(-0.95f, 0.85f, 0f), false),
-        new NodeSpec("demo_old_cache_event", "Torre Vigia Abandonada", "La torre conserva suministros y rastros de patrullas antiguas.", WorldMapTerrainType.Ruinas, new Vector3(-1.25f, 2.45f, 0f), false),
-        new NodeSpec("demo_river_ambush", "Claro de las Rocas", "Un claro abierto junto al camino sur, perfecto para una emboscada.", WorldMapTerrainType.Camino, new Vector3(-3.35f, -2.0f, 0f), false),
-        new NodeSpec("demo_bandit_camp", "Campamento del Vigia", "El humo de una fogata delata un grupo armado en el centro del valle.", WorldMapTerrainType.Camino, new Vector3(0.05f, -0.55f, 0f), false),
-        new NodeSpec("demo_shrine_event", "Cruce de los Susurros", "Un altar olvidado descansa junto al puente del bosque profundo.", WorldMapTerrainType.Ruinas, new Vector3(0.55f, -2.0f, 0f), false),
-        new NodeSpec("demo_swamp_beast", "Bosque Profundo de Umbria", "Las sombras se cierran entre arboles viejos y caminos torcidos.", WorldMapTerrainType.BosqueProfundo, new Vector3(-0.35f, -3.15f, 0f), false),
-        new NodeSpec("demo_broken_market", "Mina de Hierro Negro", "La mina abre una ruta dura hacia la cordillera y sus portales antiguos.", WorldMapTerrainType.Ruinas, new Vector3(2.15f, 2.2f, 0f), false),
-        new NodeSpec("demo_ruin_shortcut", "Portal de los Excavadores", "Una construccion vieja entre montanas sirve como atajo peligroso.", WorldMapTerrainType.Ruinas, new Vector3(4.95f, 0.95f, 0f), false),
-        new NodeSpec("demo_sealed_gate_event", "Aldea de Collinasombra", "El camino hacia el este queda cerrado por simbolos y patrullas.", WorldMapTerrainType.Pueblo, new Vector3(3.85f, -0.95f, 0f), false),
-        new NodeSpec("demo_gate_guard", "Pantano de las Sombras Lentas", "El ultimo grupo protege la entrada al tramo maldito.", WorldMapTerrainType.Pantano, new Vector3(5.15f, -2.9f, 0f), false),
-        new NodeSpec("demo_abbey_threshold", "Cordillera de Piedra Umbria", "Un respiro corto antes del jefe entre riscos y niebla.", WorldMapTerrainType.Ruinas, new Vector3(5.75f, 2.35f, 0f), false),
-        new NodeSpec("demo_final_boss", "La Cosa Bajo la Cordillera", "El objetivo final de la run simulada.", WorldMapTerrainType.Ruinas, new Vector3(6.55f, 1.35f, 0f), false)
+        new NodeSpec("node_valdoran", "Ciudad de Valdoran", "Base de la caravana, preparacion y crafting.", WorldMapTerrainType.Pueblo, new Vector3(-5.9f, 2.25f, 0f), true),
+        new NodeSpec("node_camino_01", "Camino a Claravalle I", "Primer tramo seguro fuera de Valdoran.", WorldMapTerrainType.Camino, new Vector3(-5.25f, 0.75f, 0f), true),
+        new NodeSpec("node_camino_02", "Camino a Claravalle II", "Segundo tramo antes del puente viejo.", WorldMapTerrainType.Camino, new Vector3(-4.65f, -0.25f, 0f), true),
+        new NodeSpec("node_puente_roto", "Puente roto", "Obstaculo inicial de recursos y tiempo.", WorldMapTerrainType.RioBajo, new Vector3(-3.45f, -0.95f, 0f), true),
+        new NodeSpec("node_cruce_central", "Cruce del Vigia", "Cruce principal de la mini zona.", WorldMapTerrainType.Camino, new Vector3(-1.05f, -0.25f, 0f), false),
+        new NodeSpec("node_bosque_aldheron", "Bosque de Aldheron", "Farm temprano con ratas y esqueletos.", WorldMapTerrainType.Bosque, new Vector3(-1.95f, 1.15f, 0f), false),
+        new NodeSpec("node_claro_rocas", "Claro de las Rocas", "Farm medio y prueba de builds.", WorldMapTerrainType.Camino, new Vector3(-2.55f, -2.05f, 0f), false),
+        new NodeSpec("node_torre_vigia", "Torre vigia abandonada", "Evento para encontrar la pista del jefe.", WorldMapTerrainType.Ruinas, new Vector3(-0.65f, 2.25f, 0f), false),
+        new NodeSpec("node_mina_hierro", "Mina de Hierro Negro", "Farm de hierro y cristal para preparacion final.", WorldMapTerrainType.Ruinas, new Vector3(1.95f, 1.75f, 0f), false),
+        new NodeSpec("node_collinasombra", "Aldea de Collinasombra", "Advertencia final antes del portal.", WorldMapTerrainType.Pueblo, new Vector3(3.75f, -0.85f, 0f), false),
+        new NodeSpec("node_portal_excavadores", "Portal de los Excavadores", "Jefe de la demo Tier 1.", WorldMapTerrainType.Ruinas, new Vector3(5.05f, 0.95f, 0f), false),
+        new NodeSpec("node_frontera_abierta", "Frontera abierta", "Cierre de demo tras derrotar al jefe.", WorldMapTerrainType.CaminoMontañoso, new Vector3(6.15f, 2.1f, 0f), false)
     };
 
     private static readonly string[,] ZoneConnections =
     {
-        { "demo_start", "demo_crossroads" },
-        { "demo_crossroads", "demo_bridge_event" },
-        { "demo_bridge_event", "demo_low_forest_combat" },
-        { "demo_bridge_event", "demo_river_ambush" },
-        { "demo_low_forest_combat", "demo_old_cache_event" },
-        { "demo_old_cache_event", "demo_bandit_camp" },
-        { "demo_old_cache_event", "demo_broken_market" },
-        { "demo_broken_market", "demo_ruin_shortcut" },
-        { "demo_ruin_shortcut", "demo_sealed_gate_event" },
-        { "demo_river_ambush", "demo_shrine_event" },
-        { "demo_shrine_event", "demo_swamp_beast" },
-        { "demo_swamp_beast", "demo_sealed_gate_event" },
-        { "demo_bandit_camp", "demo_sealed_gate_event" },
-        { "demo_sealed_gate_event", "demo_gate_guard" },
-        { "demo_gate_guard", "demo_abbey_threshold" },
-        { "demo_abbey_threshold", "demo_final_boss" }
+        { "node_valdoran", "node_camino_01" },
+        { "node_camino_01", "node_camino_02" },
+        { "node_camino_02", "node_puente_roto" },
+        { "node_puente_roto", "node_cruce_central" },
+        { "node_cruce_central", "node_bosque_aldheron" },
+        { "node_bosque_aldheron", "node_claro_rocas" },
+        { "node_cruce_central", "node_torre_vigia" },
+        { "node_torre_vigia", "node_mina_hierro" },
+        { "node_cruce_central", "node_collinasombra" },
+        { "node_collinasombra", "node_portal_excavadores" },
+        { "node_portal_excavadores", "node_frontera_abierta" }
     };
 
     [MenuItem("CaravanRPG/World Map/Generate Demo Event Route")]
@@ -89,7 +87,7 @@ public static class WorldMapDemoRouteGenerator
 
         EditorUtility.SetDirty(parent);
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-        Debug.Log("Mini zona demo generada: eventos, rutas opcionales, combates y jefe final.");
+        Debug.Log("Mini zona demo Tier 1 generada: 12 nodos, 10 caminos logicos, eventos, combates y jefe final.");
     }
 
     private static Dictionary<string, WorldMapNode> CreateNodes(WorldMapNode prefab, Transform parent)
@@ -114,12 +112,13 @@ public static class WorldMapDemoRouteGenerator
             node.connectedNodes.Clear();
             node.isUnlocked = spec.unlockedAtStart;
             node.isVisited = false;
-            node.isCurrent = spec.id == "demo_start";
+            node.isCurrent = spec.id == "node_valdoran";
             node.hasEvent = false;
             node.eventCompleted = false;
             node.nodeEvent = null;
             node.isCombatNode = false;
-            node.battleGroupId = "TestBattle";
+            node.isRepeatableCombat = false;
+            node.battleGroupId = "";
             node.isCompleted = false;
             node.combatVictoryReward = null;
             node.unlockOnCombatVictory.Clear();
@@ -145,249 +144,215 @@ public static class WorldMapDemoRouteGenerator
 
     private static void ConfigureCombats(Dictionary<string, WorldMapNode> nodes)
     {
-        ConfigureCombat(nodes, "demo_low_forest_combat", "hungry_beasts_01", "demo_old_cache_event", Reward(8, 1, 0, 0, 0, 25));
-        ConfigureCombat(nodes, "demo_river_ambush", "road_ambush_01", "demo_shrine_event", Reward(10, 0, 1, 0, 0, 30));
-        ConfigureCombat(nodes, "demo_bandit_camp", "bandit_patrol_01", "demo_sealed_gate_event", Reward(25, 0, 0, 1, 0, 45));
-        ConfigureCombat(nodes, "demo_swamp_beast", "mountain_beast_01", "demo_sealed_gate_event", Reward(18, 1, 0, 0, 1, 50));
-        ConfigureCombat(nodes, "demo_ruin_shortcut", "cult_rites_01", "demo_sealed_gate_event", Reward(20, 0, 0, 0, 1, 45));
-        ConfigureCombat(nodes, "demo_gate_guard", "elite_captain_01", "demo_abbey_threshold", Reward(35, 0, 0, 2, 1, 80));
-        ConfigureCombat(nodes, "demo_final_boss", "final_abbey_thing_01", null, Reward(120, 2, 2, 2, 2, 180));
+        ConfigureCombat(nodes, "node_bosque_aldheron", "encounter_ratas_02_t1");
+        ConfigureCombat(nodes, "node_claro_rocas", "encounter_rata_esqueleto_t1");
+        ConfigureCombat(nodes, "node_mina_hierro", "encounter_esqueleto_gusano_t1");
     }
 
-    private static void ConfigureCombat(Dictionary<string, WorldMapNode> nodes, string nodeId, string battleGroupId, string unlockNodeId, RewardData reward)
+    private static void ConfigureCombat(Dictionary<string, WorldMapNode> nodes, string nodeId, string battleGroupId)
     {
         WorldMapNode node = nodes[nodeId];
+        BattleEncounterSO encounter = LoadEncounter(battleGroupId);
+
         node.isCombatNode = true;
+        node.isRepeatableCombat = true;
         node.battleGroupId = battleGroupId;
-        node.combatVictoryReward = reward;
-
-        if (!string.IsNullOrWhiteSpace(unlockNodeId))
-            node.unlockOnCombatVictory.Add(nodes[unlockNodeId]);
-
+        node.combatVictoryReward = encounter != null ? encounter.reward : null;
         EditorUtility.SetDirty(node);
     }
 
     private static void ConfigureEvents(Dictionary<string, WorldMapNode> nodes)
     {
         ConfigureBridgeEvent(nodes);
-        ConfigureCacheEvent(nodes);
-        ConfigureShrineEvent(nodes);
-        ConfigureMarketEvent(nodes);
-        ConfigureGateEvent(nodes);
-        ConfigureThresholdEvent(nodes);
+        ConfigureBossClueEvent(nodes);
+        ConfigureCollinasombraEvent(nodes);
+        ConfigureBossEvent(nodes);
+        ConfigureFinalEvent(nodes);
     }
 
     private static void ConfigureBridgeEvent(Dictionary<string, WorldMapNode> nodes)
     {
-        WorldMapNode node = nodes["demo_bridge_event"];
+        WorldMapNode node = nodes["node_puente_roto"];
         node.hasEvent = true;
         node.nodeEvent = new WorldMapEvent
         {
-            title = "Rutas partidas en Claravalle",
+            title = "Puente roto",
             eventType = "Evento de Camino",
-            description = "El camino norte esta danado por lluvias y ruedas hundidas. Repararlo abre la ruta del bosque; rodear manda a la caravana por el claro del sur.",
+            description = "El puente cruje bajo el peso de la caravana. Cruzarlo sin repararlo puede dejar la expedicion varada.",
             illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_broken_bridge_transparent.png"),
             options = new List<WorldMapEventOption>
             {
                 Option(
-                    "Reparar el camino norte",
-                    "Gastar materiales para abrir Bosque de Aldheron y mantener tambien visible el paso del sur.",
+                    "Reparar el puente",
+                    "Usar materiales y tiempo para cruzar sin perder suministros.",
                     "Assets/Sprites/GeneratedUI/Iconos/event_icon_reparar_transparent.png",
-                    nodes["demo_low_forest_combat"],
-                    nodes["demo_river_ambush"],
-                    "demo_puente_reparado",
-                    Reward(6, 0, 0, 0, 0, 15),
-                    wood: 2,
+                    FlagBridgeRepaired,
+                    Reward(experience: 5),
+                    nodes["node_cruce_central"],
+                    nodes["node_bosque_aldheron"],
+                    nodes["node_torre_vigia"],
+                    wood: 1,
                     iron: 1,
                     stamina: 2,
-                    hours: 2
-                ),
+                    hours: 2),
                 Option(
-                    "Rodear por el claro",
-                    "Evitar el gasto de materiales. Es mas lento y deja la ruta del bosque para despues.",
+                    "Forzar el cruce",
+                    "Cruzar igual. No bloquea la demo, pero consume energia y tiempo.",
                     "Assets/Sprites/GeneratedUI/Iconos/event_icon_camino_transparent.png",
-                    nodes["demo_river_ambush"],
+                    FlagBridgeRepaired,
                     null,
-                    "demo_puente_rodeado",
+                    nodes["node_cruce_central"],
+                    nodes["node_bosque_aldheron"],
+                    nodes["node_torre_vigia"],
+                    stamina: 3,
+                    hours: 2),
+                Option(
+                    "Volver a Valdoran",
+                    "No cambia nada. Mejor preparar recursos antes de cruzar.",
+                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_pueblo_transparent.png",
                     null,
-                    stamina: 1,
-                    hours: 3
-                )
+                    null)
             }
         };
 
         EditorUtility.SetDirty(node);
     }
 
-    private static void ConfigureCacheEvent(Dictionary<string, WorldMapNode> nodes)
+    private static void ConfigureBossClueEvent(Dictionary<string, WorldMapNode> nodes)
     {
-        WorldMapNode node = nodes["demo_old_cache_event"];
+        WorldMapNode node = nodes["node_torre_vigia"];
         node.hasEvent = true;
         node.nodeEvent = new WorldMapEvent
         {
             title = "Torre vigia abandonada",
-            eventType = "Recursos",
-            description = "La puerta esta trabada, pero dentro quedan cajas viejas, mapas rotos y marcas recientes.",
-            illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_market_transparent.png"),
+            eventType = "Descubrimiento",
+            description = "Desde la torre se ven marcas recientes hacia las montanas. Alguien esta usando el viejo portal como refugio.",
+            illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_ruins_transparent.png"),
             options = new List<WorldMapEventOption>
             {
                 Option(
-                    "Forzar la puerta",
-                    "Recuperar suministros y revelar el campamento del vigia que usaba el lugar.",
+                    "Revisar la torre",
+                    "Encuentra la pista del jefe y desbloquea la ruta hacia Collinasombra y la mina.",
+                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_camino_transparent.png",
+                    FlagBossClueFound,
+                    Reward(experience: 10),
+                    nodes["node_mina_hierro"],
+                    nodes["node_collinasombra"],
+                    hours: 1),
+                Option(
+                    "Saquear suministros",
+                    "Tomar recursos menores. La pista queda pendiente para volver luego.",
                     "Assets/Sprites/GeneratedUI/Iconos/event_icon_recursos_transparent.png",
-                    nodes["demo_bandit_camp"],
-                    nodes["demo_broken_market"],
-                    "demo_almacen_saqueado",
-                    Reward(18, 1, 2, 1, 0, 35),
-                    stamina: 2,
-                    hours: 1
-                ),
-                Option(
-                    "Marcar el lugar y seguir",
-                    "No arriesgarse con las cajas. Abre solo la ruta dura hacia la mina.",
-                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_camino_transparent.png",
-                    nodes["demo_broken_market"],
                     null,
-                    "demo_almacen_ignorado",
-                    Reward(4, 0, 0, 0, 0, 10),
-                    hours: 1
-                )
-            }
-        };
-
-        EditorUtility.SetDirty(node);
-    }
-
-    private static void ConfigureShrineEvent(Dictionary<string, WorldMapNode> nodes)
-    {
-        WorldMapNode node = nodes["demo_shrine_event"];
-        node.hasEvent = true;
-        node.nodeEvent = new WorldMapEvent
-        {
-            title = "Cruce de los Susurros",
-            eventType = "Evento de Fe",
-            description = "El altar tiene una hendidura con la misma forma que el sello de Collinasombra.",
-            illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_ruins_transparent.png"),
-            options = new List<WorldMapEventOption>
-            {
-                Option(
-                    "Copiar el sello",
-                    "La caravana obtiene la marca necesaria para abrir el paso de Collinasombra sin forzarlo.",
-                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_descanso_transparent.png",
-                    nodes["demo_swamp_beast"],
+                    Reward(wood: 1, stone: 1),
                     null,
-                    "demo_sello_santuario",
-                    Reward(5, 0, 0, 0, 0, 25),
-                    hours: 1
-                ),
-                Option(
-                    "Descansar un momento",
-                    "Recuperar fuerzas y seguir por el pantano sin aprender el sello.",
-                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_descanso_transparent.png",
-                    nodes["demo_swamp_beast"],
-                    null,
-                    "demo_descanso_santuario",
-                    Reward(0, 1, 0, 0, 0, 15),
-                    hours: 2
-                )
-            }
-        };
-
-        EditorUtility.SetDirty(node);
-    }
-
-    private static void ConfigureMarketEvent(Dictionary<string, WorldMapNode> nodes)
-    {
-        WorldMapNode node = nodes["demo_broken_market"];
-        node.hasEvent = true;
-        node.nodeEvent = new WorldMapEvent
-        {
-            title = "Mina de Hierro Negro",
-            eventType = "Ruta Opcional",
-            description = "Una senda minera permite alcanzar el portal de los excavadores por una ruta peligrosa.",
-            illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_market_transparent.png"),
-            options = new List<WorldMapEventOption>
-            {
-                Option(
-                    "Abrir el atajo",
-                    "Gastar tiempo limpiando escombros para alcanzar una ruta alternativa hacia Collinasombra.",
-                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_camino_transparent.png",
-                    nodes["demo_ruin_shortcut"],
-                    null,
-                    "demo_atajo_abierto",
-                    Reward(8, 0, 1, 0, 0, 20),
-                    stamina: 1,
-                    hours: 2
-                )
-            }
-        };
-
-        EditorUtility.SetDirty(node);
-    }
-
-    private static void ConfigureGateEvent(Dictionary<string, WorldMapNode> nodes)
-    {
-        WorldMapNode node = nodes["demo_sealed_gate_event"];
-        node.hasEvent = true;
-        node.nodeEvent = new WorldMapEvent
-        {
-            title = "Paso sellado de Collinasombra",
-            eventType = "Bloqueo",
-            description = "El paso puede abrirse con el sello de los Susurros o romperse a fuerza bruta. Detras espera la guardia del pantano.",
-            illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_ruins_transparent.png"),
-            options = new List<WorldMapEventOption>
-            {
-                Option(
-                    "Abrir con el sello",
-                    "Usar la marca copiada en el cruce para evitar perder recursos.",
-                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_pueblo_transparent.png",
-                    nodes["demo_gate_guard"],
-                    null,
-                    "demo_porton_abierto_con_sello",
-                    Reward(12, 0, 0, 0, 0, 35),
                     hours: 1,
-                    requiredFlag: "demo_sello_santuario"
-                ),
+                    completesEvent: false),
                 Option(
-                    "Romper las cadenas",
-                    "Forzar el paso gastando hierro y stamina. Sirve si la run no consiguio el sello.",
-                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_reparar_transparent.png",
-                    nodes["demo_gate_guard"],
+                    "Irse",
+                    "No cambia nada.",
+                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_camino_transparent.png",
                     null,
-                    "demo_porton_forzado",
                     null,
-                    iron: 2,
-                    stamina: 3,
-                    hours: 2
-                )
+                    null,
+                    completesEvent: false)
             }
         };
 
         EditorUtility.SetDirty(node);
     }
 
-    private static void ConfigureThresholdEvent(Dictionary<string, WorldMapNode> nodes)
+    private static void ConfigureCollinasombraEvent(Dictionary<string, WorldMapNode> nodes)
     {
-        WorldMapNode node = nodes["demo_abbey_threshold"];
+        WorldMapNode node = nodes["node_collinasombra"];
         node.hasEvent = true;
         node.nodeEvent = new WorldMapEvent
         {
-            title = "Umbral de Piedra Umbria",
-            eventType = "Preparacion",
-            description = "El paso interior esta abierto. La caravana puede tomar aire antes del jefe.",
+            title = "Aldea de Collinasombra",
+            eventType = "Advertencia",
+            description = "Los aldeanos hablan de fuego azul en las ruinas. Las heridas no parecen hechas por acero.",
+            illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_village_transparent.png"),
+            options = new List<WorldMapEventOption>
+            {
+                Option(
+                    "Escuchar advertencias",
+                    "La caravana confirma que el jefe usa dano magico y abre el camino al portal.",
+                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_pueblo_transparent.png",
+                    FlagBossRouteUnlocked,
+                    Reward(experience: 10),
+                    nodes["node_portal_excavadores"]),
+                Option(
+                    "Pedir ayuda menor",
+                    "Comprar una racion antes de seguir.",
+                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_recursos_transparent.png",
+                    null,
+                    Reward(food: 1),
+                    null,
+                    gold: 5,
+                    completesEvent: false),
+                Option(
+                    "Volver a preparar",
+                    "No cambia nada.",
+                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_camino_transparent.png",
+                    null,
+                    null,
+                    null,
+                    completesEvent: false)
+            }
+        };
+
+        EditorUtility.SetDirty(node);
+    }
+
+    private static void ConfigureBossEvent(Dictionary<string, WorldMapNode> nodes)
+    {
+        WorldMapNode node = nodes["node_portal_excavadores"];
+        node.unlockOnCombatVictory.Add(nodes["node_frontera_abierta"]);
+        node.hasEvent = true;
+        node.nodeEvent = new WorldMapEvent
+        {
+            title = "Portal de los Excavadores",
+            eventType = "Jefe",
+            description = "El aire vibra con calor azul. El demonio menor espera entre piedras quebradas.",
             illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_ruins_transparent.png"),
             options = new List<WorldMapEventOption>
             {
                 Option(
-                    "Preparar el asalto final",
-                    "Ordenar equipo, repartir antorchas y avanzar hacia el jefe.",
+                    "Enfrentar al demonio menor",
+                    "Inicia el combate final de la demo Tier 1.",
                     "Assets/Sprites/GeneratedUI/Iconos/event_icon_combate_transparent.png",
-                    nodes["demo_final_boss"],
                     null,
-                    "demo_jefe_desbloqueado",
-                    Reward(20, 1, 0, 1, 0, 40),
-                    hours: 1
-                )
+                    null,
+                    null,
+                    requiredFlag: FlagBossRouteUnlocked,
+                    startsCombat: true,
+                    battleGroupId: "encounter_demonio_menor_t1")
+            }
+        };
+
+        EditorUtility.SetDirty(node);
+    }
+
+    private static void ConfigureFinalEvent(Dictionary<string, WorldMapNode> nodes)
+    {
+        WorldMapNode node = nodes["node_frontera_abierta"];
+        node.hasEvent = true;
+        node.nodeEvent = new WorldMapEvent
+        {
+            title = "Frontera abierta",
+            eventType = "Cierre de Demo",
+            description = "Con el demonio derrotado, la caravana puede seguir mas alla del valle.",
+            illustration = LoadSprite("Assets/Sprites/GeneratedUI/Ilistrations/event_illustration_caravan_road_transparent.png"),
+            options = new List<WorldMapEventOption>
+            {
+                Option(
+                    "Cerrar expedicion",
+                    "Marca la frontera como abierta.",
+                    "Assets/Sprites/GeneratedUI/Iconos/event_icon_camino_transparent.png",
+                    FlagFrontierOpen,
+                    Reward(gold: 10, experience: 20),
+                    null,
+                    requiredFlag: FlagBossDefeated)
             }
         };
 
@@ -398,18 +363,24 @@ public static class WorldMapDemoRouteGenerator
         string title,
         string description,
         string iconPath,
-        WorldMapNode unlockA,
-        WorldMapNode unlockB,
         string flag,
         RewardData reward,
+        WorldMapNode unlockA = null,
+        WorldMapNode unlockB = null,
+        WorldMapNode unlockC = null,
         int gold = 0,
         int food = 0,
         int wood = 0,
+        int stone = 0,
         int iron = 0,
         int leather = 0,
+        int crystals = 0,
         int stamina = 0,
         int hours = 0,
-        string requiredFlag = null)
+        string requiredFlag = null,
+        bool completesEvent = true,
+        bool startsCombat = false,
+        string battleGroupId = "")
     {
         WorldMapEventOption option = new WorldMapEventOption
         {
@@ -419,13 +390,17 @@ public static class WorldMapDemoRouteGenerator
             goldCost = gold,
             foodCost = food,
             woodCost = wood,
+            stoneCost = stone,
             ironCost = iron,
             leatherCost = leather,
+            crystalsCost = crystals,
             caravanStaminaCost = stamina,
             hoursCost = hours,
             flagToAdd = flag,
             reward = reward,
-            completesEvent = true
+            completesEvent = completesEvent,
+            startsCombat = startsCombat,
+            battleGroupId = string.IsNullOrWhiteSpace(battleGroupId) ? "TestBattle" : battleGroupId
         };
 
         if (unlockA != null)
@@ -434,23 +409,44 @@ public static class WorldMapDemoRouteGenerator
         if (unlockB != null)
             option.nodesToUnlock.Add(unlockB);
 
+        if (unlockC != null)
+            option.nodesToUnlock.Add(unlockC);
+
         if (!string.IsNullOrWhiteSpace(requiredFlag))
             option.requiredFlags.Add(requiredFlag);
 
         return option;
     }
 
-    private static RewardData Reward(int gold, int food, int wood, int iron, int leather, int experience)
+    private static RewardData Reward(int gold = 0, int food = 0, int wood = 0, int stone = 0, int iron = 0, int leather = 0, int crystals = 0, int experience = 0)
     {
         return new RewardData
         {
             gold = gold,
             food = food,
             wood = wood,
+            stone = stone,
             iron = iron,
             leather = leather,
+            crystals = crystals,
             experience = experience
         };
+    }
+
+    private static BattleEncounterSO LoadEncounter(string encounterId)
+    {
+        string[] guids = AssetDatabase.FindAssets("t:BattleEncounterSO", new[] { "Assets/GameData/Battles" });
+
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            BattleEncounterSO encounter = AssetDatabase.LoadAssetAtPath<BattleEncounterSO>(path);
+
+            if (encounter != null && encounter.encounterId == encounterId)
+                return encounter;
+        }
+
+        return null;
     }
 
     private static void CreateConnectionLines(Transform parent, Dictionary<string, WorldMapNode> nodesById)
@@ -470,7 +466,7 @@ public static class WorldMapDemoRouteGenerator
 
     private static void CreateConnectionLine(Transform parent, WorldMapNode fromNode, WorldMapNode toNode, int index)
     {
-        GameObject lineObject = new GameObject($"Connection_{index + 1:00}_{fromNode.nodeId}_to_{toNode.nodeId}");
+        GameObject lineObject = new GameObject($"Road_{index + 1:00}_{fromNode.nodeId}_to_{toNode.nodeId}");
         Undo.RegisterCreatedObjectUndo(lineObject, "Create demo map connection line");
         lineObject.transform.SetParent(parent);
         lineObject.transform.position = Vector3.zero;
@@ -481,6 +477,11 @@ public static class WorldMapDemoRouteGenerator
         WorldMapConnectionLine connectionLine = lineObject.AddComponent<WorldMapConnectionLine>();
         connectionLine.fromNode = fromNode;
         connectionLine.toNode = toNode;
+        connectionLine.blockedColor = new Color(0.42f, 0.08f, 0.06f, 0.75f);
+        connectionLine.undiscoveredColor = new Color(0.25f, 0.22f, 0.18f, 0.5f);
+        connectionLine.availableColor = new Color(0.95f, 0.72f, 0.24f, 0.95f);
+        connectionLine.visitedColor = new Color(1f, 0.86f, 0.32f, 1f);
+        connectionLine.currentColor = new Color(1f, 0.93f, 0.55f, 1f);
         connectionLine.Refresh();
 
         EditorUtility.SetDirty(connectionLine);
@@ -496,7 +497,7 @@ public static class WorldMapDemoRouteGenerator
             return;
         }
 
-        manager.currentNode = nodesById["demo_start"];
+        manager.currentNode = nodesById["node_valdoran"];
         manager.allNodes = new List<WorldMapNode>();
 
         foreach (NodeSpec spec in ZoneNodes)

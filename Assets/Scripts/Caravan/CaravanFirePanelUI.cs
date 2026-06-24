@@ -12,6 +12,7 @@ public class CaravanFirePanelUI : MonoBehaviour
     public CaravanFireActionButtonUI physicalRepairButton;
     public CaravanFireActionButtonUI magicalRepairButton;
     public CaravanFireActionButtonUI sleepButton;
+    public CaravanFireActionButtonUI gatherResourcesButton;
 
     [Header("Resource Icons")]
     public Sprite foodIcon;
@@ -22,24 +23,31 @@ public class CaravanFirePanelUI : MonoBehaviour
 
     [Header("Recovery")]
     [Range(0f, 1f)]
-    public float partialRecoveryPercent = 0.20f;
+    public float partialRecoveryPercent = 0.50f;
     [Range(0f, 1f)]
-    public float armorRepairPercent = 0.20f;
+    public float armorRepairPercent = 0.50f;
 
     [Header("Costs")]
     public int partialRestFoodPerLivingMember = 1;
-    public int partialRestWoodCost = 1;
+    public int partialRestWoodCost = 0;
+    public int partialRestCaravanStaminaCost = 0;
+    public int partialRestHoursCost = 2;
     public int sleepFoodPerLivingMember = 1;
     public int sleepWoodCost = 2;
-    public int physicalArmorIronCost = 2;
+    public int physicalArmorIronCost = 0;
     public int physicalArmorLeatherCost = 1;
-    public int magicalArmorCrystalsCost = 2;
-    public int magicalArmorLeatherCost = 2;
+    public int physicalArmorRepairHoursCost = 2;
+    public int magicalArmorCrystalsCost = 0;
+    public int magicalArmorLeatherCost = 0;
+    public int magicalArmorRepairHoursCost = 2;
 
     private void Awake()
     {
         AutoBind();
+        HideGatherResourcesButton();
         BindButtons();
+        GameSfxPlayer.GetOrCreate();
+        ScreenFadeUI.GetOrCreate();
     }
 
     private void OnEnable()
@@ -72,7 +80,7 @@ public class CaravanFirePanelUI : MonoBehaviour
 
     public void ExecuteMagicalArmorRepair()
     {
-        ExecuteAction(CaravanFireActionType.RepairMagicalArmor);
+        ExecuteAction(CaravanFireActionType.PartialRest);
     }
 
     public void ExecuteSleep()
@@ -85,19 +93,19 @@ public class CaravanFirePanelUI : MonoBehaviour
         partialRestButton?.Bind(
             CaravanFireActionType.PartialRest,
             "Descanso parcial",
-            $"Recupera {GetPercentText(partialRecoveryPercent)} HP, energia y mana de la compania.",
+            $"Recupera {GetPercentText(partialRecoveryPercent)} HP y energia. Consume comida y tiempo.",
             ExecuteAction);
 
         physicalRepairButton?.Bind(
             CaravanFireActionType.RepairPhysicalArmor,
-            "Reparar armadura fisica",
-            $"Repara {GetPercentText(armorRepairPercent)} de armadura fisica a todos.",
+            "Reparar armaduras",
+            $"Repara {GetPercentText(armorRepairPercent)} de armadura fisica y magica. Consume cuero y tiempo.",
             ExecuteAction);
 
         magicalRepairButton?.Bind(
-            CaravanFireActionType.RepairMagicalArmor,
-            "Reparar armadura magica",
-            $"Repara {GetPercentText(armorRepairPercent)} de armadura magica a todos.",
+            CaravanFireActionType.PartialRest,
+            "Descanso parcial",
+            $"Recupera {GetPercentText(partialRecoveryPercent)} HP y energia. Consume comida y tiempo.",
             ExecuteAction);
 
         sleepButton?.Bind(
@@ -105,14 +113,17 @@ public class CaravanFirePanelUI : MonoBehaviour
             "Dormir",
             "Recupera compania y energia de viaje. Pasa el dia.",
             ExecuteAction);
+
+        HideGatherResourcesButton();
     }
 
     private void RefreshActionButtons()
     {
         RefreshButton(partialRestButton, CaravanFireActionType.PartialRest);
         RefreshButton(physicalRepairButton, CaravanFireActionType.RepairPhysicalArmor);
-        RefreshButton(magicalRepairButton, CaravanFireActionType.RepairMagicalArmor);
+        RefreshButton(magicalRepairButton, CaravanFireActionType.PartialRest);
         RefreshButton(sleepButton, CaravanFireActionType.Sleep);
+        HideGatherResourcesButton();
     }
 
     private void RefreshButton(CaravanFireActionButtonUI button, CaravanFireActionType actionType)
@@ -124,7 +135,7 @@ public class CaravanFirePanelUI : MonoBehaviour
         bool[] canPayCosts = GetCanPayCosts(costs);
         Sprite[] icons = GetCostIcons(costs);
         CaravanFireResourceCost[] displayCosts = GetDisplayCosts(costs);
-        bool canUse = CanPayAll(canPayCosts) && GetLivingRosterUnits().Count > 0;
+        bool canUse = CanPayAll(canPayCosts) && CanPayActionCosts(actionType) && HasRequiredTargets(actionType);
 
         button.SetCosts(displayCosts, icons, canPayCosts);
         button.SetAvailable(canUse);
@@ -144,10 +155,21 @@ public class CaravanFirePanelUI : MonoBehaviour
 
         CaravanFireResourceCost[] costs = GetCosts(actionType);
 
-        if (!CanPayAll(GetCanPayCosts(costs)))
+        if (!CanPayAll(GetCanPayCosts(costs)) || !CanPayActionCosts(actionType))
         {
             SetMessage(GetMissingResourcesMessage(actionType));
             Refresh();
+            return;
+        }
+
+        if (actionType == CaravanFireActionType.Sleep)
+        {
+            ScreenFadeUI.GetOrCreate().PlaySleepTransition(() =>
+            {
+                SpendCosts(costs);
+                ApplySleep();
+                Refresh();
+            });
             return;
         }
 
@@ -155,6 +177,10 @@ public class CaravanFirePanelUI : MonoBehaviour
 
         switch (actionType)
         {
+            case CaravanFireActionType.GatherResources:
+                ApplyGatherResources();
+                break;
+
             case CaravanFireActionType.PartialRest:
                 ApplyPartialRest();
                 break;
@@ -181,20 +207,33 @@ public class CaravanFirePanelUI : MonoBehaviour
         {
             unit.Heal(Mathf.CeilToInt(unit.maxHP * partialRecoveryPercent));
             unit.RestoreStamina(Mathf.CeilToInt(unit.maxStamina * partialRecoveryPercent));
-            unit.RestoreMana(Mathf.CeilToInt(unit.maxMana * partialRecoveryPercent));
         }
 
-        SetMessage("Descanso parcial realizado. La energia de viaje no cambia.");
+        SpendActionCosts(CaravanFireActionType.PartialRest);
+        SetMessage($"Descanso parcial realizado: {GetPercentText(partialRecoveryPercent)} HP y energia. +{partialRestHoursCost} h.");
+    }
+
+    private void ApplyGatherResources()
+    {
+        if (CaravanResourceSearchUtility.TrySearchResources(out string message))
+            SetMessage(message);
+        else
+            SetMessage(message);
     }
 
     private void ApplyPhysicalArmorRepair()
     {
-        int restored = 0;
+        int restoredPhysical = 0;
+        int restoredMagical = 0;
 
         foreach (Unit unit in GetLivingRosterUnits())
-            restored += unit.RestorePhysicalArmor(Mathf.CeilToInt(unit.maxPhysicalArmor * armorRepairPercent));
+        {
+            restoredPhysical += unit.RestorePhysicalArmor(Mathf.CeilToInt(unit.maxPhysicalArmor * armorRepairPercent));
+            restoredMagical += unit.RestoreMagicalArmor(Mathf.CeilToInt(unit.maxMagicalArmor * armorRepairPercent));
+        }
 
-        SetMessage($"Armadura fisica reparada: +{restored}.");
+        SpendActionCosts(CaravanFireActionType.RepairPhysicalArmor);
+        SetMessage($"Armaduras reparadas: +{restoredPhysical} fisica, +{restoredMagical} magica. +{physicalArmorRepairHoursCost} h.");
     }
 
     private void ApplyMagicalArmorRepair()
@@ -204,7 +243,8 @@ public class CaravanFirePanelUI : MonoBehaviour
         foreach (Unit unit in GetLivingRosterUnits())
             restored += unit.RestoreMagicalArmor(Mathf.CeilToInt(unit.maxMagicalArmor * armorRepairPercent));
 
-        SetMessage($"Armadura magica reparada: +{restored}.");
+        SpendActionCosts(CaravanFireActionType.RepairMagicalArmor);
+        SetMessage($"Armadura magica reparada: +{restored}. +{magicalArmorRepairHoursCost} h.");
     }
 
     private void ApplySleep()
@@ -238,13 +278,20 @@ public class CaravanFirePanelUI : MonoBehaviour
         if (actionType == CaravanFireActionType.Sleep)
             return true;
 
+        if (actionType == CaravanFireActionType.GatherResources)
+        {
+            CaravanState caravan = CaravanState.Instance;
+            return caravan != null && caravan.caravanStamina >= CaravanResourceSearchUtility.CaravanStaminaCost;
+        }
+
         foreach (Unit unit in units)
         {
             if (actionType == CaravanFireActionType.PartialRest &&
-                (unit.currentHP < unit.maxHP || unit.currentStamina < unit.maxStamina || unit.currentMana < unit.maxMana))
+                (unit.currentHP < unit.maxHP || unit.currentStamina < unit.maxStamina))
                 return true;
 
-            if (actionType == CaravanFireActionType.RepairPhysicalArmor && unit.currentPhysicalArmor < unit.maxPhysicalArmor)
+            if (actionType == CaravanFireActionType.RepairPhysicalArmor &&
+                (unit.currentPhysicalArmor < unit.maxPhysicalArmor || unit.currentMagicalArmor < unit.maxMagicalArmor))
                 return true;
 
             if (actionType == CaravanFireActionType.RepairMagicalArmor && unit.currentMagicalArmor < unit.maxMagicalArmor)
@@ -261,14 +308,12 @@ public class CaravanFirePanelUI : MonoBehaviour
             case CaravanFireActionType.PartialRest:
                 return new[]
                 {
-                    CreateCost(CaravanResourceType.Food, partialRestFoodPerLivingMember, true),
-                    CreateCost(CaravanResourceType.Wood, partialRestWoodCost, false)
+                    CreateCost(CaravanResourceType.Food, partialRestFoodPerLivingMember, true)
                 };
 
             case CaravanFireActionType.RepairPhysicalArmor:
                 return new[]
                 {
-                    CreateCost(CaravanResourceType.Iron, physicalArmorIronCost, false),
                     CreateCost(CaravanResourceType.Leather, physicalArmorLeatherCost, false)
                 };
 
@@ -285,6 +330,9 @@ public class CaravanFirePanelUI : MonoBehaviour
                     CreateCost(CaravanResourceType.Food, sleepFoodPerLivingMember, true),
                     CreateCost(CaravanResourceType.Wood, sleepWoodCost, false)
                 };
+
+            case CaravanFireActionType.GatherResources:
+                return new CaravanFireResourceCost[0];
         }
 
         return new CaravanFireResourceCost[0];
@@ -351,6 +399,61 @@ public class CaravanFirePanelUI : MonoBehaviour
         return true;
     }
 
+    private bool CanPayActionCosts(CaravanFireActionType actionType)
+    {
+        int staminaCost = GetCaravanStaminaCost(actionType);
+        int hoursCost = GetHoursCost(actionType);
+
+        if (staminaCost <= 0 && hoursCost <= 0)
+            return true;
+
+        CaravanState caravan = CaravanState.Instance;
+
+        if (caravan == null)
+            return false;
+
+        return staminaCost <= 0 || caravan.caravanStamina >= staminaCost;
+    }
+
+    private void SpendActionCosts(CaravanFireActionType actionType)
+    {
+        CaravanState caravan = CaravanState.Instance;
+
+        if (caravan == null)
+            return;
+
+        int staminaCost = GetCaravanStaminaCost(actionType);
+        int hoursCost = GetHoursCost(actionType);
+
+        if (staminaCost > 0)
+            caravan.ChangeStamina(-staminaCost);
+
+        if (hoursCost > 0)
+            caravan.AdvanceHours(hoursCost);
+    }
+
+    private int GetCaravanStaminaCost(CaravanFireActionType actionType)
+    {
+        return actionType == CaravanFireActionType.PartialRest ? Mathf.Max(0, partialRestCaravanStaminaCost) : 0;
+    }
+
+    private int GetHoursCost(CaravanFireActionType actionType)
+    {
+        switch (actionType)
+        {
+            case CaravanFireActionType.PartialRest:
+                return Mathf.Max(0, partialRestHoursCost);
+            case CaravanFireActionType.RepairPhysicalArmor:
+                return Mathf.Max(0, physicalArmorRepairHoursCost);
+            case CaravanFireActionType.RepairMagicalArmor:
+                return Mathf.Max(0, magicalArmorRepairHoursCost);
+            case CaravanFireActionType.GatherResources:
+                return Mathf.Max(0, CaravanResourceSearchUtility.HoursCost);
+        }
+
+        return 0;
+    }
+
     private void SpendCosts(CaravanFireResourceCost[] costs)
     {
         if (InventoryRuntimeState.Instance == null || costs == null)
@@ -380,6 +483,8 @@ public class CaravanFirePanelUI : MonoBehaviour
                 return inventory.food;
             case CaravanResourceType.Wood:
                 return inventory.wood;
+            case CaravanResourceType.Stone:
+                return inventory.stone;
             case CaravanResourceType.Iron:
                 return inventory.iron;
             case CaravanResourceType.Leather:
@@ -404,6 +509,8 @@ public class CaravanFirePanelUI : MonoBehaviour
                 return inventory.SpendFood(amount);
             case CaravanResourceType.Wood:
                 return inventory.SpendWood(amount);
+            case CaravanResourceType.Stone:
+                return inventory.SpendStone(amount);
             case CaravanResourceType.Iron:
                 return inventory.SpendIron(amount);
             case CaravanResourceType.Leather:
@@ -423,6 +530,8 @@ public class CaravanFirePanelUI : MonoBehaviour
                 return foodIcon;
             case CaravanResourceType.Wood:
                 return woodIcon;
+            case CaravanResourceType.Stone:
+                return null;
             case CaravanResourceType.Iron:
                 return ironIcon;
             case CaravanResourceType.Leather:
@@ -469,6 +578,7 @@ public class CaravanFirePanelUI : MonoBehaviour
         builder.AppendLine();
         builder.AppendLine($"Comida {(inventory != null ? inventory.food : 0)}");
         builder.AppendLine($"Madera {(inventory != null ? inventory.wood : 0)}");
+        builder.AppendLine($"Piedra {(inventory != null ? inventory.stone : 0)}");
         builder.AppendLine($"Hierro {(inventory != null ? inventory.iron : 0)}");
         builder.AppendLine($"Cuero {(inventory != null ? inventory.leather : 0)}");
         builder.AppendLine($"Cristales {(inventory != null ? inventory.crystals : 0)}");
@@ -517,11 +627,13 @@ public class CaravanFirePanelUI : MonoBehaviour
             case CaravanFireActionType.PartialRest:
                 return "No hay nada que recuperar en la compania.";
             case CaravanFireActionType.RepairPhysicalArmor:
-                return "La armadura fisica ya esta completa.";
+                return "Las armaduras ya estan completas.";
             case CaravanFireActionType.RepairMagicalArmor:
                 return "La armadura magica ya esta completa.";
             case CaravanFireActionType.Sleep:
                 return "No hay mercenarios vivos para dormir.";
+            case CaravanFireActionType.GatherResources:
+                return $"No hay energia de viaje suficiente para buscar recursos. Requiere {CaravanResourceSearchUtility.CaravanStaminaCost}.";
         }
 
         return "No se puede realizar la accion.";
@@ -532,13 +644,15 @@ public class CaravanFirePanelUI : MonoBehaviour
         switch (actionType)
         {
             case CaravanFireActionType.PartialRest:
-                return "No se puede descansar: faltan comida o madera.";
+                return "No se puede descansar: falta comida.";
             case CaravanFireActionType.RepairPhysicalArmor:
-                return "No se puede reparar armadura fisica: faltan hierro o cuero.";
+                return "No se puede reparar armaduras: falta cuero o estado de caravana.";
             case CaravanFireActionType.RepairMagicalArmor:
-                return "No se puede reparar armadura magica: faltan cristales o cuero.";
+                return "No se puede reparar armadura magica: faltan cristales, cuero o estado de caravana.";
             case CaravanFireActionType.Sleep:
                 return "No se puede dormir: faltan comida o madera.";
+            case CaravanFireActionType.GatherResources:
+                return "No se puede buscar recursos: falta estado de caravana o energia de viaje.";
         }
 
         return "Faltan recursos.";
@@ -595,11 +709,20 @@ public class CaravanFirePanelUI : MonoBehaviour
         if (sleepButton == null)
             sleepButton = FindChild<CaravanFireActionButtonUI>("sleepButton");
 
+        if (gatherResourcesButton == null)
+            gatherResourcesButton = FindChild<CaravanFireActionButtonUI>("gatherResourcesButton");
+
         if (stateText == null)
             stateText = FindChild<TMP_Text>("TextState");
 
         if (messageText == null)
             messageText = FindChild<TMP_Text>("Text_Message");
+    }
+
+    private void HideGatherResourcesButton()
+    {
+        if (gatherResourcesButton != null)
+            gatherResourcesButton.gameObject.SetActive(false);
     }
 
     private T FindChild<T>(string childName) where T : Component

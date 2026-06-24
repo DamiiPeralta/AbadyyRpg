@@ -21,8 +21,10 @@ public static class RewardApplier
         inventory.AddGold(reward.gold);
         inventory.AddFood(reward.food);
         inventory.AddWood(reward.wood);
+        inventory.AddStone(reward.stone);
         inventory.AddIron(reward.iron);
         inventory.AddLeather(reward.leather);
+        inventory.AddCrystals(reward.crystals);
 
         if (reward.experience > 0 && PartyRuntimeState.Instance != null)
             PartyRuntimeState.Instance.AddExperienceToActiveParty(reward.experience);
@@ -62,8 +64,10 @@ public static class RewardApplier
         AddPart(sb, ref hasPrevious, reward.gold, "oro");
         AddPart(sb, ref hasPrevious, reward.food, "comida");
         AddPart(sb, ref hasPrevious, reward.wood, "madera");
+        AddPart(sb, ref hasPrevious, reward.stone, "piedra");
         AddPart(sb, ref hasPrevious, reward.iron, "hierro");
         AddPart(sb, ref hasPrevious, reward.leather, "cuero");
+        AddPart(sb, ref hasPrevious, reward.crystals, "cristales");
         AddPart(sb, ref hasPrevious, reward.experience, "XP");
 
         if (reward.items != null)

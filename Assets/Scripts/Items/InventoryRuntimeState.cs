@@ -6,14 +6,14 @@ public class InventoryRuntimeState : MonoBehaviour
     public static InventoryRuntimeState Instance { get; private set; }
 
     [Header("Currency")]
-    public int gold = 100;
+    public int gold = 0;
 
     [Header("Basic Resources")]
-    public int food = 10;
-    public int wood = 5;
+    public int food = 0;
+    public int wood = 0;
     public int stone = 0;
-    public int iron = 3;
-    public int leather = 2;
+    public int iron = 0;
+    public int leather = 0;
     public int crystals = 0;
 
     [Header("Items")]

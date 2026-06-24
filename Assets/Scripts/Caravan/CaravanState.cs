@@ -35,6 +35,7 @@ public class CaravanState : MonoBehaviour
     {
         day++;
         hour = 8;
+        EvaluateExpeditionTimeLimit();
     }
 
     public void AdvanceHours(int hours)
@@ -49,6 +50,8 @@ public class CaravanState : MonoBehaviour
             hour -= 24;
             day++;
         }
+
+        EvaluateExpeditionTimeLimit();
     }
 
     public void RestoreStamina()
@@ -71,5 +74,20 @@ public class CaravanState : MonoBehaviour
     public void SetCarry(int amount)
     {
         currentCarry = Mathf.Clamp(amount, 0, maxCarry);
+    }
+
+    private void EvaluateExpeditionTimeLimit()
+    {
+        GameRunState runState = GameRunState.Instance;
+
+        if (runState == null || runState.expeditionFailed)
+            return;
+
+        if (!runState.ShouldFailByTime(day))
+            return;
+
+        runState.RegisterExpeditionFailure(
+            $"La expedicion fracaso al comenzar el dia {day}: el jefe no fue derrotado antes del limite."
+        );
     }
 }
