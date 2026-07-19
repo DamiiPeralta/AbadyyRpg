@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,9 +22,16 @@ public class WorldMapManager : MonoBehaviour
     public WorldMapHudUI hudUI;
     public WorldMapTimeOfDayOverlayUI timeOfDayOverlayUI;
 
+    [Header("Camara")]
+    public Camera worldMapCamera;
+    public bool centerCameraOnCurrentNode = true;
+    public Vector3 cameraNodeOffset = Vector3.zero;
+    public float cameraMoveDuration = 0.35f;
+
     private WorldMapEvent currentEvent;
     private bool caravanDefeatPanelShown;
     private bool demoVictoryPanelShown;
+    private Coroutine cameraMoveRoutine;
 
     private void Awake()
     {
@@ -63,6 +71,7 @@ public class WorldMapManager : MonoBehaviour
             GameRunState.Instance.RegisterVisitedNode(currentNode.nodeId);
         }
 
+        CenterCameraOnCurrentNode(true);
         RefreshHud();
 
         Debug.Log($"Starting at node: {currentNode.nodeName}");
@@ -166,6 +175,7 @@ public class WorldMapManager : MonoBehaviour
 
         currentNode.SetVisited(true);
         currentNode.SetCurrent(true);
+        CenterCameraOnCurrentNode(false);
 
         if (GameSfxPlayer.Instance != null)
             GameSfxPlayer.Instance.PlayNodeTravel();
@@ -604,6 +614,7 @@ public class WorldMapManager : MonoBehaviour
         currentNode = node;
         currentNode.SetVisited(true);
         currentNode.SetCurrent(true);
+        CenterCameraOnCurrentNode(true);
 
         if (GameRunState.Instance != null)
         {
@@ -612,6 +623,64 @@ public class WorldMapManager : MonoBehaviour
         }
 
         Debug.Log($"WorldMapManager: currentNode restaurado después del combate: {currentNode.nodeName}");
+    }
+
+    private void CenterCameraOnCurrentNode(bool instant)
+    {
+        if (!centerCameraOnCurrentNode || currentNode == null)
+            return;
+
+        Camera cameraToMove = GetWorldMapCamera();
+
+        if (cameraToMove == null)
+            return;
+
+        Vector3 targetPosition = currentNode.transform.position + cameraNodeOffset;
+        targetPosition.z = cameraToMove.transform.position.z;
+
+        if (cameraMoveRoutine != null)
+            StopCoroutine(cameraMoveRoutine);
+
+        if (instant || cameraMoveDuration <= 0f)
+        {
+            cameraToMove.transform.position = targetPosition;
+            cameraMoveRoutine = null;
+            return;
+        }
+
+        cameraMoveRoutine = StartCoroutine(MoveCameraToNode(cameraToMove, targetPosition));
+    }
+
+    private Camera GetWorldMapCamera()
+    {
+        if (worldMapCamera != null)
+            return worldMapCamera;
+
+        worldMapCamera = Camera.main;
+        return worldMapCamera;
+    }
+
+    private IEnumerator MoveCameraToNode(Camera cameraToMove, Vector3 targetPosition)
+    {
+        Vector3 startPosition = cameraToMove.transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < cameraMoveDuration)
+        {
+            if (cameraToMove == null)
+                yield break;
+
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / cameraMoveDuration);
+            float easedT = Mathf.SmoothStep(0f, 1f, t);
+            cameraToMove.transform.position = Vector3.Lerp(startPosition, targetPosition, easedT);
+            yield return null;
+        }
+
+        if (cameraToMove != null)
+            cameraToMove.transform.position = targetPosition;
+
+        cameraMoveRoutine = null;
     }
 
     private void RefreshHud()

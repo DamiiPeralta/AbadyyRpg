@@ -1896,12 +1896,12 @@ PrefabInstance:
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.65
+      value: -6.15
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.25
+      value: 3.04
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
@@ -2456,8 +2456,11 @@ MonoBehaviour:
     experience: 0
     items: []
   currentNodeId: 
+  currentNodeAllowsTrading: 1
+  currentNodeNoTradingMessage: No puedes vender aqui, no hay mercado.
   expeditionFailed: 0
   expeditionFailureReason: 
+  demoCompleted: 0
   completedNodeIds: []
   unlockedNodeIds: []
   visitedNodeIds: []
@@ -2624,12 +2627,12 @@ PrefabInstance:
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.9
+      value: -8.73
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.25
+      value: 6.97
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
@@ -3409,7 +3412,7 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Positions:
-  - {x: -3.45, y: -0.95, z: 0}
+  - {x: -5.97, y: -1.1, z: 0}
   - {x: -1.05, y: -0.25, z: 0}
   m_Parameters:
     serializedVersion: 3
@@ -4196,12 +4199,12 @@ PrefabInstance:
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.55
+      value: -2.2
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.05
+      value: -1.78
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
@@ -4775,12 +4778,12 @@ PrefabInstance:
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.25
+      value: -5.36
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.75
+      value: 4.48
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
@@ -4892,6 +4895,11 @@ MonoBehaviour:
   worldMapSceneName: WorldMapScene
   eventPanelUI: {fileID: 810007792}
   hudUI: {fileID: 1760230637}
+  timeOfDayOverlayUI: {fileID: 0}
+  worldMapCamera: {fileID: 0}
+  centerCameraOnCurrentNode: 1
+  cameraNodeOffset: {x: 0, y: 0, z: 0}
+  cameraMoveDuration: 0.35
 --- !u!4 &1329031018
 Transform:
   m_ObjectHideFlags: 0
@@ -5003,8 +5011,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Positions:
-  - {x: -1.95, y: 1.15, z: 0}
-  - {x: -2.55, y: -2.05, z: 0}
+  - {x: -2.91, y: 1.55, z: 0}
+  - {x: -2.2, y: -1.78, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -5436,7 +5444,7 @@ LineRenderer:
   m_SortingOrder: -1
   m_Positions:
   - {x: -1.05, y: -0.25, z: 0}
-  - {x: -1.95, y: 1.15, z: 0}
+  - {x: -2.91, y: 1.55, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -5962,12 +5970,12 @@ PrefabInstance:
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.95
+      value: -2.91
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.15
+      value: 1.55
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
@@ -6502,8 +6510,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Positions:
-  - {x: -5.9, y: 2.25, z: 0}
-  - {x: -5.25, y: 0.75, z: 0}
+  - {x: -8.73, y: 6.97, z: 0}
+  - {x: -5.36, y: 4.48, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -7228,8 +7236,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Positions:
-  - {x: -5.25, y: 0.75, z: 0}
-  - {x: -4.65, y: -0.25, z: 0}
+  - {x: -5.36, y: 4.48, z: 0}
+  - {x: -6.15, y: 3.04, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -7553,12 +7561,12 @@ PrefabInstance:
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.45
+      value: -5.97
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.95
+      value: -1.1
       objectReference: {fileID: 0}
     - target: {fileID: 8030735224044678866, guid: f48364795d8a04445a226aa58dfd9b82,
         type: 3}
@@ -8217,6 +8225,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusText: {fileID: 422112565}
+  searchResourcesButton: {fileID: 0}
+  searchResourcesButtonText: {fileID: 0}
+  searchResourcesInfoText: {fileID: 0}
 --- !u!114 &1760230638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8333,8 +8344,8 @@ Transform:
   m_GameObject: {fileID: 1784386579}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0198, y: -0.0208, z: 0}
-  m_LocalScale: {x: 1.164067, y: 0.9864733, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -8789,8 +8800,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Positions:
-  - {x: -4.65, y: -0.25, z: 0}
-  - {x: -3.45, y: -0.95, z: 0}
+  - {x: -6.15, y: 3.04, z: 0}
+  - {x: -5.97, y: -1.1, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

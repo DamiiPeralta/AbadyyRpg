@@ -10,4 +10,6 @@ public abstract class EquipmentItem : ItemBase
     // Para balance / progresión (opcional)
     public int levelRequirement;
 
+    public override bool IsStackable => false;
+
 }

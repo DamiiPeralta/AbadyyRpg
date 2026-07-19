@@ -16,6 +16,11 @@ public abstract class ItemBase : ScriptableObject
     [Header("Economia")]
     public int sellValue = 0;
 
+    [Header("Inventario")]
+    public bool isStackable = true;
+
     [Header("Efectos")]
     public List<ItemEffect> effects = new List<ItemEffect>();
+
+    public virtual bool IsStackable => isStackable;
 }

@@ -45,6 +45,14 @@ public class InventoryRuntimeState : MonoBehaviour
             return;
         }
 
+        if (!IsItemStackable(itemId))
+        {
+            for (int i = 0; i < amount; i++)
+                items.Add(new InventoryEntry(itemId, 1));
+
+            return;
+        }
+
         InventoryEntry entry = items.Find(x => x.itemId == itemId);
 
         if (entry == null)
@@ -65,9 +73,35 @@ public class InventoryRuntimeState : MonoBehaviour
         if (amount <= 0)
             return false;
 
-        InventoryEntry entry = items.Find(x => x.itemId == itemId);
+        if (GetAmount(itemId) < amount)
+            return false;
 
-        if (entry == null)
+        int remaining = amount;
+
+        for (int i = items.Count - 1; i >= 0 && remaining > 0; i--)
+        {
+            InventoryEntry entry = items[i];
+
+            if (entry == null || entry.itemId != itemId)
+                continue;
+
+            int removed = Mathf.Min(entry.amount, remaining);
+            entry.amount -= removed;
+            remaining -= removed;
+
+            if (entry.amount <= 0)
+                items.RemoveAt(i);
+        }
+
+        return true;
+    }
+
+    public bool RemoveItem(InventoryEntry entry, int amount)
+    {
+        if (entry == null || amount <= 0)
+            return false;
+
+        if (!items.Contains(entry))
             return false;
 
         if (entry.amount < amount)
@@ -89,9 +123,7 @@ public class InventoryRuntimeState : MonoBehaviour
         if (amount <= 0)
             return true;
 
-        InventoryEntry entry = items.Find(x => x.itemId == itemId);
-
-        return entry != null && entry.amount >= amount;
+        return GetAmount(itemId) >= amount;
     }
 
     public int GetAmount(string itemId)
@@ -99,9 +131,21 @@ public class InventoryRuntimeState : MonoBehaviour
         if (string.IsNullOrWhiteSpace(itemId))
             return 0;
 
-        InventoryEntry entry = items.Find(x => x.itemId == itemId);
+        int total = 0;
 
-        return entry != null ? entry.amount : 0;
+        foreach (InventoryEntry entry in items)
+        {
+            if (entry != null && entry.itemId == itemId)
+                total += Mathf.Max(0, entry.amount);
+        }
+
+        return total;
+    }
+
+    private bool IsItemStackable(string itemId)
+    {
+        ItemBase item = ItemDatabase.Instance != null ? ItemDatabase.Instance.GetItemById(itemId) : null;
+        return item == null || item.IsStackable;
     }
 
     public void AddGold(int amount)

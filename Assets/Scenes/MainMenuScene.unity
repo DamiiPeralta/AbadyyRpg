@@ -205,17 +205,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   masterVolume: 1
+  hitDelayAfterAttack: 0.12
+  deathDelayAfterHit: 0.16
   basicAttack: {fileID: 8300000, guid: 16c3eb33e78ebde45a6864ccd8408470, type: 3}
   hit: {fileID: 8300000, guid: 8e13ab322531c9c4a866da535d9d9b6d, type: 3}
-  heal: {fileID: 0}
-  death: {fileID: 0}
-  victory: {fileID: 0}
-  defeat: {fileID: 0}
-  buttonClick: {fileID: 0}
-  nodeTravel: {fileID: 0}
-  craftSuccess: {fileID: 0}
-  craftFail: {fileID: 0}
-  sleep: {fileID: 0}
+  heal: {fileID: 8300000, guid: 271acd05e5bf19448abb9e4ed1ea3cbf, type: 3}
+  death: {fileID: 8300000, guid: d3117011564001146911f8d94a99520c, type: 3}
+  victory: {fileID: 8300000, guid: fd28a96b5f73f7d409c9359b24da7ecb, type: 3}
+  defeat: {fileID: 8300000, guid: 511207bdb147c114b9302aff9d5e7562, type: 3}
+  buttonClick: {fileID: 8300000, guid: ca7197225300f2e4aa8c391989df3d49, type: 3}
+  nodeTravel: {fileID: 8300000, guid: 248718ea51ecdad4ab662b98fb9cc798, type: 3}
+  craftSuccess: {fileID: 8300000, guid: cb368552fccc3d6468ff1b4949776004, type: 3}
+  craftFail: {fileID: 8300000, guid: 45e5d8c1d2c04fc4282d595f12cdb66a, type: 3}
+  sleep: {fileID: 8300000, guid: 18be39e8fb2f4db44ae4adf53bc0b7c9, type: 3}
 --- !u!4 &678869732
 Transform:
   m_ObjectHideFlags: 0

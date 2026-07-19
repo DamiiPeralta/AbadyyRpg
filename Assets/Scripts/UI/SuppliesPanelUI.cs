@@ -140,7 +140,7 @@ public class SuppliesPanelUI : MonoBehaviour
             return;
         }
 
-        if (!InventoryRuntimeState.Instance.RemoveItem(entry.itemId, 1))
+        if (!InventoryRuntimeState.Instance.RemoveItem(entry, 1))
             return;
 
         InventoryRuntimeState.Instance.AddGold(Mathf.Max(0, item.sellValue));
@@ -164,7 +164,7 @@ public class SuppliesPanelUI : MonoBehaviour
         if (amount <= 0)
             return;
 
-        if (!InventoryRuntimeState.Instance.RemoveItem(entry.itemId, amount))
+        if (!InventoryRuntimeState.Instance.RemoveItem(entry, amount))
             return;
 
         InventoryRuntimeState.Instance.AddGold(Mathf.Max(0, item.sellValue) * amount);

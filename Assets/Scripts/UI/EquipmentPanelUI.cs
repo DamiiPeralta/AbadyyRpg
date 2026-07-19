@@ -150,7 +150,7 @@ public class EquipmentPanelUI : MonoBehaviour
             return;
 
         InventoryRuntimeState inventory = InventoryRuntimeState.Instance;
-        if (inventory == null || !inventory.RemoveItem(selectedEntry.itemId, 1))
+        if (inventory == null || !inventory.RemoveItem(selectedEntry, 1))
             return;
 
         if (selectedItem is ConsumableItem consumable)
